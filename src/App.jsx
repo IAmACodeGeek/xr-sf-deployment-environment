@@ -74,6 +74,11 @@ export const App = () => {
     unlockPointer();
   };
 
+  // ✅ Prevent Rendering until brandData is Loaded
+  if (!brandData) {
+    return null; // or a loading state
+  }
+
   return (
     <>
       {!isMobile && (
@@ -102,12 +107,29 @@ export const App = () => {
         </Suspense>
         <Products />
         <ChestBox />
-        <Television
+        {brandData && (
+          <>
+            <Television
+              videoPath={brandData.brand_video_url}
+              scale={[0.9, 0.9, 0.9]}
+              position={[-4.5, 11, -91]}
+              rotation={[0, -82.79, 0]}
+            />
+            <BrandPoster
+              imageUrl={brandData.brand_poster_url}
+              width={192 * 4}
+              height={108 * 4}
+              position={[-2.2, 3.2, -55.35]}
+              rotation={[0, 90, 1]}
+            />
+          </>
+        )}
+        {/* <Television
           videoPath={brandData.brand_video_url}
           scale={[0.9, 0.9, 0.9]}
           position={[-4.5, 11, -91]}
           rotation={[0, -82.79, 0]}
-        />
+        /> */}
 
         {/*May crash if external website*/}
         {/* <WebPlane
@@ -115,13 +137,13 @@ export const App = () => {
           position={[-5, 0, 5.1]}
           rotation={[0, 162.5, 0]}
         /> */}
-        <BrandPoster
+        {/* <BrandPoster
           imageUrl={brandData.brand_poster_url}
           width={192 * 4}
           height={108 * 4}
           position={[-2.2, 3.2, -55.35]}
           rotation={[0, 90, 1]}
-        />
+        /> */}
         {/* <ImageShowcase
           url="https://cdn.shopify.com/s/files/1/0901/2222/3909/files/image_7.png?v=1736493908"
           width={108 * 1.5}
