@@ -138,14 +138,24 @@ function CanvasWrapper() {
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:image" content={brandData.brand_logo_url} />
           <meta name="theme-color" content="#ffffff" />
-          <link rel="preload" href={brandData.brand_logo_url} />
+          <link rel="preload" as="image/png" href={brandData.brand_logo_url} />
           {/* <link
             rel="apple-touch-icon"
             sizes="180x180"
             href="/media/sflogo.svg"
           /> */}
-          <link rel="icon" sizes="32x32" href={brandData.brand_logo_url} />
-          <link rel="icon" sizes="16x16" href={brandData.brand_logo_url} />
+          <link
+            rel="icon"
+            as="image/png"
+            sizes="32x32"
+            href={brandData.brand_logo_url}
+          />
+          <link
+            rel="icon"
+            as="image/png"
+            sizes="16x16"
+            href={brandData.brand_logo_url}
+          />
         </Helmet>
       )}
       <div id="container">
