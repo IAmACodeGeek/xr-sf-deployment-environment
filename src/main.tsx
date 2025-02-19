@@ -132,12 +132,6 @@ function CanvasWrapper() {
             <>
               <meta property="og:image" content={brandData.brand_logo_url} />
               <meta name="twitter:image" content={brandData.brand_logo_url} />
-              <link
-                rel="icon"
-                as="image"
-                href={brandData.brand_logo_url}
-                type="image/png"
-              />
               <link rel="icon" sizes="32x32" href={brandData.brand_logo_url} />
               <link rel="icon" sizes="16x16" href={brandData.brand_logo_url} />
             </>
