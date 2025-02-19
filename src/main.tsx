@@ -13,8 +13,42 @@ function CanvasWrapper() {
   const { progress } = useProgress();
   const [videoLoaded, setVideoLoaded] = useState(false);
   const videoRef = useRef(null);
-  const [maxProgress, setMaxProgress] = useState(0); 
+  const [maxProgress, setMaxProgress] = useState(0);
   const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
+  // ✅ Extract subdomain function
+  function getSubdomain() {
+    const host = window.location.hostname; // e.g., subdomain.strategyfox.in
+    const parts = host.split(".");
+    if (parts.length > 2) {
+      return parts[0]; // Extracts 'subdomain'
+    }
+    return null;
+  }
+
+  // ✅ Fetch API Data based on subdomain
+  async function fetchBrandData() {
+    const subdomain = getSubdomain();
+    if (!subdomain) {
+      console.warn("No subdomain detected.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://function-11-934416248688.us-central1.run.app?brandname=${subdomain}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("📌 Brand Data:", data); // ✅ Log response in the console
+    } catch (error) {
+      console.error("❌ Error fetching brand data:", error);
+    }
+  }
 
   async function fetchProducts() {
     try {
@@ -24,19 +58,22 @@ function CanvasWrapper() {
       console.error(err);
     }
   }
+
+  // ✅ Fetch brand data on component mount
   useEffect(() => {
+    fetchBrandData();
     fetchProducts();
   }, []);
 
   useEffect(() => {
     const scrollY = window.scrollY;
     const joystickZone = document.getElementById("joystickZone");
-  
+
     if (!(progress >= 100 && videoLoaded)) {
       if (joystickZone) {
         joystickZone.style.display = "none";
       }
-  
+
       document.body.style.position = "fixed";
       document.body.style.top = `-${scrollY}px`;
       document.body.style.width = "100%";
@@ -46,7 +83,7 @@ function CanvasWrapper() {
       if (joystickZone) {
         joystickZone.style.display = "block";
       }
-  
+
       document.body.style.position = "";
       document.body.style.top = "";
       document.body.style.width = "";
@@ -54,12 +91,12 @@ function CanvasWrapper() {
       document.body.style.touchAction = "";
       window.scrollTo(0, scrollY);
     }
-  
+
     return () => {
       if (joystickZone) {
         joystickZone.style.display = "block";
       }
-  
+
       document.body.style.position = "";
       document.body.style.top = "";
       document.body.style.width = "";
@@ -70,12 +107,10 @@ function CanvasWrapper() {
   }, [progress, videoLoaded]);
 
   useEffect(() => {
-    // Update maxProgress only if progress exceeds the current maxProgress
     if (progress > maxProgress) {
       setMaxProgress(progress);
     }
   }, [progress]);
-  
 
   return (
     <div id="container">
@@ -89,9 +124,8 @@ function CanvasWrapper() {
             autoPlay
             muted
             playsInline
-            onEnded={() => setVideoLoaded(true)} // Set videoLoaded to true when the video ends
+            onEnded={() => setVideoLoaded(true)}
           />
-          {/* Show progress bar and text only after the video finishes */}
           {videoLoaded && (
             <>
               <div className="loading-text">Your experience is loading!</div>
