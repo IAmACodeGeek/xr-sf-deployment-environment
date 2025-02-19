@@ -17,6 +17,7 @@ import {
   usePointerLockStore,
   useDriverStore,
 } from "./stores/ZustandStores";
+import { useBrandStore } from "./stores/brandStore";
 import { useTouchStore } from "./stores/ZustandStores";
 
 const shadowOffset = 50;
@@ -35,6 +36,7 @@ export const App = () => {
     isContactModalOpen,
     isProductSearcherOpen,
   } = useComponentStore();
+  const { brandData } = useBrandStore();
   const { lockPointer, unlockPointer } = usePointerLockStore();
   const { driverActive } = useDriverStore();
   const { isTouchEnabled } = useTouchStore();
@@ -101,7 +103,7 @@ export const App = () => {
         <Products />
         <ChestBox />
         <Television
-          videoPath="/media/backhome.mp4"
+          videoPath={brandData.brand_video_url}
           scale={[0.9, 0.9, 0.9]}
           position={[-4.5, 11, -91]}
           rotation={[0, -82.79, 0]}
@@ -114,7 +116,7 @@ export const App = () => {
           rotation={[0, 162.5, 0]}
         /> */}
         <BrandPoster
-          imageUrl="https://th.bing.com/th/id/OIP.SNik-SOwvsExn4HNF47l2gHaEK?rs=1&pid=ImgDetMain"
+          imageUrl={brandData.brand_poster_url}
           width={192 * 4}
           height={108 * 4}
           position={[-2.2, 3.2, -55.35]}

@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import ReactDOM from "react-dom/client";
+import { HelmetProvider } from "react-helmet-async";
+import { Helmet } from "react-helmet-async";
 import { Canvas } from "@react-three/fiber";
 import { useProgress } from "@react-three/drei";
 import App from "@/App.jsx";
@@ -7,9 +9,11 @@ import "@/index.scss";
 import UI from "@/UI/UI.tsx";
 import { ProductService } from "./api/shopifyAPIService";
 import { useComponentStore } from "./stores/ZustandStores";
+import { useBrandStore } from "./stores/brandStore";
 
 function CanvasWrapper() {
   const { setProducts } = useComponentStore();
+  const { brandData, setBrandData } = useBrandStore();
   const { progress } = useProgress();
   const [videoLoaded, setVideoLoaded] = useState(false);
   const videoRef = useRef(null);
@@ -44,6 +48,7 @@ function CanvasWrapper() {
       }
 
       const data = await response.json();
+      setBrandData(data);
       console.log("📌 Brand Data:", data); // ✅ Log response in the console
     } catch (error) {
       console.error("❌ Error fetching brand data:", error);
@@ -113,43 +118,68 @@ function CanvasWrapper() {
   }, [progress]);
 
   return (
-    <div id="container">
-      {progress >= 100 && videoLoaded ? (
-        <UI />
-      ) : (
-        <div className="video-loader">
-          <video
-            ref={videoRef}
-            src={isMobile ? "/media/Intro.mp4" : "/media/Intro.MOV"}
-            autoPlay
-            muted
-            playsInline
-            onEnded={() => setVideoLoaded(true)}
+    <>
+      {brandData && (
+        <Helmet>
+          <title>{brandData.brand_name} - Official Store</title>
+          <meta
+            property="og:title"
+            content={`${brandData.brand_name} - Official Store`}
           />
-          {videoLoaded && (
-            <>
-              <div className="loading-text">Your experience is loading!</div>
-              <div className="progress-bar">
-                <div
-                  className="progress-bar-inner"
-                  style={{ width: `${Math.min(maxProgress, 100)}%` }}
-                />
-              </div>
-            </>
-          )}
-        </div>
+          <meta property="og:image" content={brandData.brand_logo_url} />
+          <meta
+            property="og:description"
+            content={`Shop the latest products from ${brandData.brand_name}`}
+          />
+          <meta
+            name="description"
+            content={`Welcome to ${brandData.brand_name} store!`}
+          />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:image" content={brandData.brand_logo_url} />
+          <meta name="theme-color" content="#ffffff" />
+        </Helmet>
       )}
-      <Canvas camera={{ fov: 45 }} shadows>
-        <React.Suspense fallback={null}>
-          <App />
-        </React.Suspense>
-      </Canvas>
-    </div>
+      <div id="container">
+        {progress >= 100 && videoLoaded ? (
+          <UI />
+        ) : (
+          <div className="video-loader">
+            <video
+              ref={videoRef}
+              src={isMobile ? "/media/Intro.mp4" : "/media/Intro.MOV"}
+              autoPlay
+              muted
+              playsInline
+              onEnded={() => setVideoLoaded(true)}
+            />
+            {videoLoaded && (
+              <>
+                <div className="loading-text">Your experience is loading!</div>
+                <div className="progress-bar">
+                  <div
+                    className="progress-bar-inner"
+                    style={{ width: `${Math.min(maxProgress, 100)}%` }}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        )}
+        <Canvas camera={{ fov: 45 }} shadows>
+          <React.Suspense fallback={null}>
+            <App />
+          </React.Suspense>
+        </Canvas>
+      </div>
+    </>
   );
 }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <CanvasWrapper />
+    <HelmetProvider>
+      <CanvasWrapper />
+    </HelmetProvider>
   </React.StrictMode>
 );
