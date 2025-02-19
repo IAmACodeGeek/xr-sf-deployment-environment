@@ -122,11 +122,27 @@ function CanvasWrapper() {
       {brandData && (
         <Helmet>
           <title>{brandData.brand_name} - Official Store</title>
+
+          {/* Open Graph Meta Tags (For Social Sharing) */}
           <meta
             property="og:title"
             content={`${brandData.brand_name} - Official Store`}
           />
-          <meta property="og:image" content={brandData.brand_logo_url} />
+          {brandData.brand_logo_url && (
+            <>
+              <meta property="og:image" content={brandData.brand_logo_url} />
+              <meta name="twitter:image" content={brandData.brand_logo_url} />
+              <link
+                rel="preload"
+                as="image"
+                href={brandData.brand_logo_url}
+                type="image/png"
+              />
+              <link rel="icon" sizes="32x32" href={brandData.brand_logo_url} />
+              <link rel="icon" sizes="16x16" href={brandData.brand_logo_url} />
+            </>
+          )}
+
           <meta
             property="og:description"
             content={`Shop the latest products from ${brandData.brand_name}`}
@@ -136,26 +152,10 @@ function CanvasWrapper() {
             content={`Welcome to ${brandData.brand_name} store!`}
           />
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:image" content={brandData.brand_logo_url} />
           <meta name="theme-color" content="#ffffff" />
-          <link rel="preload" as="image/png" href={brandData.brand_logo_url} />
-          {/* <link
-            rel="apple-touch-icon"
-            sizes="180x180"
-            href="/media/sflogo.svg"
-          /> */}
-          <link
-            rel="icon"
-            as="image/png"
-            sizes="32x32"
-            href={brandData.brand_logo_url}
-          />
-          <link
-            rel="icon"
-            as="image/png"
-            sizes="16x16"
-            href={brandData.brand_logo_url}
-          />
+
+          {/* Apple Touch Icon (Optional) */}
+          {/* <link rel="apple-touch-icon" sizes="180x180" href="/media/sflogo.svg" /> */}
         </Helmet>
       )}
       <div id="container">
