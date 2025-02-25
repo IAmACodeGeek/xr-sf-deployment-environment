@@ -12,6 +12,10 @@ interface ComponentStore {
   selectedProduct: Product | undefined;
   setProducts: (products: Product[]) => void;
   setSelectedProduct: (productId: number) => void;
+  productsLoading: boolean;
+  productsLoaded: boolean;
+  setProductsLoading: (value: boolean) => void;
+  setProductsLoaded: (value: boolean) => void;
 
   // Search Handling 
   searchResult: { x: number; y: number; z: number } | null; 
@@ -64,7 +68,7 @@ interface ComponentStore {
   closeDiscountModal: () => void;
   setDiscountCode: (code: string) => void;
 
-  // Search Handling
+  // Product Searcher
   isProductSearcherOpen: boolean;
   openProductSearcher: () => void;
   closeProductSearcher: () => void;
@@ -87,7 +91,11 @@ const useComponentStore = create<ComponentStore>((set) => ({
       );
       return { ...state, selectedProduct: finalProduct };
     }),
-
+    productsLoading: false,
+  setProductsLoading: (value: boolean) => set({productsLoading: value}),
+  productsLoaded: false,
+  setProductsLoaded: (value: boolean) => set({productsLoaded: value}),
+  
   // Search Handling 
   searchResult: null,
   initiateSearchGSAP: false,
@@ -192,7 +200,7 @@ const useComponentStore = create<ComponentStore>((set) => ({
   },
   setDiscountCode: (code: string) => set({ discountCode: code }),
 
-  // Search Handling
+  // Product Searcher
   isProductSearcherOpen: false,
   openProductSearcher: () => set({ isProductSearcherOpen: true }),
   closeProductSearcher: () => set({ isProductSearcherOpen: false }),
@@ -248,10 +256,125 @@ const useTourStore = create<TourStore>((set) => ({
   setTourComplete: (value) => set({ tourComplete: value }),
 }));
 
+// Environment Product Handling
+interface EnvProduct {
+  id: number;
+  type?: "MODEL_3D" | "PHOTO";
+  imageIndex?: number | undefined;
+  modelIndex?: number | undefined;
+  placeHolderId?: number | undefined;
+  position?: number[];
+  rotation?: number[];
+  scale?: number;
+}
+
+interface EnvProductStore {
+  envProducts: {[id: number]: EnvProduct};
+  setEnvProducts: (envProducts: {[id: number]: EnvProduct}) => void;
+  modifyEnvProduct: (id: number, envProduct: EnvProduct) => void;
+
+  activeProductId: number | null,
+  setActiveProductId: (value: number | null) => void
+}
+
+const useEnvProductStore = create<EnvProductStore>((set) => ({
+  envProducts: {},
+  setEnvProducts: (envProducts: {[id: number]: EnvProduct}) => set({envProducts: envProducts}),
+  modifyEnvProduct: (id: number, envProduct: EnvProduct) => set((state: { envProducts: { [id: number]: EnvProduct } }) => ({
+    envProducts: {
+      ...state.envProducts,
+      [id]: { ...state.envProducts[id], ...envProduct },
+    },
+  })),
+
+  activeProductId: null,
+  setActiveProductId: (value: number | null) => set({activeProductId: value})
+}));
+
+interface EnvAsset {
+  id: string;
+  type: "MODEL_3D" | "PHOTO";
+  placeHolderId?: number | undefined;
+  position?: number[];
+  rotation?: number[];
+  scale?: number;
+  src: string;
+  name: string;
+}
+
+interface EnvAssetStore {
+  envAssets: {[id: string]: EnvAsset};
+  setEnvAssets: (envAssets: {[id: string]: EnvAsset}) => void;
+  modifyEnvAsset: (id: string, envAsset: EnvAsset) => void;
+
+  assetsLoading: boolean;
+  setAssetsLoading: (value: boolean) => void;
+  assetsLoaded: boolean;
+  setAssetsLoaded: (value: boolean) => void;
+
+  activeAssetId: string | null;
+  setActiveAssetId: (value: string | null) => void;
+}
+
+const useEnvAssetStore = create<EnvAssetStore>((set) => ({
+  envAssets: {},
+  setEnvAssets: (envAssets: {[id: string]: EnvAsset}) => set({envAssets: envAssets}),
+  modifyEnvAsset: (id: string, envAsset: EnvAsset) => set((state: {envAssets: {[id: string]: EnvAsset}}) => ({
+    envAssets: {
+      ...state.envAssets,
+      [id]: {...state.envAssets[id], ...envAsset}
+    }
+  })),
+  
+  assetsLoading: false,
+  setAssetsLoading: (value: boolean) => set({assetsLoading: value}),
+  assetsLoaded: false,
+  setAssetsLoaded: (value: boolean) => set({assetsLoaded: value}),
+
+  activeAssetId: null,
+  setActiveAssetId: (value: string | null) => set({activeAssetId: value})
+}));
+
+// Dynamic Loading of Environment
+interface EnvironmentStore {
+  environmentType: string | undefined;
+  setEnvironmentType: (value: string) => void;
+}
+
+const useEnvironmentStore = create<EnvironmentStore>((set) => ({
+  environmentType: undefined,
+  setEnvironmentType: (value: string) =>  set({environmentType: value})
+}));
+
+interface BrandData {
+  id: string;
+  brand_name: string;
+  brand_logo_url: string;
+  brand_poster_url: string;
+  brand_video_url: string;
+  environment_name: string;
+  email: string;
+}
+
+interface BrandStore {
+  brandData: BrandData | null;
+  setBrandData: (data: BrandData) => void;
+}
+
+const useBrandStore = create<BrandStore>((set) => ({
+  brandData: null,
+  setBrandData: (data) => set({ brandData: data }),
+}));
+
 export {
   useComponentStore,
   usePointerLockStore,
   useTouchStore,
   useDriverStore,
   useTourStore,
+  useEnvProductStore,
+  useEnvAssetStore,
+  useEnvironmentStore,
+  useBrandStore
 };
+export type {EnvProduct, EnvAsset};

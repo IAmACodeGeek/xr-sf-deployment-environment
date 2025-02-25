@@ -2,24 +2,24 @@ import { useEffect, useRef, useState } from "react";
 import { driver, Driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import styles from "@/UI/UI.module.scss";
-import ChatbotModal from "../Chatbot";
+import ChatbotModal from "./Components/Chatbot";
 import {
   useComponentStore,
   useDriverStore,
   useTourStore,
 } from "../stores/ZustandStores";
 import { ShopifyProvider, CartProvider } from "@shopify/hydrogen-react";
-import Modal from "@/NewModal";
-import Cart from "@/Cart";
-import Wishlist from "@/Wishlist";
-import InfoModal from "@/InfoModal";
-import DiscountModal from "@/DiscountModal";
-import SettingsModal from "@/SettingsModal";
-import TermsConditionsModal from "@/TermsModal";
-import ContactUsModal from "@/ContactUsModal";
+import Modal from "@/UI/Components/NewModal";
+import Cart from "@/UI/Components/Cart";
+import Wishlist from "@/UI/Components/Wishlist";
+import InfoModal from "@/UI/Components/InfoModal";
+import DiscountModal from "@/UI/Components/DiscountModal";
+import SettingsModal from "@/UI/Components/SettingsModal";
+import TermsConditionsModal from "@/UI/Components/TermsModal";
+import ContactUsModal from "@/UI/Components/ContactUsModal";
 import ReactAudioPlayer from "react-audio-player";
-import ModalWrapper from "@/ModalWrapper";
-import ProductSearcher from "@/ProductSearcher";
+import ModalWrapper from "@/UI/Components/ModalWrapper";
+import ProductSearcher from "@/UI/Components/ProductSearcher";
 
 const customDriverStyles = `
   .driver-popover {

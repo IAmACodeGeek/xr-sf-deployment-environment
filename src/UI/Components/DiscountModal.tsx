@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close"; 
 import Swal from "sweetalert2";
-import styles from "./UI/UI.module.scss";
+import styles from "../UI.module.scss";
 import confetti from "canvas-confetti";
 
 interface DiscountModalProps {

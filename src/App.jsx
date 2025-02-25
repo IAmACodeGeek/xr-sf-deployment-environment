@@ -1,17 +1,15 @@
 import * as TWEEN from "@tweenjs/tween.js";
 import { PointerLockControls } from "@react-three/drei";
-import { Ground } from "@/Ground.jsx";
+import { Ground } from "./world/Ground.jsx";
 import { Physics } from "@react-three/rapier";
-import { Player } from "@/Player.jsx";
+import { Player } from "./world/Player.jsx";
 import { useFrame } from "@react-three/fiber";
-import Television from "./Television";
-import BrandPoster from "./BrandPoster";
-import ImageShowcase from "./ImageShowcase";
-import MirrorPoster from "./MirrorPoster";
-import Products from "./Products";
-import ChestBox from "./Chestbox";
+import Television from "./world/Television";
+import BrandPoster from "./world/BrandPoster";
+import Products from "./world/Products";
+import ChestBox from "./world/Chestbox";
 import { Suspense, useState, useEffect } from "react";
-import Skybox from "./Skybox";
+import Skybox from "./world/Skybox";
 import {
   useComponentStore,
   usePointerLockStore,

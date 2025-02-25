@@ -2,8 +2,8 @@ import { useRef, useEffect } from "react";
 import { Box, Button, Card, Typography } from "@mui/material";
 import { useCart } from "@shopify/hydrogen-react";
 import Swal from "sweetalert2";
-import styles from './UI/UI.module.scss';
-import { useComponentStore } from "./stores/ZustandStores"
+import styles from '../UI.module.scss';
+import { useComponentStore } from "../../stores/ZustandStores"
 
 const Cart = () => {
   const { lines, linesUpdate, checkoutUrl, linesRemove } = useCart();

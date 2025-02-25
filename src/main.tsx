@@ -8,68 +8,79 @@ import App from "@/App.jsx";
 import "@/index.scss";
 import UI from "@/UI/UI.tsx";
 import { ProductService } from "./api/shopifyAPIService";
-import { useComponentStore } from "./stores/ZustandStores";
+import { useComponentStore, useEnvAssetStore, useEnvironmentStore, useEnvProductStore } from "./stores/ZustandStores";
 import { useBrandStore } from "./stores/brandStore";
+import BrandService from "./api/brandService";
+import EnvStoreService from "./api/envStoreService";
 
 function CanvasWrapper() {
-  const { setProducts } = useComponentStore();
+  // Load Brand Details
   const { brandData, setBrandData } = useBrandStore();
-  const { progress } = useProgress();
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const brandName = queryParams.get('brandName');
+    if(!brandName) return;
+
+    BrandService.fetchBrandData(brandName).then((response) => {
+      console.log(response);
+      setBrandData(response);
+    });
+  }, [setBrandData]);
+
+  // Set the environment type
+  const { setEnvironmentType } = useEnvironmentStore();
+  useEffect(() => {
+    if(!brandData) return;
+    setEnvironmentType(brandData.environment_name.toUpperCase());
+  }, [brandData, setEnvironmentType]);
+
+  // Set products and assets
+  const { envAssets, setEnvAssets } = useEnvAssetStore();
+  const { products, setProducts, productsLoaded, setProductsLoaded, productsLoading, setProductsLoading } = useComponentStore();
+  const { setEnvProducts } = useEnvProductStore();
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        if (!productsLoaded && !productsLoading && brandData) {
+          setProductsLoading(true);
+          const response = await ProductService.getAllProducts(brandData.brand_name);
+          setProducts(response);
+          console.log('Products:', response);
+        }
+      } catch (err) {
+        console.error('Products error:', err);
+      }
+    }
+    fetchProducts();
+  }, [brandData]);
+  
+  useEffect(() => {
+    async function fetchEnvData() {
+      try {
+        if (brandData) {
+          await EnvStoreService.getEnvData(brandData.brand_name).then((response) => {
+            console.log(response.envProducts);
+            console.log(response.envAssets);
+            setEnvProducts(response.envProducts);
+            setEnvAssets(response.envAssets);
+          });
+        }
+      } catch (err) {
+        console.error('Products error:', err);
+      }
+    }
+    fetchEnvData();
+  }, [brandData]);
+
+  // Loader
   const [videoLoaded, setVideoLoaded] = useState(false);
   const videoRef = useRef(null);
   const [maxProgress, setMaxProgress] = useState(0);
   const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+  const { progress } = useProgress();
 
-  // ✅ Extract subdomain function
-  function getSubdomain() {
-    const host = window.location.hostname; // e.g., subdomain.strategyfox.in
-    const parts = host.split(".");
-    if (parts.length > 2) {
-      return parts[0]; // Extracts 'subdomain'
-    }
-    return null;
-  }
-
-  // ✅ Fetch API Data based on subdomain
-  async function fetchBrandData() {
-    const subdomain = getSubdomain();
-    if (!subdomain) {
-      console.warn("No subdomain detected.");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `https://function-11-934416248688.us-central1.run.app?brandname=${subdomain}`
-      );
-
-      if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`);
-      }
-
-      const data = await response.json();
-      setBrandData(data);
-      console.log("📌 Brand Data:", data); // ✅ Log response in the console
-    } catch (error) {
-      console.error("❌ Error fetching brand data:", error);
-    }
-  }
-
-  async function fetchProducts() {
-    try {
-      const response = await ProductService.getAllProducts();
-      setProducts(response);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  // ✅ Fetch brand data on component mount
-  useEffect(() => {
-    fetchBrandData();
-    fetchProducts();
-  }, []);
-
+  // Joystick
   useEffect(() => {
     const scrollY = window.scrollY;
     const joystickZone = document.getElementById("joystickZone");
@@ -186,6 +197,8 @@ function CanvasWrapper() {
       </div>
     </>
   );
+
+  return null;
 }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

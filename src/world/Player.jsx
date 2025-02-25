@@ -6,7 +6,7 @@ import { usePersonControls } from "@/hooks.js";
 import { useFrame, useThree } from "@react-three/fiber";
 import nipplejs from "nipplejs";
 import gsap from "gsap";
-import { useComponentStore, useTouchStore } from "./stores/ZustandStores";
+import { useComponentStore, useTouchStore } from "../stores/ZustandStores";
 import { CameraController } from "./CameraController";
 import { ProductGSAPUtil }  from "./ProductGSAPUtil";
 
