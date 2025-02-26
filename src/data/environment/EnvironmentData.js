@@ -21,7 +21,7 @@ const environmentData = {
           duration: 5
         },
         {
-          position: [0, 1.8, 0],
+          position: [20, 3.2, 0],
           rotation: [0, 270, 0],
           duration: 2
         },

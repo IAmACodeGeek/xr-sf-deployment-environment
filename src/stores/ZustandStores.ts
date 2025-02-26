@@ -1,6 +1,33 @@
 import Product from "@/Types/Product";
 import { create } from "zustand";
 
+interface ResourceFetchStore {
+  // Products loading
+  productsLoading: boolean;
+  productsLoaded: boolean;
+  setProductsLoading: (value: boolean) => void;
+  setProductsLoaded: (value: boolean) => void;
+
+  envItemsLoaded: boolean;
+  setEnvItemsLoaded: (value: boolean) => void;
+  envItemsLoading: boolean;
+  setEnvItemsLoading: (value: boolean) => void;
+}
+
+const useResourceFetchStore = create<ResourceFetchStore>((set) => ({
+  // Products
+  productsLoading: false,
+  setProductsLoading: (value: boolean) => set({productsLoading: value}),
+  productsLoaded: false,
+  setProductsLoaded: (value: boolean) => set({productsLoaded: value}),
+
+  // EnvAssets and EnvProducts
+  envItemsLoaded: false,
+  setEnvItemsLoaded: (value: boolean) => set({envItemsLoaded: value}),
+  envItemsLoading: false,
+  setEnvItemsLoading: (value: boolean) => set({envItemsLoading: value}),
+}));
+
 interface ComponentStore {
   // Crosshair handling
   crosshairVisible: boolean;
@@ -12,10 +39,6 @@ interface ComponentStore {
   selectedProduct: Product | undefined;
   setProducts: (products: Product[]) => void;
   setSelectedProduct: (productId: number) => void;
-  productsLoading: boolean;
-  productsLoaded: boolean;
-  setProductsLoading: (value: boolean) => void;
-  setProductsLoaded: (value: boolean) => void;
 
   // Search Handling 
   searchResult: { x: number; y: number; z: number } | null; 
@@ -91,10 +114,6 @@ const useComponentStore = create<ComponentStore>((set) => ({
       );
       return { ...state, selectedProduct: finalProduct };
     }),
-  productsLoading: false,
-  setProductsLoading: (value: boolean) => set({productsLoading: value}),
-  productsLoaded: false,
-  setProductsLoaded: (value: boolean) => set({productsLoaded: value}),
   
   // Search Handling 
   searchResult: null,
@@ -300,11 +319,6 @@ interface EnvAssetStore {
   envAssets: {[id: string]: EnvAsset};
   setEnvAssets: (envAssets: {[id: string]: EnvAsset}) => void;
   modifyEnvAsset: (id: string, envAsset: EnvAsset) => void;
-
-  assetsLoading: boolean;
-  setAssetsLoading: (value: boolean) => void;
-  assetsLoaded: boolean;
-  setAssetsLoaded: (value: boolean) => void
 }
 
 const useEnvAssetStore = create<EnvAssetStore>((set) => ({
@@ -315,12 +329,7 @@ const useEnvAssetStore = create<EnvAssetStore>((set) => ({
       ...state.envAssets,
       [id]: {...state.envAssets[id], ...envAsset}
     }
-  })),
-  
-  assetsLoading: false,
-  setAssetsLoading: (value: boolean) => set({assetsLoading: value}),
-  assetsLoaded: false,
-  setAssetsLoaded: (value: boolean) => set({assetsLoaded: value}),
+  }))
 }));
 
 // Dynamic Loading of Environment
@@ -355,6 +364,7 @@ const useBrandStore = create<BrandStore>((set) => ({
 }));
 
 export {
+  useResourceFetchStore,
   useComponentStore,
   usePointerLockStore,
   useTouchStore,

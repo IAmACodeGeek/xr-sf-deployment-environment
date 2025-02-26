@@ -1,4 +1,4 @@
-import { EnvAsset, useEnvAssetStore } from "@/stores/ZustandStores";
+import { EnvAsset } from "@/stores/ZustandStores";
 import { PivotControls, useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import { useEffect, useMemo, useRef } from "react";
@@ -22,14 +22,8 @@ const DraggableAssetContainer = ({
   envAsset
 }: DraggableAssetContainerProps) => {
   const {camera} = useThree();
-  const {modifyEnvAsset, activeAssetId} = useEnvAssetStore();
 
-  // To show axes when selected
-  const isActive = useMemo(() => {
-    return activeAssetId === envAsset.id && envAsset.placeHolderId === undefined;
-  }, [activeAssetId, envAsset.id, envAsset.placeHolderId]);
-  
-  // Get the model URL based on modelIndex
+  // Get the model URL
   const modelUrl = useMemo(() => {
     if (envAsset.type !== "MODEL_3D" || !envAsset.src) {
       return null;
@@ -119,7 +113,7 @@ const DraggableAssetContainer = ({
     return scale / size.y;
   }, [scene, scale]);
 
-  const {computedPositionForModel, boxCenter} = useMemo(() => {
+  const {computedPositionForModel} = useMemo(() => {
     if(!computedScaleForModel || !scene) return {
       computedPositionForModel: null,
       boxCenter: null
@@ -144,7 +138,6 @@ const DraggableAssetContainer = ({
     const newPosition = positionVector.clone().sub(boxCenter.clone());
     return {
       computedPositionForModel: [newPosition.x, newPosition.y, newPosition.z],
-      boxCenter: boxCenter
     }
   }, [scene, computedScaleForModel, position, camera]);
 
@@ -212,15 +205,23 @@ const DraggableAssetContainer = ({
 
   }, [position, computedPositionForModel, envAsset.type, computedRotation, camera, meshRef]);
 
+  // Load Image texture
   const imageUrl = useMemo(() => {
     if(envAsset.type !== "PHOTO" || !envAsset.src) return null;
     return envAsset.src;
   }, [envAsset.type, envAsset.src]);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const texture = imageUrl? useLoader(TextureLoader, imageUrl) : null;
   const imageTexture = useMemo(() => {
     if(!imageUrl) return null;
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useLoader(TextureLoader, imageUrl);
+    try{
+      return texture;
+    }
+    catch(error){
+      console.error('Error Loading Asset Image: ', error);
+      return null;
+    }
   }, [imageUrl]);
 
   const computedSizeForImage = useMemo(() => {

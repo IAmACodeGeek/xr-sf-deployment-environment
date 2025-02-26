@@ -8,7 +8,7 @@ import App from "@/App.jsx";
 import "@/index.scss";
 import UI from "@/UI/UI.tsx";
 import { ProductService } from "./api/shopifyAPIService";
-import { useComponentStore, useEnvAssetStore, useEnvironmentStore, useEnvProductStore, useBrandStore } from "./stores/ZustandStores";
+import { useComponentStore, useEnvAssetStore, useEnvironmentStore, useBrandStore, useResourceFetchStore, useEnvProductStore } from "./stores/ZustandStores";
 import BrandService from "./api/brandService";
 import EnvStoreService from "./api/envStoreService";
 
@@ -35,8 +35,10 @@ function CanvasWrapper() {
 
   // Set products and assets
   const { envAssets, setEnvAssets } = useEnvAssetStore();
-  const { products, setProducts, productsLoaded, setProductsLoaded, productsLoading, setProductsLoading } = useComponentStore();
-  const { setEnvProducts } = useEnvProductStore();
+  const {setEnvProducts} = useEnvProductStore();
+  const { setProducts } = useComponentStore();
+  const {productsLoaded, setProductsLoaded, productsLoading, setProductsLoading} = useResourceFetchStore();
+  const {envItemsLoaded, setEnvItemsLoaded, envItemsLoading, setEnvItemsLoading} = useResourceFetchStore();
 
   useEffect(() => {
     async function fetchProducts() {
@@ -59,6 +61,7 @@ function CanvasWrapper() {
     async function fetchEnvData() {
       try {
         if (brandData) {
+          setEnvItemsLoading(true);
           await EnvStoreService.getEnvData(brandData.brand_name).then((response) => {
             console.log("EnvProducts: ", response.envProducts);
             console.log("EnvAssets: ", response.envAssets);
@@ -70,6 +73,8 @@ function CanvasWrapper() {
               if(envAssets[envAsset].type === "MODEL_3D")
                 useGLTF.preload(envAssets[envAsset].src);
             });
+
+            setEnvItemsLoaded(true);
           });
         }
       } catch (err) {
@@ -170,7 +175,7 @@ function CanvasWrapper() {
         </Helmet>
       )}
       <div id="container">
-        {progress >= 100 && videoLoaded && productsLoaded? (
+        {progress >= 100 && videoLoaded && productsLoaded && envItemsLoaded? (
           <UI />
         ) : (
           <div className="video-loader">

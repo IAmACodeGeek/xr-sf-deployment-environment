@@ -1,7 +1,7 @@
-import { useComponentStore, EnvProduct, useEnvProductStore } from "@/stores/ZustandStores";
-import { PivotControls, useGLTF, Image as DreiImage } from "@react-three/drei";
+import { useComponentStore, EnvProduct } from "@/stores/ZustandStores";
+import { PivotControls, useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type Product from '../Types/Product';
 import {Box3, Euler, Mesh, Object3D, Quaternion, TextureLoader, Vector3} from 'three';
 import { useLoader, useThree } from "@react-three/fiber";
@@ -81,6 +81,7 @@ const DraggableProductContainer = ({
     }
     return envRotation;
   }, [placeHolderId, envRotation]);
+
   const scale = useMemo(() => {
     if(placeHolderId !== undefined){
       const placeHolder = placeHolderData.find((placeHolder) => placeHolder.id === placeHolderId);
@@ -122,7 +123,7 @@ const DraggableProductContainer = ({
     return scale / size.y;
   }, [scene, scale]);
 
-  const {computedPositionForModel, boxCenter} = useMemo(() => {
+  const {computedPositionForModel} = useMemo(() => {
     if(!computedScaleForModel || !scene) return {
       computedPositionForModel: null,
       boxCenter: null
@@ -147,7 +148,6 @@ const DraggableProductContainer = ({
     const newPosition = positionVector.clone().sub(boxCenter.clone());
     return {
       computedPositionForModel: [newPosition.x, newPosition.y, newPosition.z],
-      boxCenter: boxCenter
     }
   }, [scene, computedScaleForModel, position, camera]);
 
@@ -225,7 +225,6 @@ const DraggableProductContainer = ({
   const texture = imageUrl? useLoader(TextureLoader, imageUrl) : null;
   const imageTexture = useMemo(() => {
     if(!imageUrl) return null;
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     try{
       return texture;
     }
@@ -253,20 +252,6 @@ const DraggableProductContainer = ({
       computedScale * imageHeightInWorld
     ];
   }, [imageTexture, scale]);
-
-  // useEffect(() => {
-  //   console.log("EnvProduct: ", envProduct);
-  //   console.log("Product: ", product);
-
-  //   console.log("Model URL: ", modelUrl);
-  //   console.log("Model Scene: ", memoizedModelScene);
-
-  //   console.log("Image URL: ", imageUrl);
-  //   console.log("Image Texture: ", imageTexture);
-
-  //   console.log("Position:", position);
-  //   console.log("Rotation: ", rotation);
-  // }, [envProduct, product, modelUrl, memoizedModelScene, imageUrl, imageTexture, position, rotation]);
 
   return (
     <RigidBody type="fixed">
