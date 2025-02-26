@@ -91,7 +91,7 @@ const useComponentStore = create<ComponentStore>((set) => ({
       );
       return { ...state, selectedProduct: finalProduct };
     }),
-    productsLoading: false,
+  productsLoading: false,
   setProductsLoading: (value: boolean) => set({productsLoading: value}),
   productsLoaded: false,
   setProductsLoaded: (value: boolean) => set({productsLoaded: value}),
@@ -272,9 +272,6 @@ interface EnvProductStore {
   envProducts: {[id: number]: EnvProduct};
   setEnvProducts: (envProducts: {[id: number]: EnvProduct}) => void;
   modifyEnvProduct: (id: number, envProduct: EnvProduct) => void;
-
-  activeProductId: number | null,
-  setActiveProductId: (value: number | null) => void
 }
 
 const useEnvProductStore = create<EnvProductStore>((set) => ({
@@ -285,10 +282,7 @@ const useEnvProductStore = create<EnvProductStore>((set) => ({
       ...state.envProducts,
       [id]: { ...state.envProducts[id], ...envProduct },
     },
-  })),
-
-  activeProductId: null,
-  setActiveProductId: (value: number | null) => set({activeProductId: value})
+  }))
 }));
 
 interface EnvAsset {
@@ -310,10 +304,7 @@ interface EnvAssetStore {
   assetsLoading: boolean;
   setAssetsLoading: (value: boolean) => void;
   assetsLoaded: boolean;
-  setAssetsLoaded: (value: boolean) => void;
-
-  activeAssetId: string | null;
-  setActiveAssetId: (value: string | null) => void;
+  setAssetsLoaded: (value: boolean) => void
 }
 
 const useEnvAssetStore = create<EnvAssetStore>((set) => ({
@@ -330,9 +321,6 @@ const useEnvAssetStore = create<EnvAssetStore>((set) => ({
   setAssetsLoading: (value: boolean) => set({assetsLoading: value}),
   assetsLoaded: false,
   setAssetsLoaded: (value: boolean) => set({assetsLoaded: value}),
-
-  activeAssetId: null,
-  setActiveAssetId: (value: string | null) => set({activeAssetId: value})
 }));
 
 // Dynamic Loading of Environment

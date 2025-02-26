@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { useEnvAssetStore, useEnvProductStore } from "@/stores/ZustandStores";
+import { useComponentStore, useEnvAssetStore, useEnvProductStore } from "@/stores/ZustandStores";
 
 const LazyDraggableProductContainer = React.lazy(() => 
   import("./DraggableProductContainer").then(module => ({ 
@@ -16,12 +16,13 @@ const LazyDraggableAssetContainer = React.lazy(() =>
 const Products = () => {
   const {envProducts} = useEnvProductStore();
   const {envAssets} = useEnvAssetStore();
+  const {productsLoaded} = useComponentStore();
 
   return (
     <Suspense fallback={null}>
-      {
+      {productsLoaded &&
         Object.keys(envProducts).map((id) => {
-          return ( envProducts[id].isEnvironmentProduct &&
+          return (
             <LazyDraggableProductContainer
               placeHolderId={envProducts[id].placeHolderId}
               envPosition={envProducts[id].position}
@@ -35,7 +36,7 @@ const Products = () => {
       }
       {
         Object.keys(envAssets).map((id) => {
-          return ( envAssets[id].isEnvironmentAsset &&
+          return (
             <LazyDraggableAssetContainer
               placeHolderId={envAssets[id].placeHolderId}
               envPosition={envAssets[id].position}

@@ -1,26 +1,14 @@
 import * as THREE from "three";
-import * as RAPIER from "@dimforge/rapier3d-compat";
 import { CapsuleCollider, RigidBody, useRapier } from "@react-three/rapier";
 import { useRef, useState, useEffect } from "react";
 import { usePersonControls } from "@/hooks.js";
 import { useFrame, useThree } from "@react-three/fiber";
 import nipplejs from "nipplejs";
 import gsap from "gsap";
-import { useComponentStore, useTouchStore } from "../stores/ZustandStores";
+import { useComponentStore, useTouchStore, useEnvironmentStore } from "../stores/ZustandStores";
 import { CameraController } from "./CameraController";
 import { ProductGSAPUtil }  from "./ProductGSAPUtil";
-
-const MOVE_SPEED = 12;
-const TOUCH_SENSITIVITY = {
-  PORTRAIT: {
-    x: 0.004, 
-    y: 0.004, 
-  },
-  LANDSCAPE: {
-    x: 0.004, 
-    y: 0.004, 
-  },
-};
+import environmentData from "@/data/environment/EnvironmentData";
 
 const direction = new THREE.Vector3();
 const frontVector = new THREE.Vector3();
@@ -28,8 +16,17 @@ const sideVector = new THREE.Vector3();
 
 const RESPAWN_HEIGHT = -5;
 const START_POSITION = new THREE.Vector3(0, 7, -5);
+const TOUCH_SENSITIVITY = {x: 0.003, y: 0.003}
 
 export const Player = () => {
+  // Set player speed based on environment
+  const [moveSpeed, setMoveSpeed] = useState(0);
+  const {environmentType} = useEnvironmentStore();
+  useEffect(() => {
+    if(!environmentData[environmentType]) return;
+    setMoveSpeed(environmentData[environmentType].playerSpeed);
+  }, [environmentType]);
+
   const playerRef = useRef();
   const touchRef = useRef({
     cameraTouch: null,
@@ -124,7 +121,7 @@ export const Player = () => {
 
       const { angle, distance } = data;
       const radian = angle.radian; 
-      const speed = (distance / 100) * MOVE_SPEED;
+      const speed = (distance / 100) * moveSpeed;
 
       direction.set(Math.cos(radian) * speed, 0, -Math.sin(radian) * speed * 2);
     };
@@ -142,54 +139,73 @@ export const Player = () => {
     };
   }, [isMobile]);
 
+  // Initial Tour of the environment
   const initialTourComplete = useRef(false);
   const { 
     isModalOpen, isCartOpen, isWishlistOpen, crosshairVisible ,
     isInfoModalOpen , isDiscountModalOpen , isSettingsModalOpen , isTermsModalOpen , isContactModalOpen , isProductSearcherOpen,
   } = useComponentStore();
-
+  
   const { isTouchEnabled, enableTouch} = useTouchStore();
 
   useEffect(() => {
     if (!playerRef.current || initialTourComplete.current) return;
-  
-    const startPosition = new THREE.Vector3(-3, 55, 80);
+    if (!environmentData[environmentType]) return;
+
+    // Set initial position & rotation
+    const startPosition = new THREE.Vector3(...environmentData[environmentType].initialGSAP.start.position);
+    const startRotation = [
+      environmentData[environmentType].initialGSAP.start.rotation[0] * Math.PI / 180,
+      environmentData[environmentType].initialGSAP.start.rotation[1] * Math.PI / 180,
+      environmentData[environmentType].initialGSAP.start.rotation[2] * Math.PI / 180,
+    ];
     playerRef.current.setTranslation(startPosition);
     camera.position.copy(startPosition);
+    camera.rotation.set(...startRotation, 'YZX');
+    camera.rotation.order = 'YZX';
   
+    // Create a timeline handler
     const timeline = gsap.timeline({
       onComplete: () => {
         initialTourComplete.current = true;
         enableTouch();
   
+        // Reset physics state
         playerRef.current.setLinvel({ x: 0, y: 0, z: 0 });
         playerRef.current.setAngvel({ x: 0, y: 0, z: 0 });
       },
     });
-  
-    timeline.to(camera.position, {
-      duration: 3,
-      x: START_POSITION.x,
-      y: START_POSITION.y,
-      z: START_POSITION.z,
-      ease: "power2.inOut",
-    });
-  
-    const updatePhysicsBody = () => {
-      if (!playerRef.current || initialTourComplete.current) return;
-      
-      playerRef.current.wakeUp();
-      playerRef.current.setTranslation(camera.position);
-      playerRef.current.setLinvel({ x: 0, y: 0, z: 0 });
+    
+    let transform = {
+      posX: camera.position.x, posY: camera.position.y, posZ: camera.position.z,
+      rotX: camera.rotation.x, rotY: camera.rotation.y, rotZ: camera.rotation.z
     };
-  
-    const animationFrameId = setInterval(updatePhysicsBody, 1000 / 60);
+    for(let target of environmentData[environmentType].initialGSAP.update){
+      timeline.to(transform, {
+        duration: target.duration,
+        posX: target.position[0],
+        posY: target.position[1],
+        posZ: target.position[2],
+        rotX: target.rotation[0] * Math.PI / 180,
+        rotY: target.rotation[1] * Math.PI / 180,
+        rotZ: target.rotation[2] * Math.PI / 180,
+        ease: target.ease? target.ease : "power2.inOut",
+        onUpdate: () => {
+          camera.position.copy(new THREE.Vector3(transform.posX, transform.posY, transform.posZ));
+          camera.rotation.set(transform.rotX, transform.rotY, transform.rotZ, 'YZX');
+          camera.updateMatrixWorld();
+          if(playerRef.current){
+            playerRef.current.setTranslation(camera.position);
+            playerRef.current.setLinvel({ x: 0, y: 0, z: 0 });
+          }
+        },
+      });
+    }
   
     return () => {
       timeline.kill();
-      clearInterval(animationFrameId);
     };
-  }, [camera]);
+  }, [camera, environmentType]);
 
   useEffect(() => {
     const handleTouchStart = (e) => {
@@ -294,7 +310,7 @@ export const Player = () => {
         .copy(combinedInput)
         .applyQuaternion(state.camera.quaternion) 
         .normalize()
-        .multiplyScalar(MOVE_SPEED);
+        .multiplyScalar(moveSpeed);
 
     
       playerRef.current.wakeUp();
@@ -341,7 +357,7 @@ export const Player = () => {
       <ProductGSAPUtil setAnimating={setAnimating} playerRef={playerRef} />
       <CameraController setAnimating={setAnimating} playerRef={playerRef} />
       <mesh castShadow>
-        <CapsuleCollider args={[1.2, 1]} />
+        <CapsuleCollider args={[2, 1]} />
       </mesh>
     </RigidBody>
   );

@@ -3,13 +3,12 @@ import ReactDOM from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
 import { Helmet } from "react-helmet-async";
 import { Canvas } from "@react-three/fiber";
-import { useProgress } from "@react-three/drei";
+import { useGLTF, useProgress } from "@react-three/drei";
 import App from "@/App.jsx";
 import "@/index.scss";
 import UI from "@/UI/UI.tsx";
 import { ProductService } from "./api/shopifyAPIService";
-import { useComponentStore, useEnvAssetStore, useEnvironmentStore, useEnvProductStore } from "./stores/ZustandStores";
-import { useBrandStore } from "./stores/brandStore";
+import { useComponentStore, useEnvAssetStore, useEnvironmentStore, useEnvProductStore, useBrandStore } from "./stores/ZustandStores";
 import BrandService from "./api/brandService";
 import EnvStoreService from "./api/envStoreService";
 
@@ -46,6 +45,7 @@ function CanvasWrapper() {
           setProductsLoading(true);
           const response = await ProductService.getAllProducts(brandData.brand_name);
           setProducts(response);
+          setProductsLoaded(true);
           console.log('Products:', response);
         }
       } catch (err) {
@@ -60,10 +60,16 @@ function CanvasWrapper() {
       try {
         if (brandData) {
           await EnvStoreService.getEnvData(brandData.brand_name).then((response) => {
-            console.log(response.envProducts);
-            console.log(response.envAssets);
+            console.log("EnvProducts: ", response.envProducts);
+            console.log("EnvAssets: ", response.envAssets);
             setEnvProducts(response.envProducts);
             setEnvAssets(response.envAssets);
+
+            // Preload asset models
+            Object.keys(envAssets).forEach((envAsset) => {
+              if(envAssets[envAsset].type === "MODEL_3D")
+                useGLTF.preload(envAssets[envAsset].src);
+            });
           });
         }
       } catch (err) {
@@ -164,7 +170,7 @@ function CanvasWrapper() {
         </Helmet>
       )}
       <div id="container">
-        {progress >= 100 && videoLoaded ? (
+        {progress >= 100 && videoLoaded && productsLoaded? (
           <UI />
         ) : (
           <div className="video-loader">

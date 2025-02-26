@@ -7,15 +7,14 @@ import { useFrame } from "@react-three/fiber";
 import Television from "./world/Television";
 import BrandPoster from "./world/BrandPoster";
 import Products from "./world/Products";
-import ChestBox from "./world/Chestbox";
 import { Suspense, useState, useEffect } from "react";
 import Skybox from "./world/Skybox";
 import {
   useComponentStore,
   usePointerLockStore,
   useDriverStore,
+  useBrandStore
 } from "./stores/ZustandStores";
-import { useBrandStore } from "./stores/brandStore";
 import { useTouchStore } from "./stores/ZustandStores";
 
 const shadowOffset = 50;
@@ -104,7 +103,6 @@ export const App = () => {
           <Player />
         </Suspense>
         <Products />
-        <ChestBox />
         {brandData && (
           <>
             <Television
