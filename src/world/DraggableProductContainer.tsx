@@ -4,8 +4,10 @@ import { RigidBody } from "@react-three/rapier";
 import { useEffect, useMemo, useRef } from "react";
 import type Product from '../Types/Product';
 import {Box3, Euler, Mesh, Object3D, Quaternion, TextureLoader, Vector3} from 'three';
-import { useLoader, useThree } from "@react-three/fiber";
+import { ThreeEvent, useLoader, useThree } from "@react-three/fiber";
 import placeHolderData from "../data/environment/placeHolderData/BigRoom";
+import Swal from "sweetalert2";
+import styles from "../UI/UI.module.scss";
 
 interface DraggableProductContainerProps {
   placeHolderId?: number | undefined;
@@ -22,7 +24,7 @@ const DraggableProductContainer = ({
   envScale = 1,
   envProduct
 }: DraggableProductContainerProps) => {
-  const { products } = useComponentStore();
+  const { products, setSelectedProduct, openModal } = useComponentStore();
   const {camera} = useThree();
   
   // Find the corresponding product for the envProduct
@@ -253,6 +255,26 @@ const DraggableProductContainer = ({
     ];
   }, [imageTexture, scale]);
 
+  const handleEvent = (event) => {
+    if(event && event.stopPropogation) event.stopPropogation();
+    
+    if(product){
+      setSelectedProduct(product.id);
+      openModal();
+    }
+    else{      
+      Swal.fire({
+        title: "Could Not Load Product",
+        text: "The products couldn't be loaded. Please try again.",
+        icon: "error",
+        customClass: {
+          title: styles.swalTitle,
+          popup: styles.swalPopup
+        }
+      });
+    }
+  };
+
   return (
     <RigidBody type="fixed">
       <group
@@ -270,6 +292,8 @@ const DraggableProductContainer = ({
               ref={modelRef}
               object={memoizedModelScene}
               scale={[computedScaleForModel, computedScaleForModel, computedScaleForModel]}
+              onTouchStart={handleEvent}
+              onClick={handleEvent}
               castShadow
               receiveShadow
             />
@@ -278,6 +302,8 @@ const DraggableProductContainer = ({
             <mesh
               rotation={computedRotation}
               ref={meshRef}
+              onTouchStart={handleEvent}
+              onClick={handleEvent}
             >
               <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
               <meshBasicMaterial 
