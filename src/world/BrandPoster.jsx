@@ -19,7 +19,7 @@ export default function BrandPoster({
       width: width * scaleUpOrDown,
       height: height * scaleUpOrDown
     }
-  }, [texture]);
+  }, [texture, scale]);
 
   return (
     <group

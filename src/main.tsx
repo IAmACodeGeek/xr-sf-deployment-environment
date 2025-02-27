@@ -36,7 +36,7 @@ function CanvasWrapper() {
   // Set products and assets
   const { envAssets, setEnvAssets } = useEnvAssetStore();
   const {setEnvProducts} = useEnvProductStore();
-  const { setProducts } = useComponentStore();
+  const { products, setProducts } = useComponentStore();
   const {productsLoaded, setProductsLoaded, productsLoading, setProductsLoading} = useResourceFetchStore();
   const {envItemsLoaded, setEnvItemsLoaded, envItemsLoading, setEnvItemsLoading} = useResourceFetchStore();
 
@@ -60,7 +60,7 @@ function CanvasWrapper() {
   useEffect(() => {
     async function fetchEnvData() {
       try {
-        if (brandData) {
+        if (!envItemsLoaded && !envItemsLoading && brandData) {
           setEnvItemsLoading(true);
           await EnvStoreService.getEnvData(brandData.brand_name).then((response) => {
             console.log("EnvProducts: ", response.envProducts);
@@ -82,7 +82,7 @@ function CanvasWrapper() {
       }
     }
     fetchEnvData();
-  }, [brandData]);
+  }, [brandData, products]);
 
   // Loader
   const [videoLoaded, setVideoLoaded] = useState(false);
