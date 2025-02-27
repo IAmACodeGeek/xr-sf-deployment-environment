@@ -16,14 +16,23 @@ function CanvasWrapper() {
   // Load Brand Details
   const { brandData, setBrandData } = useBrandStore();
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const brandName = queryParams.get('brandName');
-    if(!brandName) return;
+    // const queryParams = new URLSearchParams(window.location.search);
+    // const brandName = queryParams.get('brandName');
+    try{
+      const host = window.location.hostname;
+      const parts = host.split(".");
+      const brandName = parts[0];
+      if(!brandName) return;
+      
+      BrandService.fetchBrandData(brandName).then((response) => {
+        console.log(response);
+        setBrandData(response);
+      });
+    }
+    catch(error){
+      console.error(error);
+    }
 
-    BrandService.fetchBrandData(brandName).then((response) => {
-      console.log(response);
-      setBrandData(response);
-    });
   }, [setBrandData]);
 
   // Set the environment type
