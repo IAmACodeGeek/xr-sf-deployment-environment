@@ -4,7 +4,7 @@ import { useGLTFWithKTX2 } from './useGTLFwithKTX';
 
 export default function Television({
   videoPath,
-  scale = [1, 1, 1],
+  scale = 1,
   position = [0, 0, 0],
   rotation = [0, 0, 0],
 }) {
@@ -43,7 +43,7 @@ export default function Television({
   return (
     <group
       dispose={null}
-      scale={scale}
+      scale={[scale, scale, scale]}
       position={position}
       rotation={memoizedRotation} 
     >

@@ -13,9 +13,11 @@ import {
   useComponentStore,
   usePointerLockStore,
   useDriverStore,
-  useBrandStore
+  useBrandStore,
+  useEnvironmentStore
 } from "./stores/ZustandStores";
 import { useTouchStore } from "./stores/ZustandStores";
+import environmentData from "./data/environment/EnvironmentData.js";
 
 const shadowOffset = 50;
 
@@ -37,6 +39,7 @@ export const App = () => {
   const { lockPointer, unlockPointer } = usePointerLockStore();
   const { driverActive } = useDriverStore();
   const { isTouchEnabled } = useTouchStore();
+  const {environmentType} = useEnvironmentStore();
 
   useEffect(() => {
     setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
@@ -105,19 +108,33 @@ export const App = () => {
         <Products />
         {brandData && (
           <>
-            <Television
-              videoPath={brandData.brand_video_url}
-              scale={[0.9, 0.9, 0.9]}
-              position={[-4.5, 11, -91]}
-              rotation={[0, -82.79, 0]}
-            />
-            <BrandPoster
-              imageUrl={brandData.brand_poster_url}
-              width={192 * 4}
-              height={108 * 4}
-              position={[-2.2, 3.2, -55.35]}
-              rotation={[0, 90, 1]}
-            />
+            {environmentData[environmentType].televisions && 
+              environmentData[environmentType].televisions.map((television, index) => {
+                return (
+                  <Television
+                    videoPath={brandData.brand_video_url}
+                    scale={television.scale}
+                    position={television.position}
+                    rotation={television.rotation}
+                    key={index}
+                  />
+                );
+              })
+            }
+            {
+              environmentData[environmentType].brandPosters &&
+                environmentData[environmentType].brandPosters.map((brandPoster, index) => {
+                  return (
+                    <BrandPoster
+                      imageUrl={brandData.brand_poster_url}
+                      position={brandPoster.position}
+                      rotation={brandPoster.rotation}
+                      scale={brandPoster.scale}
+                      key={index}
+                    />
+                  );
+                })
+            }
           </>
         )}
         {/* <Television

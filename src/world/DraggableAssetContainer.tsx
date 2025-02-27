@@ -243,19 +243,6 @@ const DraggableAssetContainer = ({
     ];
   }, [imageTexture, scale]);
 
-  useEffect(() => {
-    console.log("EnvAsset: ", envAsset);
-
-    console.log("Model URL: ", modelUrl);
-    console.log("Model Scene: ", memoizedModelScene);
-
-    console.log("Image URL: ", imageUrl);
-    console.log("Image Texture: ", imageTexture);
-
-    console.log("Position:", position);
-    console.log("Rotation: ", rotation);
-  }, [envAsset, modelUrl, memoizedModelScene, imageUrl, imageTexture, position, rotation]);
-
   return (
     <RigidBody type="fixed">
       <group

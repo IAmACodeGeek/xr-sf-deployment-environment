@@ -11,7 +11,7 @@ const environmentData = {
     initialGSAP: {
       start: {
         position: [40, 4, 0],
-        rotation: [0, -90, 0],
+        rotation: [0, 90, 0],
         duration: 0
       },
       update: [
@@ -26,7 +26,22 @@ const environmentData = {
           duration: 2
         },
       ]
-    }
+    },
+    televisions: [
+      {
+        position: [47.8, 4.5, 0],
+        rotation: [0, 180, 0],
+        scale: 0.37
+      }
+    ],
+    brandPosters: [
+      {
+        position: [-5, 3.2, 13.35],
+        rotation: [0, 90, 0],
+        scale: 10
+      }
+    ]
+    
   },
   
   "CASTLE": {
