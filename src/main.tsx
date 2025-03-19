@@ -8,30 +8,46 @@ import App from "@/App.jsx";
 import "@/index.scss";
 import UI from "@/UI/UI.tsx";
 import { ProductService } from "./api/shopifyAPIService";
-import { useComponentStore, useEnvAssetStore, useEnvironmentStore, useBrandStore, useResourceFetchStore, useEnvProductStore } from "./stores/ZustandStores";
+import { useComponentStore, useEnvAssetStore, useEnvironmentStore, useBrandStore, useResourceFetchStore, useEnvProductStore, EnvProduct, EnvAsset } from "./stores/ZustandStores";
 import BrandService from "./api/brandService";
 import EnvStoreService from "./api/envStoreService";
 
 function CanvasWrapper() {
-  // Load Brand Details
+  // Load brand data
   const { brandData, setBrandData } = useBrandStore();
+  const [brandStatus, setBrandStatus] = useState<'LOADING' | 'VALID' | 'INVALID' | null>(null);
+
   useEffect(() => {
-    // const queryParams = new URLSearchParams(window.location.search);
-    // const brandName = queryParams.get('brandName');
-    try{
-      const host = window.location.hostname;
-      const parts = host.split(".");
-      const brandName = parts[0];
-      if(!brandName) return;
-      
-      BrandService.fetchBrandData(brandName).then((response) => {
-        console.log(response);
-        setBrandData(response);
-      });
+    const queryParams = new URLSearchParams(window.location.search);
+    const brandName = queryParams.get('brandName');
+    // const host = window.location.hostname;
+    // const parts = host.split(".");
+    // const brandName = parts[0];
+
+    if(brandStatus !== null) return;
+
+    async function fetchBrandDetails(){
+      try{
+        if (!brandName) return;
+
+        setBrandStatus('LOADING');
+        BrandService.fetchBrandData(brandName).then((response) => {
+          if (response.status && response.status === 404) {
+            setBrandStatus('INVALID');
+            return;
+          }
+
+          console.log(response);
+          setBrandStatus('VALID');
+          setBrandData(response);
+        });
+      }
+      catch(error){
+        console.error('Brand Error: ', error);
+      }
     }
-    catch(error){
-      console.error(error);
-    }
+
+    fetchBrandDetails();
 
   }, [setBrandData]);
 
@@ -42,12 +58,14 @@ function CanvasWrapper() {
     setEnvironmentType(brandData.environment_name.toUpperCase());
   }, [brandData, setEnvironmentType]);
 
-  // Set products and assets
+  // Load All resources
   const { envAssets, setEnvAssets } = useEnvAssetStore();
-  const {setEnvProducts} = useEnvProductStore();
   const { products, setProducts } = useComponentStore();
-  const {productsLoaded, setProductsLoaded, productsLoading, setProductsLoading} = useResourceFetchStore();
-  const {envItemsLoaded, setEnvItemsLoaded, envItemsLoading, setEnvItemsLoading} = useResourceFetchStore();
+  const { envProducts, setEnvProducts } = useEnvProductStore();
+  const { productsLoaded, productsLoading, setProductsLoaded, setProductsLoading } = useResourceFetchStore();
+  const { envItemsLoaded, setEnvItemsLoaded, envItemsLoading, setEnvItemsLoading } = useResourceFetchStore();
+
+  const [myProgress, setProgress] = useState(0);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -56,56 +74,104 @@ function CanvasWrapper() {
           setProductsLoading(true);
           const response = await ProductService.getAllProducts(brandData.brand_name);
           setProducts(response);
+
+          const newEnvProducts: { [id: number]: EnvProduct } = {};
+          for (const product of response) {
+            newEnvProducts[product.id] = {
+              id: product.id,
+              type: "PHOTO",
+              placeHolderId: undefined,
+              imageIndex: undefined,
+              modelIndex: undefined,
+              position: undefined,
+              rotation: undefined,
+              scale: 1
+            };
+          }
+          setEnvProducts(newEnvProducts);
           setProductsLoaded(true);
-          console.log('Products:', response);
+          console.log('All Products:', response);
         }
       } catch (err) {
         console.error('Products error:', err);
       }
     }
-    fetchProducts();
-  }, [brandData]);
-  
-  useEffect(() => {
+
     async function fetchEnvData() {
       try {
         if (!envItemsLoaded && !envItemsLoading && brandData) {
           setEnvItemsLoading(true);
           await EnvStoreService.getEnvData(brandData.brand_name).then((response) => {
-            console.log("EnvProducts: ", response.envProducts);
-            console.log("EnvAssets: ", response.envAssets);
-            setEnvProducts(response.envProducts);
-            setEnvAssets(response.envAssets);
 
-            // Preload asset models
-            Object.keys(envAssets).forEach((envAsset) => {
-              if(envAssets[envAsset].type === "MODEL_3D")
-                useGLTF.preload(envAssets[envAsset].src);
-            });
+            const newEnvProducts: { [id: number]: EnvProduct } = {};
+            for (const envProduct of Object.values(response.envProducts)) {
+              newEnvProducts[envProduct.id] = { ...envProduct };
+              if (envProduct.type === "MODEL_3D" && envProduct.modelIndex !== undefined) {
+                useGLTF.preload(products.find((product) => product.id === envProduct.id)?.models[envProduct.modelIndex].sources?.[0].url || '');
+              }
+              if(newEnvProducts[envProduct.id].placeHolderId === -1){
+                newEnvProducts[envProduct.id].placeHolderId = undefined;
+              }
+            }
 
-            setEnvItemsLoaded(true);
+            const newEnvAssets: { [id: string]: EnvAsset } = {};
+            for (const envAsset of Object.values(response.envAssets)) {
+              newEnvAssets[envAsset.id] = { ...envAsset };
+            }
+
+            console.log("Env Products: ", response.envProducts);
+            console.log("Env Assets: ", response.envAssets);
+
+            async function setResults() {
+              setEnvProducts(newEnvProducts);
+              setEnvAssets(newEnvAssets);
+            }
+
+            setResults().then(() => setEnvItemsLoaded(true));
           });
         }
       } catch (err) {
-        console.error('Products error:', err);
+        console.error('Env data error:', err);
       }
     }
-    fetchEnvData();
-  }, [brandData, products]);
 
-  // Loader
+    async function fetchModels() {
+      // Preload asset models
+      Object.values(envAssets).forEach((envAsset) => {
+        if (envAsset.type === "MODEL_3D")
+          useGLTF.preload(envAsset.src);
+      });
+
+      // Preload product models
+      Object.values(envProducts).forEach((envProduct) => {
+        if (envProduct.type === "MODEL_3D" && envProduct.modelIndex) {
+          useGLTF.preload(products.find((product) => product.id === envProduct.id)?.models[envProduct.modelIndex].sources?.[0].url || '');
+        }
+      });
+    }
+
+    (async () => {
+      if(brandData && brandStatus === 'VALID') {
+        await fetchProducts(); setProgress(myProgress > 32 ? myProgress : 32);
+        await fetchEnvData(); setProgress(myProgress > 76 ? myProgress : 76);
+        await fetchModels(); setProgress(myProgress > 99 ? myProgress : 99);
+        await new Promise(() => {setTimeout(() => setProgress(100), 800)}); // Delay to show fully loaded progress bar
+      }
+    })();
+    
+  }, [brandStatus]);
+
+  // Loader Video
   const [videoLoaded, setVideoLoaded] = useState(false);
   const videoRef = useRef(null);
-  const [maxProgress, setMaxProgress] = useState(0);
   const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-  const { progress } = useProgress();
 
   // Joystick
   useEffect(() => {
     const scrollY = window.scrollY;
     const joystickZone = document.getElementById("joystickZone");
 
-    if (!(progress >= 100 && videoLoaded)) {
+    if (!(myProgress >= 100 && videoLoaded)) {
       if (joystickZone) {
         joystickZone.style.display = "none";
       }
@@ -140,13 +206,7 @@ function CanvasWrapper() {
       document.body.style.touchAction = "";
       window.scrollTo(0, scrollY);
     };
-  }, [progress, videoLoaded]);
-
-  useEffect(() => {
-    if (progress > maxProgress) {
-      setMaxProgress(progress);
-    }
-  }, [progress]);
+  }, [myProgress, videoLoaded]);
 
   return (
     <>
@@ -184,13 +244,13 @@ function CanvasWrapper() {
         </Helmet>
       )}
       <div id="container">
-        {progress >= 100 && videoLoaded && productsLoaded && envItemsLoaded? (
+        {myProgress >= 100 ? (
           <UI />
         ) : (
           <div className="video-loader">
             <video
               ref={videoRef}
-              src={isMobile ? "/media/Intro.mp4" : "/media/Intro.MOV"}
+              src="/media/Intro.MOV"
               autoPlay
               muted
               playsInline
@@ -198,22 +258,26 @@ function CanvasWrapper() {
             />
             {videoLoaded && (
               <>
-                <div className="loading-text">Your experience is loading!</div>
-                <div className="progress-bar">
-                  <div
-                    className="progress-bar-inner"
-                    style={{ width: `${Math.min(maxProgress, 100)}%` }}
-                  />
-                </div>
+                <div className="loading-text">{brandStatus === 'INVALID'? 'Brand name does not exist': 'Your experience is loading!'}</div>
+                {brandStatus === 'VALID' && (
+                  <div className="progress-bar">
+                    <div
+                      className="progress-bar-inner"
+                      style={{ width: `${Math.min(myProgress, 100)}%` }}
+                    />
+                  </div>
+                )}
               </>
             )}
           </div>
         )}
-        <Canvas camera={{ fov: 45 }} shadows>
-          <React.Suspense fallback={null}>
-            <App />
-          </React.Suspense>
-        </Canvas>
+        {myProgress >= 100 &&
+          <Canvas camera={{ fov: 45 }} shadows>
+            <React.Suspense fallback={null}>
+              <App />
+            </React.Suspense>
+          </Canvas>
+        }
       </div>
     </>
   );
