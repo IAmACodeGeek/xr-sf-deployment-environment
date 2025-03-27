@@ -3,8 +3,8 @@ import { PivotControls, useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import { useEffect, useMemo, useRef } from "react";
 import type Product from '../Types/Product';
-import {Box3, Euler, Mesh, Object3D, Quaternion, TextureLoader, Vector3} from 'three';
-import { ThreeEvent, useLoader, useThree } from "@react-three/fiber";
+import {BackSide, Box3, Euler, Mesh, Object3D, Quaternion, TextureLoader, Vector3} from 'three';
+import { useLoader, useThree } from "@react-three/fiber";
 import placeHolderData from "../data/environment/placeHolderData/BigRoom";
 import Swal from "sweetalert2";
 import styles from "../UI/UI.module.scss";
@@ -156,6 +156,7 @@ const DraggableProductContainer = ({
   // Set position and rotation
   const modelRef = useRef<Object3D>(null);
   const meshRef = useRef<Mesh>(null);
+  const backMeshRef = useRef<Mesh>(null);
   useEffect(() => {
     if(!modelRef.current || envProduct.type !== "MODEL_3D") return;
 
@@ -185,7 +186,7 @@ const DraggableProductContainer = ({
   }, [position, computedPositionForModel, envProduct.type, computedRotation, camera, modelRef]);
 
   useEffect(() => {
-    if(!meshRef.current || envProduct.type !== "PHOTO") return;
+    if(!meshRef.current || !backMeshRef.current || envProduct.type !== "PHOTO") return;
 
     // Position
     const cameraPosition = new Vector3(); camera.getWorldPosition(cameraPosition);
@@ -200,6 +201,7 @@ const DraggableProductContainer = ({
       worldPosition.applyMatrix4(meshRef.current.parent.matrixWorld.invert());
     }
     meshRef.current.position.copy(worldPosition);
+    backMeshRef.current.position.copy(worldPosition);
 
     // Rotation
     const worldRotation = computedRotation;
@@ -214,8 +216,9 @@ const DraggableProductContainer = ({
       quaternion.multiplyQuaternions(parentQuaternion, quaternion);
     }
     meshRef.current.setRotationFromQuaternion(quaternion);
+    backMeshRef.current.setRotationFromQuaternion(quaternion);
 
-  }, [position, computedPositionForModel, envProduct.type, computedRotation, camera, meshRef]);
+  }, [position, computedPositionForModel, envProduct.type, computedRotation, camera, meshRef, backMeshRef]);
 
   // Load Image texture
   const imageUrl = useMemo(() => {
@@ -299,18 +302,29 @@ const DraggableProductContainer = ({
             />
           }
           {envProduct.type === "PHOTO" && computedSizeForImage &&
-            <mesh
-              rotation={computedRotation}
-              ref={meshRef}
-              onTouchStart={handleEvent}
-              onClick={handleEvent}
-            >
-              <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
-              <meshBasicMaterial 
-                map={imageTexture}
-                transparent={true}
-              />
-            </mesh>
+            <>
+              <mesh
+                rotation={computedRotation}
+                ref={meshRef}
+                onClick={handleEvent}
+              >
+                <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
+                <meshBasicMaterial 
+                  map={imageTexture}
+                  transparent={true}
+                />
+              </mesh>
+              <mesh
+                ref={backMeshRef}
+                rotation={computedRotation}
+              >
+                <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
+                <meshBasicMaterial 
+                  color={0xffffff}
+                  side={BackSide}
+                />
+              </mesh>
+            </>
           }
         </PivotControls>
       </group>

@@ -2,7 +2,7 @@ import { EnvAsset } from "@/stores/ZustandStores";
 import { PivotControls, useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import { useEffect, useMemo, useRef } from "react";
-import {Box3, Euler, Mesh, Object3D, Quaternion, TextureLoader, Vector3} from 'three';
+import {BackSide, Box3, Euler, Mesh, Object3D, Quaternion, TextureLoader, Vector3} from 'three';
 import { useLoader, useThree } from "@react-three/fiber";
 import placeHolderData from "../data/environment/placeHolderData/BigRoom";
 
@@ -144,6 +144,7 @@ const DraggableAssetContainer = ({
   // Set position and rotation
   const modelRef = useRef<Object3D>(null);
   const meshRef = useRef<Mesh>(null);
+  const backMeshRef = useRef<Mesh>(null);
   useEffect(() => {
     if(!modelRef.current || envAsset.type !== "MODEL_3D") return;
 
@@ -173,7 +174,7 @@ const DraggableAssetContainer = ({
   }, [position, computedPositionForModel, envAsset.type, computedRotation, camera, modelRef]);
 
   useEffect(() => {
-    if(!meshRef.current || envAsset.type !== "PHOTO") return;
+    if(!meshRef.current || !backMeshRef.current || envAsset.type !== "PHOTO") return;
 
     // Position
     const cameraPosition = new Vector3(); camera.getWorldPosition(cameraPosition);
@@ -188,6 +189,7 @@ const DraggableAssetContainer = ({
       worldPosition.applyMatrix4(meshRef.current.parent.matrixWorld.invert());
     }
     meshRef.current.position.copy(worldPosition);
+    backMeshRef.current.position.copy(worldPosition);
 
     // Rotation
     const worldRotation = computedRotation;
@@ -202,8 +204,9 @@ const DraggableAssetContainer = ({
       quaternion.multiplyQuaternions(parentQuaternion, quaternion);
     }
     meshRef.current.setRotationFromQuaternion(quaternion);
+    backMeshRef.current.setRotationFromQuaternion(quaternion);
 
-  }, [position, computedPositionForModel, envAsset.type, computedRotation, camera, meshRef]);
+  }, [position, computedPositionForModel, envAsset.type, computedRotation, camera, meshRef, backMeshRef]);
 
   // Load Image texture
   const imageUrl = useMemo(() => {
@@ -265,16 +268,28 @@ const DraggableAssetContainer = ({
             />
           }
           {envAsset.type === "PHOTO" && computedSizeForImage &&
-            <mesh
-              rotation={computedRotation}
-              ref={meshRef}
-            >
-              <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
-              <meshBasicMaterial 
-                map={imageTexture}
-                transparent={true}
-              />
-            </mesh>
+            <>
+              <mesh
+                rotation={computedRotation}
+                ref={meshRef}
+              >
+                <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
+                <meshBasicMaterial 
+                  map={imageTexture}
+                  transparent={true}
+                />
+              </mesh>
+              <mesh
+                ref={backMeshRef}
+                rotation={computedRotation}
+              >
+                <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
+                <meshBasicMaterial 
+                  color={0xffffff}
+                  side={BackSide}
+                />
+              </mesh>
+            </>
           }
         </PivotControls>
       </group>
