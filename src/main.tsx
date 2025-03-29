@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
 import { Helmet } from "react-helmet-async";
 import { Canvas } from "@react-three/fiber";
-import { useGLTF, useProgress } from "@react-three/drei";
-import App from "@/App.jsx";
+import { useGLTF } from "@react-three/drei";
+import App from "./world/App.jsx";
 import "@/index.scss";
 import UI from "@/UI/UI.tsx";
 import { ProductService } from "./api/shopifyAPIService";
@@ -28,7 +28,10 @@ function CanvasWrapper() {
 
     async function fetchBrandDetails(){
       try{
-        if (!brandName) return;
+        if (!brandName) {
+          setBrandStatus('INVALID');
+          return;
+        }
 
         setBrandStatus('LOADING');
         BrandService.fetchBrandData(brandName).then((response) => {

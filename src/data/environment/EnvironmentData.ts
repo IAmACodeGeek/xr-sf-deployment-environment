@@ -1,12 +1,50 @@
 import BigRoomModel from "./environmentModel/BigRoom";
 import CastleModel from "./environmentModel/Castle";
+import SingleRoomModel from "./environmentModel/SingleRoom";
+
 import bigRoomPlaceHolderData from "./placeHolderData/BigRoom";
 import castlePlaceHolderData from "./placeHolderData/Castle";
+import singleRoomPlaceHolderData from "./placeHolderData/SingleRoom";
 
-const environmentData = {
+import PlaceHolder from "./placeHolderData/PlaceHolder";
+
+interface EnvironmentData {
+  [environment_name: string]: {
+    environmentModel: any;
+    playerSpeed: number;
+    playerHeight: number;
+    placeHolderData: PlaceHolder[];
+    initialGSAP: {
+      start: {
+        position: [number, number, number];
+        rotation: [number, number, number];
+        duration: number;
+      };
+      update: {
+        position: [number, number, number];
+        rotation: [number, number, number];
+        duration: number;
+        ease?: string;
+      }[];
+    };
+    televisions: {
+      position: [number, number, number];
+      rotation: [number, number, number];
+      scale: number;
+    }[];
+    brandPosters: {
+      position: [number, number, number];
+      rotation: [number, number, number];
+      scale: number;
+    }[];
+  };
+}
+
+const environmentData: EnvironmentData = {
   "BIGROOM": {
     environmentModel: BigRoomModel,
     playerSpeed: 10,
+    playerHeight: 2,
     placeHolderData: bigRoomPlaceHolderData,
     initialGSAP: {
       start: {
@@ -52,6 +90,7 @@ const environmentData = {
   "CASTLE": {
     environmentModel: CastleModel,
     playerSpeed: 17,
+    playerHeight: 2,
     placeHolderData: castlePlaceHolderData,
     initialGSAP: {
       start: {
@@ -88,7 +127,51 @@ const environmentData = {
         scale: 5
       }
     ]
-  }
+  },
+  "SINGLEROOM": {
+    environmentModel: SingleRoomModel,
+    playerSpeed: 15,
+    playerHeight: 2,
+    placeHolderData: singleRoomPlaceHolderData,
+    initialGSAP: {
+      start: {
+        position: [0, 3, 0],
+        rotation: [0, 0, 0],
+        duration: 0
+      },
+      update: [
+        {
+          position: [0, 4, 0],
+          rotation: [0, 360, 0],
+          duration: 5
+        },
+        {
+          position: [0, 3.2, 18],
+          rotation: [0, 360, 0],
+          duration: 2
+        },
+      ]
+    },
+    televisions: [
+      {
+        position: [0, 4.5, -17.1],
+        rotation: [0, -90, 0],
+        scale: 0.6
+      }
+    ],
+    brandPosters: [
+      {
+        position: [9, 4.5, -17.1],
+        rotation: [0, 0, 0],
+        scale: 3
+      },
+      {
+        position: [-9, 4.5, -17.1],
+        rotation: [0, 0, 0],
+        scale: 3
+      }
+    ]
+  },
 };
 
 export default environmentData;
