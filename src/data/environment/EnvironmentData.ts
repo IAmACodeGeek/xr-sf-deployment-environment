@@ -1,19 +1,14 @@
-import BigRoomModel from "./environmentModel/BigRoom";
-import CastleModel from "./environmentModel/Castle";
-import SingleRoomModel from "./environmentModel/SingleRoom";
-
 import bigRoomPlaceHolderData from "./placeHolderData/BigRoom";
 import castlePlaceHolderData from "./placeHolderData/Castle";
 import singleRoomPlaceHolderData from "./placeHolderData/SingleRoom";
 
-import PlaceHolder from "./placeHolderData/PlaceHolder";
+import PlaceHolderData from "./placeHolderData/PlaceHolderData";
 
 interface EnvironmentData {
   [environment_name: string]: {
-    environmentModel: any;
     playerSpeed: number;
     playerHeight: number;
-    placeHolderData: PlaceHolder[];
+    placeHolderData: PlaceHolderData[];
     initialGSAP: {
       start: {
         position: [number, number, number];
@@ -42,7 +37,6 @@ interface EnvironmentData {
 
 const environmentData: EnvironmentData = {
   "BIGROOM": {
-    environmentModel: BigRoomModel,
     playerSpeed: 10,
     playerHeight: 2,
     placeHolderData: bigRoomPlaceHolderData,
@@ -88,7 +82,6 @@ const environmentData: EnvironmentData = {
   },
   
   "CASTLE": {
-    environmentModel: CastleModel,
     playerSpeed: 17,
     playerHeight: 2,
     placeHolderData: castlePlaceHolderData,
@@ -129,7 +122,6 @@ const environmentData: EnvironmentData = {
     ]
   },
   "SINGLEROOM": {
-    environmentModel: SingleRoomModel,
     playerSpeed: 15,
     playerHeight: 2,
     placeHolderData: singleRoomPlaceHolderData,
