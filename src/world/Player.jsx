@@ -45,7 +45,7 @@ export const Player = () => {
   );
   const { camera } = useThree();
 
-  const rapier = useRapier();
+
 
   useEffect(() => {
     const handleOrientationChange = () => {
@@ -137,7 +137,7 @@ export const Player = () => {
       manager.destroy();
       document.body.removeChild(joystickZone);
     };
-  }, [isMobile]);
+  }, [isMobile, moveSpeed]);
 
   // Initial Tour of the environment
   const initialTourComplete = useRef(false);
@@ -210,7 +210,7 @@ export const Player = () => {
   useEffect(() => {
     const handleTouchStart = (e) => {
       if(!isTouchEnabled) return; 
-      if(isModalOpen || isCartOpen || isWishlistOpen || isInfoModalOpen || isDiscountModalOpen || isSettingsModalOpen || isTermsModalOpen || isContactModalOpen || isProductSearcherOpen || !crosshairVisible) return; 
+     if(isModalOpen || isCartOpen || isWishlistOpen || isInfoModalOpen || isDiscountModalOpen || isSettingsModalOpen || isTermsModalOpen || isContactModalOpen || isProductSearcherOpen || !crosshairVisible) return; 
 
       if (e.target.closest("#joystickZone")) return;
 
@@ -231,8 +231,8 @@ export const Player = () => {
     };
 
     const handleTouchMove = (e) => {
-      if(!isTouchEnabled) return; 
-      if(isModalOpen || isCartOpen || isWishlistOpen || isInfoModalOpen || isDiscountModalOpen || isSettingsModalOpen || isTermsModalOpen || isContactModalOpen || isProductSearcherOpen || !crosshairVisible) return; 
+     if(!isTouchEnabled) return; 
+     if(isModalOpen || isCartOpen || isWishlistOpen || isInfoModalOpen || isDiscountModalOpen || isSettingsModalOpen || isTermsModalOpen || isContactModalOpen || isProductSearcherOpen || !crosshairVisible) return; 
 
       const touch = Array.from(e.touches).find(
         (t) => t.identifier === touchRef.current.cameraTouch
@@ -259,8 +259,8 @@ export const Player = () => {
     };
 
     const handleTouchEnd = (e) => {
-      if(!isTouchEnabled) return; 
-      if(isModalOpen || isCartOpen || isWishlistOpen || isInfoModalOpen || isDiscountModalOpen || isSettingsModalOpen || isTermsModalOpen || isContactModalOpen|| isProductSearcherOpen || !crosshairVisible) return; 
+     if(!isTouchEnabled) return; 
+     if(isModalOpen || isCartOpen || isWishlistOpen || isInfoModalOpen || isDiscountModalOpen || isSettingsModalOpen || isTermsModalOpen || isContactModalOpen|| isProductSearcherOpen || !crosshairVisible) return; 
 
       const remainingTouches = Array.from(e.touches);
       if (
