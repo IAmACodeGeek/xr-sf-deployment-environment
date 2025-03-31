@@ -349,50 +349,43 @@ const DraggableProductContainer = ({
         position={[0, 0, 0]}
         rotation={new Euler(0, 0, 0, 'YZX')}
       >
-        <PivotControls
-          anchor={[0, 0, 0]}
-          scale={1.25 * scale}
-          visible={false}
-          disableScaling
-        >
-          {envProduct.type === "MODEL_3D" && memoizedModelScene &&
-            <primitive
-              ref={modelRef}
-              object={memoizedModelScene}
-              scale={[computedScaleForModel, computedScaleForModel, computedScaleForModel]}
-              onTouchStart={handleEvent}
+        {envProduct.type === "MODEL_3D" && memoizedModelScene &&
+          <primitive
+            ref={modelRef}
+            object={memoizedModelScene}
+            scale={[computedScaleForModel, computedScaleForModel, computedScaleForModel]}
+            onTouchStart={handleEvent}
+            onClick={handleEvent}
+            castShadow
+            receiveShadow
+          />
+        }
+        {envProduct.type === "PHOTO" && computedSizeForImage &&
+          <>
+            <mesh
+              rotation={computedRotation}
+              ref={meshRef}
               onClick={handleEvent}
-              castShadow
-              receiveShadow
-            />
-          }
-          {envProduct.type === "PHOTO" && computedSizeForImage &&
-            <>
-              <mesh
-                rotation={computedRotation}
-                ref={meshRef}
-                onClick={handleEvent}
-              >
-                <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
-                <meshBasicMaterial 
-                  map={imageTexture}
-                  transparent={true}
-                />
-              </mesh>
-              <mesh
-                ref={backMeshRef}
-                rotation={computedRotation}
-              >
-                <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
-                <meshBasicMaterial 
-                  color={0xffffff}
-                  side={BackSide}
-                />
-              </mesh>
-            </>
-          }
-        </PivotControls>
-      </group>
+            >
+              <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
+              <meshBasicMaterial 
+                map={imageTexture}
+                transparent={true}
+              />
+            </mesh>
+            <mesh
+              ref={backMeshRef}
+              rotation={computedRotation}
+            >
+              <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
+              <meshBasicMaterial 
+                color={0xffffff}
+                side={BackSide}
+              />
+            </mesh>
+          </>
+        }
+    </group>
     </RigidBody>
   );
 };
