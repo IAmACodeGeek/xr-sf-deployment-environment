@@ -243,7 +243,7 @@ export const Player = () => {
       const deltaX = touch.clientX - touchRef.current.previousCameraTouch.x;
       const deltaY = touch.clientY - touchRef.current.previousCameraTouch.y;
 
-      const sensitivity = TOUCH_SENSITIVITY.PORTRAIT;
+      const sensitivity = TOUCH_SENSITIVITY;
 
       camera.rotation.order = "YXZ";
       camera.rotation.y -= deltaX * sensitivity.x;
