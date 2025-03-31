@@ -38,7 +38,6 @@ const Products = () => {
         Object.keys(envAssets).map((id) => {
           return (
             <LazyDraggableAssetContainer
-              placeHolderId={envAssets[id].placeHolderId}
               envPosition={envAssets[id].position}
               envRotation={envAssets[id].rotation}
               envScale={envAssets[id].scale}

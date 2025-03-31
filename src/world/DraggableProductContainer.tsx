@@ -1,15 +1,15 @@
-import { useComponentStore, EnvProduct } from "@/stores/ZustandStores";
+import { useComponentStore, EnvProduct, useEnvironmentStore } from "@/stores/ZustandStores";
 import { PivotControls, useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type Product from '../Types/Product';
 import {BackSide, Box3, Euler, Mesh, Object3D, Quaternion, TextureLoader, Vector3} from 'three';
 import { useLoader, useThree } from "@react-three/fiber";
-import placeHolderData from "../data/environment/placeHolderData/BigRoom";
 import Swal from "sweetalert2";
 import styles from "../UI/UI.module.scss";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+import environmentData from "@/data/environment/EnvironmentData";
 
 interface DraggableProductContainerProps {
   placeHolderId?: number | undefined;
@@ -29,6 +29,10 @@ const DraggableProductContainer = ({
   const { products, setSelectedProduct, openModal } = useComponentStore();
   const {camera} = useThree();
   
+  // Get the placeholder
+  const {environmentType} = useEnvironmentStore();
+  const placeHolderData = environmentData[environmentType || ''].placeHolderData;
+
   // Find the corresponding product for the envProduct
   const product = useMemo(() => {
     return products.find((p: Product) => p.id === envProduct.id);

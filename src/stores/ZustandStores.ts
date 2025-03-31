@@ -307,7 +307,6 @@ const useEnvProductStore = create<EnvProductStore>((set) => ({
 interface EnvAsset {
   id: string;
   type: "MODEL_3D" | "PHOTO";
-  placeHolderId?: number | undefined;
   position?: number[];
   rotation?: number[];
   scale?: number;

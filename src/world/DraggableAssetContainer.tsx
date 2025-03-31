@@ -4,12 +4,10 @@ import { RigidBody } from "@react-three/rapier";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {BackSide, Box3, Euler, Mesh, Object3D, Quaternion, TextureLoader, Vector3} from 'three';
 import { useLoader, useThree } from "@react-three/fiber";
-import placeHolderData from "../data/environment/placeHolderData/BigRoom";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 interface DraggableAssetContainerProps {
-  placeHolderId?: number | undefined;
   envPosition?: [number, number, number];
   envRotation?: [number, number, number];
   envScale?: number;
@@ -17,7 +15,6 @@ interface DraggableAssetContainerProps {
 }
 
 const DraggableAssetContainer = ({
-  placeHolderId = undefined,
   envPosition = undefined,
   envRotation = undefined,
   envScale = 1,
@@ -117,28 +114,16 @@ const DraggableAssetContainer = ({
 
   // Fetch position, rotation & scale from placeholder
   const position = useMemo(() => {
-    if(placeHolderId !== undefined){
-      const placeHolder = placeHolderData.find((placeHolder) => placeHolder.id === placeHolderId);
-      return placeHolder?.position || envPosition;
-    }
     return envPosition;
-  }, [placeHolderId, envPosition]);
+  }, [envPosition]);
 
   const rotation = useMemo(() => {
-    if(placeHolderId !== undefined){
-      const placeHolder = placeHolderData.find((placeHolder) => placeHolder.id === placeHolderId);
-      return placeHolder?.rotation || envRotation;
-    }
     return envRotation;
-  }, [placeHolderId, envRotation]);
+  }, [envRotation]);
 
   const scale = useMemo(() => {
-    if(placeHolderId !== undefined){
-      const placeHolder = placeHolderData.find((placeHolder) => placeHolder.id === placeHolderId);
-      return placeHolder?.scale || envScale;
-    }
     return envScale;
-  }, [placeHolderId, envScale]);
+  }, [envScale]);
 
   // Convert rotation from degrees to radians
   const computedRotation = useMemo(() => {
