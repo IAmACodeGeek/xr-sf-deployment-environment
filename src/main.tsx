@@ -167,7 +167,7 @@ function CanvasWrapper() {
   // Loader Video
   const [videoLoaded, setVideoLoaded] = useState(false);
   const videoRef = useRef(null);
-  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone|Opera Mini|Kindle|Silk|Mobile|Tablet|Touch/i.test(navigator.userAgent);
 
   // Joystick
   useEffect(() => {
@@ -253,7 +253,7 @@ function CanvasWrapper() {
           <div className="video-loader">
             <video
               ref={videoRef}
-              src="/media/Intro.MOV"
+              src= {isMobile? "/media/Intro.mp4" : "/media/Intro.MOV"}
               autoPlay
               muted
               playsInline
