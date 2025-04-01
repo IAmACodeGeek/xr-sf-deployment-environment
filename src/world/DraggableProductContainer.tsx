@@ -1,9 +1,9 @@
 import { useComponentStore, EnvProduct, useEnvironmentStore } from "@/stores/ZustandStores";
-import { PivotControls, useGLTF } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type Product from '../Types/Product';
-import {BackSide, Box3, Euler, Mesh, Object3D, Quaternion, TextureLoader, Vector3} from 'three';
+import { BackSide, Box3, Euler, Mesh, Object3D, Quaternion, TextureLoader, Vector3 } from 'three';
 import { useLoader, useThree } from "@react-three/fiber";
 import Swal from "sweetalert2";
 import styles from "../UI/UI.module.scss";
@@ -27,31 +27,31 @@ const DraggableProductContainer = ({
   envProduct
 }: DraggableProductContainerProps) => {
   const { products, setSelectedProduct, openModal } = useComponentStore();
-  const {camera} = useThree();
-  
+  const { camera } = useThree();
+
   // Get the placeholder
-  const {environmentType} = useEnvironmentStore();
+  const { environmentType } = useEnvironmentStore();
   const placeHolderData = environmentData[environmentType || ''].placeHolderData;
 
   // Find the corresponding product for the envProduct
   const product = useMemo(() => {
     return products.find((p: Product) => p.id === envProduct.id);
   }, [products, envProduct.id]);
-  
+
   // Get the model URL based on modelIndex
   const modelUrl = useMemo(() => {
     if (envProduct.type !== "MODEL_3D" || !product?.models || envProduct.modelIndex === undefined) {
       return null;
     }
-    
+
     const model = product.models[envProduct.modelIndex];
     if (!model?.sources?.[0]?.url) {
       return null;
     }
-    
+
     return model.sources[0].url;
   }, [product, envProduct.modelIndex, envProduct.type]);
-  
+
   // Load the GLTF model
   const [model, setModel] = useState<GLTF | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -59,22 +59,22 @@ const DraggableProductContainer = ({
 
   useEffect(() => {
     if (!modelUrl) return;
-    
+
     let isMounted = true;
     const loadModel = async () => {
       setIsLoading(true);
-      
+
       // Create GLTFLoader with DRACOLoader
       const loader = new GLTFLoader();
-      
+
       // Set up DRACOLoader
       const dracoLoader = new DRACOLoader();
       // Set the path to the Draco decoder files
       dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.5/');
-      
+
       // Attach DRACOLoader to GLTFLoader
       loader.setDRACOLoader(dracoLoader);
-      
+
       try {
         const gltf = await new Promise<GLTF>((resolve, reject) => {
           loader.load(
@@ -87,7 +87,7 @@ const DraggableProductContainer = ({
             (error) => reject(error)
           );
         });
-        
+
         if (isMounted) {
           setModel(gltf);
           setIsLoading(false);
@@ -96,7 +96,7 @@ const DraggableProductContainer = ({
         console.error('Error loading model:', error);
         if (isMounted) {
           setIsLoading(false);
-          
+
           // Implement a retry mechanism with a maximum retry count
           if (retryCount < 5) {
             setTimeout(() => {
@@ -106,15 +106,15 @@ const DraggableProductContainer = ({
         }
       }
     };
-    
+
     loadModel();
-    
+
     // Cleanup function
     return () => {
       isMounted = false;
     };
   }, [modelUrl, retryCount]);
-  
+
   // You can still use useGLTF.preload at the component level
   useEffect(() => {
     if (modelUrl) {
@@ -125,7 +125,7 @@ const DraggableProductContainer = ({
   const scene = useMemo(() => {
     return model?.scene;
   }, [model]);
-  
+
   // Memoize the scene to prevent unnecessary rerenders
   const memoizedModelScene = useMemo(() => {
     if (!scene) return null;
@@ -135,14 +135,14 @@ const DraggableProductContainer = ({
 
   // Fetch position, rotation & scale from placeholder
   const position = useMemo(() => {
-    if(placeHolderId !== undefined){
+    if (placeHolderId !== undefined) {
       const placeHolder = placeHolderData.find((placeHolder) => placeHolder.id === placeHolderId);
       return placeHolder?.position || envPosition;
     }
     return envPosition;
   }, [placeHolderId, envPosition]);
   const rotation = useMemo(() => {
-    if(placeHolderId !== undefined){
+    if (placeHolderId !== undefined) {
       const placeHolder = placeHolderData.find((placeHolder) => placeHolder.id === placeHolderId);
       return placeHolder?.rotation || envRotation;
     }
@@ -150,7 +150,7 @@ const DraggableProductContainer = ({
   }, [placeHolderId, envRotation]);
 
   const scale = useMemo(() => {
-    if(placeHolderId !== undefined){
+    if (placeHolderId !== undefined) {
       const placeHolder = placeHolderData.find((placeHolder) => placeHolder.id === placeHolderId);
       return placeHolder?.scale || envScale;
     }
@@ -160,14 +160,14 @@ const DraggableProductContainer = ({
   // Convert rotation from degrees to radians
   const computedRotation = useMemo(() => {
     const rotArray = [0, 0, 0];
-    if(!rotation){
+    if (!rotation) {
       const cameraPosition = new Vector3(); camera.getWorldPosition(cameraPosition);
       const direction = new Vector3().subVectors(cameraPosition, new Vector3(...(position || [0, 0, 0]))).normalize();
       direction.y = 0;
       const angle = Math.atan(direction.x / direction.z) * 180 / Math.PI;
-      rotArray[1] = angle - (direction.z < 0 ? 180: 0);
+      rotArray[1] = angle - (direction.z < 0 ? 180 : 0);
     }
-    else{
+    else {
       rotArray[0] = rotation[0]; rotArray[1] = rotation[1]; rotArray[2] = rotation[2];
     }
     return new Euler(
@@ -177,10 +177,10 @@ const DraggableProductContainer = ({
       'YZX'
     );
   }, [rotation, position]);
-  
+
   // Manually compute scale such that object has unit height
   const computedScaleForModel = useMemo(() => {
-    if(!scene) return null;
+    if (!scene) return null;
 
     const box = new Box3().setFromObject(scene);
 
@@ -190,8 +190,8 @@ const DraggableProductContainer = ({
     return scale / size.y;
   }, [scene, scale]);
 
-  const {computedPositionForModel} = useMemo(() => {
-    if(!computedScaleForModel || !scene) return {
+  const { computedPositionForModel } = useMemo(() => {
+    if (!computedScaleForModel || !scene) return {
       computedPositionForModel: null,
       boxCenter: null
     };
@@ -200,17 +200,17 @@ const DraggableProductContainer = ({
     const cameraDirection = new Vector3(); camera.getWorldDirection(cameraDirection);
     cameraDirection.multiplyScalar(5);
     cameraPosition.add(cameraDirection);
-    const positionVector = position? new Vector3(position[0], position[1], position[2]) : cameraPosition;
-    
+    const positionVector = position ? new Vector3(position[0], position[1], position[2]) : cameraPosition;
+
     // Get the bounding box AFTER applying scale
     const scaledScene = scene.clone();
     scaledScene.scale.set(computedScaleForModel, computedScaleForModel, computedScaleForModel);
     const box = new Box3().setFromObject(scaledScene);
-    
+
     // Calculate center offset
     const boxCenter = new Vector3();
     box.getCenter(boxCenter);
-    
+
     // Adjust position to account for scaled center offset
     const newPosition = positionVector.clone().sub(boxCenter.clone());
     return {
@@ -219,27 +219,33 @@ const DraggableProductContainer = ({
   }, [scene, computedScaleForModel, position, camera]);
 
   // Set position and rotation
+  const rigidBodyRef = useRef<any>(null);
   const modelRef = useRef<Object3D>(null);
   const meshRef = useRef<Mesh>(null);
   const backMeshRef = useRef<Mesh>(null);
   useEffect(() => {
-    if(!modelRef.current || envProduct.type !== "MODEL_3D") return;
+    if (!modelRef.current || envProduct.type !== "MODEL_3D") return;
 
     // Position
     const worldPosition = new Vector3(...(computedPositionForModel || [0, 0, 0]));
-    
+
     modelRef.current.matrixWorld.setPosition(worldPosition);
     if (modelRef.current.parent) {
       worldPosition.applyMatrix4(modelRef.current.parent.matrixWorld.invert());
     }
-    modelRef.current.position.copy(worldPosition);
+    // Update physics body
+    modelRef.current.position.copy(new Vector3(0, 0, 0));
+    rigidBodyRef.current.setTranslation(
+      { x: worldPosition.x, y: worldPosition.y, z: worldPosition.z },
+      true
+    );
 
     // Rotation
     const worldRotation = computedRotation;
     const quaternion = new Quaternion();
     quaternion.setFromEuler(worldRotation);
 
-    if (modelRef.current.parent){
+    if (modelRef.current.parent) {
       const parentQuaternion = new Quaternion();
       modelRef.current.parent.getWorldQuaternion(parentQuaternion);
 
@@ -251,7 +257,7 @@ const DraggableProductContainer = ({
   }, [position, computedPositionForModel, envProduct.type, computedRotation, camera, modelRef]);
 
   useEffect(() => {
-    if(!meshRef.current || !backMeshRef.current || envProduct.type !== "PHOTO") return;
+    if (!meshRef.current || !backMeshRef.current || envProduct.type !== "PHOTO") return;
 
     // Position
     const cameraPosition = new Vector3(); camera.getWorldPosition(cameraPosition);
@@ -259,21 +265,26 @@ const DraggableProductContainer = ({
     cameraDirection.multiplyScalar(5);
     cameraPosition.add(cameraDirection);
 
-    const worldPosition = position? new Vector3(...position) : cameraPosition;
-    
+    const worldPosition = position ? new Vector3(...position) : cameraPosition;
+
     meshRef.current.matrixWorld.setPosition(worldPosition);
     if (meshRef.current.parent) {
       worldPosition.applyMatrix4(meshRef.current.parent.matrixWorld.invert());
     }
-    meshRef.current.position.copy(worldPosition);
-    backMeshRef.current.position.copy(worldPosition);
+    // Update physics body
+    rigidBodyRef.current.setTranslation(
+      { x: worldPosition.x, y: worldPosition.y, z: worldPosition.z },
+      true
+    );
+    meshRef.current.position.copy(new Vector3(0, 0, 0));
+    backMeshRef.current.position.copy(new Vector3(0, 0, 0));
 
     // Rotation
     const worldRotation = computedRotation;
     const quaternion = new Quaternion();
     quaternion.setFromEuler(worldRotation);
 
-    if (meshRef.current.parent){
+    if (meshRef.current.parent) {
       const parentQuaternion = new Quaternion();
       meshRef.current.parent.getWorldQuaternion(parentQuaternion);
 
@@ -287,25 +298,25 @@ const DraggableProductContainer = ({
 
   // Load Image texture
   const imageUrl = useMemo(() => {
-    if((envProduct.imageIndex === undefined) || envProduct.type !== "PHOTO") return null;
+    if ((envProduct.imageIndex === undefined) || envProduct.type !== "PHOTO") return null;
     return product?.images[envProduct.imageIndex].src || "";
   }, [envProduct.type, envProduct.imageIndex, product?.images]);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const texture = imageUrl? useLoader(TextureLoader, imageUrl) : null;
+  const texture = imageUrl ? useLoader(TextureLoader, imageUrl) : null;
   const imageTexture = useMemo(() => {
-    if(!imageUrl) return null;
-    try{
+    if (!imageUrl) return null;
+    try {
       return texture;
     }
-    catch(error){
+    catch (error) {
       console.error('Error Loading Asset Image: ', error);
       return null;
     }
   }, [imageUrl]);
 
   const computedSizeForImage = useMemo(() => {
-    if(!imageTexture) return null;
+    if (!imageTexture) return null;
 
     const width = imageTexture.image.width;
     const height = imageTexture.image.height;
@@ -324,13 +335,13 @@ const DraggableProductContainer = ({
   }, [imageTexture, scale]);
 
   const handleEvent = (event) => {
-    if(event && event.stopPropogation) event.stopPropogation();
-    
-    if(product){
+    if (event && event.stopPropogation) event.stopPropogation();
+
+    if (product) {
       setSelectedProduct(product.id);
       openModal();
     }
-    else{      
+    else {
       Swal.fire({
         title: "Could Not Load Product",
         text: "The products couldn't be loaded. Please try again.",
@@ -344,49 +355,58 @@ const DraggableProductContainer = ({
   };
 
   return (
-    <RigidBody type="fixed">
-      <group
-        position={[0, 0, 0]}
-        rotation={new Euler(0, 0, 0, 'YZX')}
-      >
-        {envProduct.type === "MODEL_3D" && memoizedModelScene &&
-          <primitive
-            ref={modelRef}
-            object={memoizedModelScene}
-            scale={[computedScaleForModel, computedScaleForModel, computedScaleForModel]}
-            onTouchStart={handleEvent}
-            onClick={handleEvent}
-            castShadow
-            receiveShadow
-          />
-        }
-        {envProduct.type === "PHOTO" && computedSizeForImage &&
-          <>
-            <mesh
-              rotation={computedRotation}
-              ref={meshRef}
-              onClick={handleEvent}
-            >
-              <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
-              <meshBasicMaterial 
-                map={imageTexture}
-                transparent={true}
+    <>
+      {envProduct.type === "MODEL_3D" && memoizedModelScene && 
+        <RigidBody ref={rigidBodyRef} type="fixed" colliders="hull">
+          <group
+            position={[0, 0, 0]}
+            rotation={new Euler(0, 0, 0, 'YZX')}
+          >
+            <primitive
+              ref={modelRef}
+                object={memoizedModelScene}
+                scale={[computedScaleForModel, computedScaleForModel, computedScaleForModel]}
+                onTouchStart={handleEvent}
+                onClick={handleEvent}
               />
-            </mesh>
-            <mesh
-              ref={backMeshRef}
-              rotation={computedRotation}
-            >
-              <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
-              <meshBasicMaterial 
-                color={0xffffff}
-                side={BackSide}
-              />
-            </mesh>
-          </>
-        }
-    </group>
-    </RigidBody>
+          </group>
+        </RigidBody>
+      }
+      {envProduct.type === "PHOTO" && computedSizeForImage && 
+        <RigidBody ref={rigidBodyRef} type="fixed" colliders="cuboid">
+          <group
+            position={[0, 0, 0]}
+            rotation={new Euler(0, 0, 0, 'YZX')}
+          >
+            {envProduct.type === "PHOTO" && computedSizeForImage &&
+              <>
+                <mesh
+                  rotation={computedRotation}
+                  ref={meshRef}
+                  onClick={handleEvent}
+                >
+                  <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
+                  <meshBasicMaterial 
+                    map={imageTexture}
+                    transparent={true}
+                  />
+                </mesh>
+                <mesh
+                  ref={backMeshRef}
+                  rotation={computedRotation}
+                >
+                  <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
+                  <meshBasicMaterial 
+                    color={0xffffff}
+                    side={BackSide}
+                  />
+                </mesh>
+              </>
+            }
+          </group>
+        </RigidBody>
+      }
+    </>
   );
 };
 

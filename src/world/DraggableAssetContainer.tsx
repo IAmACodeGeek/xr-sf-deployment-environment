@@ -187,6 +187,7 @@ const DraggableAssetContainer = ({
   }, [scene, computedScaleForModel, position, camera]);
 
   // Set position and rotation
+  const rigidBodyRef = useRef<any>(null);
   const modelRef = useRef<Object3D>(null);
   const meshRef = useRef<Mesh>(null);
   const backMeshRef = useRef<Mesh>(null);
@@ -200,7 +201,12 @@ const DraggableAssetContainer = ({
     if (modelRef.current.parent) {
       worldPosition.applyMatrix4(modelRef.current.parent.matrixWorld.invert());
     }
-    modelRef.current.position.copy(worldPosition);
+    // Update physics body
+    modelRef.current.position.copy(new Vector3(0, 0, 0));
+    rigidBodyRef.current.setTranslation(
+      { x: worldPosition.x, y: worldPosition.y, z: worldPosition.z },
+      true
+    );
 
     // Rotation
     const worldRotation = computedRotation;
@@ -233,8 +239,13 @@ const DraggableAssetContainer = ({
     if (meshRef.current.parent) {
       worldPosition.applyMatrix4(meshRef.current.parent.matrixWorld.invert());
     }
-    meshRef.current.position.copy(worldPosition);
-    backMeshRef.current.position.copy(worldPosition);
+    // Update physics body
+    rigidBodyRef.current.setTranslation(
+      { x: worldPosition.x, y: worldPosition.y, z: worldPosition.z },
+      true
+    );
+    meshRef.current.position.copy(new Vector3(0, 0, 0));
+    backMeshRef.current.position.copy(new Vector3(0, 0, 0));
 
     // Rotation
     const worldRotation = computedRotation;
@@ -292,46 +303,55 @@ const DraggableAssetContainer = ({
   }, [imageTexture, scale]);
 
   return (
-    <RigidBody type="fixed">
-      <group
-        position={[0, 0, 0]}
-        rotation={new Euler(0, 0, 0, 'YZX')}
-      >
-        {envAsset.type === "MODEL_3D" && memoizedModelScene &&
-          <primitive
-            ref={modelRef}
-            object={memoizedModelScene}
-            scale={[computedScaleForModel, computedScaleForModel, computedScaleForModel]}
-            castShadow
-            receiveShadow
-          />
-        }
-        {envAsset.type === "PHOTO" && computedSizeForImage &&
-          <>
-            <mesh
-              rotation={computedRotation}
-              ref={meshRef}
-            >
-              <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
-              <meshBasicMaterial 
-                map={imageTexture}
-                transparent={true}
-              />
-            </mesh>
-            <mesh
-              ref={backMeshRef}
-              rotation={computedRotation}
-            >
-              <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
-              <meshBasicMaterial 
-                color={0xffffff}
-                side={BackSide}
-              />
-            </mesh>
-          </>
-        }
-      </group>
-    </RigidBody>
+    <>
+      {envAsset.type === "MODEL_3D" && memoizedModelScene &&
+        <RigidBody ref={rigidBodyRef} type="fixed" colliders="hull">
+          <group
+            position={[0, 0, 0]}
+            rotation={new Euler(0, 0, 0, 'YZX')}
+          >
+            <primitive
+              ref={modelRef}
+              object={memoizedModelScene}
+              scale={[computedScaleForModel, computedScaleForModel, computedScaleForModel]}
+              castShadow
+              receiveShadow
+            />
+          </group>
+        </RigidBody>
+      }
+      {envAsset.type === "PHOTO" && computedSizeForImage &&
+        <RigidBody ref={rigidBodyRef} type="fixed" colliders="hull">
+          <group
+            position={[0, 0, 0]}
+            rotation={new Euler(0, 0, 0, 'YZX')}
+          >
+            <>
+              <mesh
+                rotation={computedRotation}
+                ref={meshRef}
+              >
+                <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
+                <meshBasicMaterial 
+                  map={imageTexture}
+                  transparent={true}
+                />
+              </mesh>
+              <mesh
+                ref={backMeshRef}
+                rotation={computedRotation}
+              >
+                <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
+                <meshBasicMaterial 
+                  color={0xffffff}
+                  side={BackSide}
+                />
+              </mesh>
+            </>
+          </group>
+        </RigidBody>
+      }
+    </>
   );
 };
 
