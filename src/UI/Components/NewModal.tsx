@@ -7,6 +7,7 @@ import DOMPurify from "dompurify";
 import useWishlist from "./WishlistHook";
 import Swal from "sweetalert2";
 import styles from "@/UI/UI.module.scss";
+import { showPremiumPopup } from "./PremiumRequired";
 
 const Modal = () => {
   const client = {
@@ -594,8 +595,9 @@ const Modal = () => {
           }}
         >
           <Button
-            disabled={!isMobile || isIosChrome}
-            onPointerDown={handleViewInAR}
+            onPointerDown={() => {
+              showPremiumPopup("Upgrade to premium to unlock this feature. Contact sales right away!");
+            }}
             sx={{
               minWidth: "30%",
               backgroundColor: "#424147",
@@ -618,7 +620,7 @@ const Modal = () => {
             View in AR
           </Button>
           <Button
-            onPointerDown={handleARTryOn}
+            onPointerDown={() => showPremiumPopup("Upgrade to premium to unlock this feature. Contact sales right away!")}
             sx={{
               minWidth: "30%",
               backgroundColor: "#424147",
