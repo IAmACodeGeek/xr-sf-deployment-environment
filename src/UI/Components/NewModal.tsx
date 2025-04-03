@@ -458,7 +458,7 @@ const Modal = () => {
           </ButtonBase>
           <Box
             sx={{
-              width: "70%", 
+              width: "70%", height: "100%",
               display: "block",
               overflow: "hidden"
             }}
@@ -479,12 +479,19 @@ const Modal = () => {
                   return (
                     <Box
                       sx={{
-                        width: String(1 / photosCount * 100) + "%",
+                        width: String(1 / photosCount * 100) + "%", height: "100%",
+                        display: "flex", justifyContent: "center", alignItems: "center",
                       }}
-                      component="img"
-                      src={image.src}
                       key={image.src}
-                    />
+                    >
+                      <Box
+                        sx={{
+                          maxWidth: "100%", maxHeight: "100%"
+                        }}
+                        component="img"
+                        src={image.src}
+                      />
+                    </Box>
                   );
                 })
               )}
