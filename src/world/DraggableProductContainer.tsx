@@ -252,7 +252,11 @@ const DraggableProductContainer = ({
       parentQuaternion.invert();
       quaternion.multiplyQuaternions(parentQuaternion, quaternion);
     }
-    modelRef.current.setRotationFromQuaternion(quaternion);
+    rigidBodyRef.current.setRotation(quaternion, true);
+    
+    const nullQuaternion = new Quaternion();
+    nullQuaternion.setFromEuler(new Euler(0, 0, 0));
+    modelRef.current.setRotationFromQuaternion(nullQuaternion);
 
   }, [position, computedPositionForModel, envProduct.type, computedRotation, camera, modelRef]);
 
@@ -364,10 +368,10 @@ const DraggableProductContainer = ({
           >
             <primitive
               ref={modelRef}
-                object={memoizedModelScene}
-                scale={[computedScaleForModel, computedScaleForModel, computedScaleForModel]}
-                onTouchStart={handleEvent}
-                onClick={handleEvent}
+              object={memoizedModelScene}
+              scale={[computedScaleForModel, computedScaleForModel, computedScaleForModel]}
+              onTouchStart={handleEvent}
+              onClick={handleEvent}
               />
           </group>
         </RigidBody>

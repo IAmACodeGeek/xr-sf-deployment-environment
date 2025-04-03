@@ -220,8 +220,11 @@ const DraggableAssetContainer = ({
       parentQuaternion.invert();
       quaternion.multiplyQuaternions(parentQuaternion, quaternion);
     }
-    modelRef.current.setRotationFromQuaternion(quaternion);
+    rigidBodyRef.current.setRotation(quaternion, true);
 
+    const nullQuaternion = new Quaternion();
+    nullQuaternion.setFromEuler(new Euler(0, 0, 0));
+    modelRef.current.setRotationFromQuaternion(nullQuaternion);
   }, [position, computedPositionForModel, envAsset.type, computedRotation, camera, modelRef]);
 
   useEffect(() => {
