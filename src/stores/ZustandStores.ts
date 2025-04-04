@@ -350,6 +350,8 @@ interface BrandData {
   brand_video_url: string;
   environment_name: string;
   email: string;
+  shopify_store_name: string;
+  shopify_storefront_access_token: string;
 }
 
 interface BrandStore {

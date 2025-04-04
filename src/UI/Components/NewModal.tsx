@@ -1,7 +1,7 @@
 import { Box, Button, Card, Typography, ButtonBase } from "@mui/material";
 import { useCart, ModelViewer } from "@shopify/hydrogen-react";
-import { useEffect, useRef, useState } from "react";
-import { useComponentStore } from "../../stores/ZustandStores";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useBrandStore, useComponentStore } from "../../stores/ZustandStores";
 import Variant from "../../Types/Variant";
 import DOMPurify from "dompurify";
 import useWishlist from "./WishlistHook";
@@ -10,11 +10,17 @@ import styles from "@/UI/UI.module.scss";
 import { showPremiumPopup } from "./PremiumRequired";
 
 const Modal = () => {
-  const client = {
-    domain: "htphzk-um.myshopify.com",
-    storefrontAccessToken: "446cb8f8327b9074dcc7c158332ca146",
-    apiVersion: "2023-10",
-  };
+  const {brandData} = useBrandStore();
+
+  const client = useMemo(() => {
+    if(!brandData) return null;
+    
+    return{
+      domain: brandData.shopify_store_name,
+      storefrontAccessToken: brandData.shopify_storefront_access_token,
+      apiVersion: "2023-10",
+    };
+  }, [brandData]);
 
   const containerRef = useRef(null);
   const modelViewerElement = useRef(null);
@@ -85,6 +91,20 @@ const Modal = () => {
         },
       });
 
+      if(!client) {
+        Swal.fire({
+          title: "Checkout Failed",
+          text: "Unable to start checkout. Please try again later.",
+          icon: "error",
+          confirmButtonText: "Okay",
+          customClass: {
+            title: styles.swalTitle,
+            popup: styles.swalPopup,
+          },
+        });
+        return;
+      }
+
       // Step 1: Create Cart
       const createCartResponse = await fetch(
         `https://${client.domain}/api/${client.apiVersion}/graphql.json`,
@@ -123,7 +143,7 @@ const Modal = () => {
       );
 
       const createCartData = await createCartResponse.json();
-
+      console.log(createCartResponse);
       if (createCartData.errors) {
         throw new Error(createCartData.errors[0].message);
       }
@@ -135,7 +155,6 @@ const Modal = () => {
       checkoutLink.rel = "noopener noreferrer";
       checkoutLink.style.display = "none";
       document.body.appendChild(checkoutLink);
-  
    
       Swal.fire({
         title: "Order Ready",
@@ -325,12 +344,13 @@ const Modal = () => {
     }
 
     try {
-      await linesAdd([
+      const result = await linesAdd([
         {
           merchandiseId: `gid://shopify/ProductVariant/${selectedVariant.id}`,
           quantity: quantity,
         },
       ]);
+      console.log(result);
 
       Swal.fire({
         title: "Success",
@@ -759,7 +779,7 @@ const Modal = () => {
           return false;
         }
       };
-
+      if(selectedProduct?.options[0].name.toLowerCase() === "title") return null;
       return (
         <Box
           sx={{

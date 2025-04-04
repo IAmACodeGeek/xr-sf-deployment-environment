@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { driver, Driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import styles from "@/UI/UI.module.scss";
 import ChatbotModal from "./Components/Chatbot";
 import {
+  useBrandStore,
   useComponentStore,
   useDriverStore,
   useTourStore,
@@ -53,13 +54,19 @@ const customDriverStyles = `
   }
 `;
 
-const shopifyConfig = {
-  storeDomain: "htphzk-um.myshopify.com",
-  storefrontToken: "446cb8f8327b9074dcc7c158332ca146",
-  storefrontApiVersion: "2024-10",
-};
 
 const UI = () => {
+  const {brandData} = useBrandStore();
+
+  const shopifyConfig = useMemo(() => {
+    if(!brandData) return;
+    return {
+      storeDomain: brandData.shopify_store_name,
+      storefrontToken: brandData.shopify_storefront_access_token,
+      storefrontApiVersion: "2024-10",
+    };
+  }, [brandData]);
+
   const {
     crosshairVisible,
     hideCrosshair,
@@ -279,7 +286,7 @@ const UI = () => {
         />
       </div>
 
-      <ShopifyProvider
+      {shopifyConfig && <ShopifyProvider
         countryIsoCode="ID"
         languageIsoCode="ID"
         {...shopifyConfig}
@@ -288,7 +295,7 @@ const UI = () => {
           {isModalOpen && <Modal />}
           {isCartOpen && <Cart></Cart>}
         </CartProvider>
-      </ShopifyProvider>
+      </ShopifyProvider>}
       {isWishlistOpen && <Wishlist></Wishlist>}
       {isInfoModalOpen && <InfoModal></InfoModal>}
       {isTermsModalOpen && <TermsConditionsModal />}
