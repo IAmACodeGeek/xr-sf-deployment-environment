@@ -1,6 +1,6 @@
 import { EnvAsset, EnvProduct } from "@/stores/ZustandStores";
 
-const BASE_URL = "https://get-env-data-934416248688.us-central1.run.app?brandname=";
+const BASE_URL = "https://get-env-data-864197837687.asia-south1.run.app?brandname=";
 
 const EnvStoreService = {
   getEnvData: async function (brandName: string) : Promise<{envProducts: {[id: number]: EnvProduct}, envAssets: {[id: string]: EnvAsset}}> {

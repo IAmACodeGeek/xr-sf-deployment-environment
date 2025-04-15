@@ -40,7 +40,7 @@ const ChatBotModal: React.FC<ChatbotProps> = (props) => {
 
     try {
       const response = await fetch(
-        "https://us-central1-global-road-449105-e7.cloudfunctions.net/function-1",
+        "https://function-1-864197837687.asia-south1.run.app",
         {
           method: "POST",
           headers: {
