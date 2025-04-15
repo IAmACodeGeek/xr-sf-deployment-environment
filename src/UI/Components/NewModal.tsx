@@ -622,7 +622,7 @@ const Modal = () => {
           }}
         >
           <Button
-            onPointerDown={() => {
+            onClick={() => {
               showPremiumPopup("Upgrade to premium to unlock this feature. Contact sales right away!");
             }}
             sx={{
@@ -647,7 +647,7 @@ const Modal = () => {
             View in AR
           </Button>
           <Button
-            onPointerDown={() => showPremiumPopup("Upgrade to premium to unlock this feature. Contact sales right away!")}
+            onClick={() => showPremiumPopup("Upgrade to premium to unlock this feature. Contact sales right away!")}
             sx={{
               minWidth: "30%",
               backgroundColor: "#424147",

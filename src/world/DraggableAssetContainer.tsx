@@ -305,6 +305,10 @@ const DraggableAssetContainer = ({
     ];
   }, [imageTexture, scale]);
 
+  const handleEvent = (event) => {
+    event.stopPropagation();
+  };
+
   return (
     <>
       {envAsset.type === "MODEL_3D" && memoizedModelScene &&
@@ -317,6 +321,8 @@ const DraggableAssetContainer = ({
               ref={modelRef}
               object={memoizedModelScene}
               scale={[computedScaleForModel, computedScaleForModel, computedScaleForModel]}
+              onTouchStart={handleEvent}
+              onClick={handleEvent}
               castShadow
               receiveShadow
             />
@@ -333,6 +339,8 @@ const DraggableAssetContainer = ({
               <mesh
                 rotation={computedRotation}
                 ref={meshRef}
+                onClick={handleEvent}
+                onPointerDown={handleEvent}
               >
                 <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
                 <meshBasicMaterial 

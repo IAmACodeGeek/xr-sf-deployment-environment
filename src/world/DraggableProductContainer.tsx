@@ -339,7 +339,7 @@ const DraggableProductContainer = ({
   }, [imageTexture, scale]);
 
   const handleEvent = (event) => {
-    if (event && event.stopPropogation) event.stopPropogation();
+    event.stopPropagation();
 
     if (product) {
       setSelectedProduct(product.id);
@@ -388,6 +388,7 @@ const DraggableProductContainer = ({
                   rotation={computedRotation}
                   ref={meshRef}
                   onClick={handleEvent}
+                  onPointerDown={handleEvent}
                 >
                   <planeGeometry args={[computedSizeForImage[0], computedSizeForImage[1]]} />
                   <meshBasicMaterial 
