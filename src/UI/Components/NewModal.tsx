@@ -18,7 +18,7 @@ const Modal = () => {
     return{
       domain: brandData.shopify_store_name,
       storefrontAccessToken: brandData.shopify_storefront_access_token,
-      apiVersion: "2023-10",
+      apiVersion: "2024-10",
     };
   }, [brandData]);
 
