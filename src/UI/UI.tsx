@@ -21,6 +21,7 @@ import ContactUsModal from "@/UI/Components/ContactUsModal";
 import ReactAudioPlayer from "react-audio-player";
 import ModalWrapper from "@/UI/Components/ModalWrapper";
 import ProductSearcher from "@/UI/Components/ProductSearcher";
+import { showPremiumPopup } from "./Components/PremiumRequired";
 
 const customDriverStyles = `
   .driver-popover {
@@ -242,7 +243,8 @@ const UI = () => {
           src="/icons/Search.svg"
           alt="Search"
           className={styles.icon}
-          onClick={openProductSearcher}
+          // onClick={openProductSearcher}
+          onClick={() => {showPremiumPopup("This store does not support this feature yet.")}}
         />
         <img
           src="/icons/Cart.svg"
