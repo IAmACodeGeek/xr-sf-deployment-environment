@@ -296,6 +296,19 @@ if (process.env.NODE_ENV === "production") {
   // Optional: leave console.warn and console.error for debugging
 }
 
+if (import.meta.env.MODE === "production") {
+  console.log = () => {};
+  console.debug = () => {};
+  console.info = () => {};
+}
+
+if (import.meta.env.PROD) {
+  console.log = () => {};
+  console.debug = () => {};
+  console.info = () => {};
+}
+
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <HelmetProvider>
