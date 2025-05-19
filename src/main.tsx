@@ -288,6 +288,27 @@ function CanvasWrapper() {
   return null;
 }
 
+// 🔇 Remove console logs in production
+if (process.env.NODE_ENV === "production") {
+  console.log = () => {};
+  console.debug = () => {};
+  console.info = () => {};
+  // Optional: leave console.warn and console.error for debugging
+}
+
+if (import.meta.env.MODE === "production") {
+  console.log = () => {};
+  console.debug = () => {};
+  console.info = () => {};
+}
+
+if (import.meta.env.PROD) {
+  console.log = () => {};
+  console.debug = () => {};
+  console.info = () => {};
+}
+
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <HelmetProvider>
