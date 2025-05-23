@@ -275,7 +275,7 @@ const UI = () => {
         <img src="/logo.avif" alt="Brand Logo" className={styles.brandLogo} />
       </div>
 
-      <div className={styles.chatLogoContainer}>
+      {/* <div className={styles.chatLogoContainer}>
         <img
           src="/icons/Chatbot.svg"
           alt="Chatbot"
@@ -285,7 +285,7 @@ const UI = () => {
             hideCrosshair();
           }}
         />
-      </div>
+      </div> */}
 
       {/*{shopifyConfig && <ShopifyProvider
         countryIsoCode="ID"

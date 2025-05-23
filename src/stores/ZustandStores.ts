@@ -374,6 +374,7 @@ interface BrandData {
   email: string;
   shopify_store_name: string;
   original_brand_name: string;
+  about_brand: string;
 }
 
 interface BrandStore {

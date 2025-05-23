@@ -155,7 +155,7 @@ const SettingsModal = () => {
           </Typography>
         </Box>
         <br />
-        <Box
+        {/* <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
@@ -176,8 +176,8 @@ const SettingsModal = () => {
           </Typography>
           <ChevronRightIcon />
         </Box>
-        <br />
-        <Box
+        <br /> */}
+        {/* <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
@@ -202,7 +202,7 @@ const SettingsModal = () => {
           </Typography>
           <ChevronRightIcon />
         </Box>
-        <br />
+        <br /> */}
         <Box
           sx={{
             display: "flex",
@@ -220,12 +220,12 @@ const SettingsModal = () => {
           <Typography
             sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: "medium" }}
           >
-            Contact us
+            About us
           </Typography>
           <ChevronRightIcon />
         </Box>
         <br />
-        <Box
+        {/* <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
@@ -241,7 +241,7 @@ const SettingsModal = () => {
             Music
           </Typography>
           <IOSSwitch checked={isAudioPlaying} onChange={handleSwitchToggle} />
-        </Box>
+        </Box> */}
       </Card>
     </div>
   );
