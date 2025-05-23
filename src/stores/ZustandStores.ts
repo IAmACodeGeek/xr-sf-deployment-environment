@@ -275,6 +275,27 @@ const useTourStore = create<TourStore>((set) => ({
   setTourComplete: (value) => set({ tourComplete: value }),
 }));
 
+// Search handling
+interface SearchStore {
+  searchResult: {x: number, y: number, z: number, face?: "N" | "S" | "E" | "W"} | undefined,
+  initiateSearchGSAP: boolean,
+  setSearchResult: (position: { x: number; y: number; z: number; face?: "N" | "S" | "E" | "W" }) => void,
+  startSearchGSAP: () => void,
+  resetSearchGSAP: () => void,
+}
+const useSearchStore = create<SearchStore>((set) => ({
+  searchResult: undefined,
+  initiateSearchGSAP: false,
+  setSearchResult: (position: { x: number; y: number; z: number; face?: "N" | "S" | "E" | "W" }) =>
+    set({ searchResult: position }),
+  startSearchGSAP: () => set({ initiateSearchGSAP: true }),
+  resetSearchGSAP: () =>
+    set({
+      searchResult: undefined,
+      initiateSearchGSAP: false,
+    }),
+}));
+
 // Environment Product Handling
 interface EnvProduct {
   id: number;
@@ -285,6 +306,7 @@ interface EnvProduct {
   position?: number[];
   rotation?: number[];
   scale?: number;
+  face?: "N" | "S" | "E" | "W";
 }
 
 interface EnvProductStore {
@@ -371,6 +393,7 @@ export {
   useTouchStore,
   useDriverStore,
   useTourStore,
+  useSearchStore,
   useEnvProductStore,
   useEnvAssetStore,
   useEnvironmentStore,

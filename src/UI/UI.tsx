@@ -59,14 +59,14 @@ const customDriverStyles = `
 const UI = () => {
   const {brandData} = useBrandStore();
 
-  const shopifyConfig = useMemo(() => {
-    if(!brandData) return;
-    return {
-      storeDomain: brandData.shopify_store_name,
-      storefrontToken: brandData.shopify_storefront_access_token,
-      storefrontApiVersion: "2024-10",
-    };
-  }, [brandData]);
+  // const shopifyConfig = useMemo(() => {
+  //   if(!brandData) return;
+  //   return {
+  //     storeDomain: brandData.shopify_store_name,
+  //     storefrontToken: brandData.shopify_storefront_access_token,
+  //     storefrontApiVersion: "2024-10",
+  //   };
+  // }, [brandData]);
 
   const {
     crosshairVisible,
@@ -243,8 +243,7 @@ const UI = () => {
           src="/icons/Search.svg"
           alt="Search"
           className={styles.icon}
-          // onClick={openProductSearcher}
-          onClick={() => {showPremiumPopup("This store does not support this feature yet.")}}
+          onClick={openProductSearcher}
         />
         <img
           src="/icons/Cart.svg"
@@ -288,7 +287,7 @@ const UI = () => {
         />
       </div>
 
-      {shopifyConfig && <ShopifyProvider
+      {/*{shopifyConfig && <ShopifyProvider
         countryIsoCode="ID"
         languageIsoCode="ID"
         {...shopifyConfig}
@@ -297,7 +296,7 @@ const UI = () => {
           {isModalOpen && <Modal />}
           {isCartOpen && <Cart></Cart>}
         </CartProvider>
-      </ShopifyProvider>}
+      </ShopifyProvider>}*/}
       {isWishlistOpen && <Wishlist></Wishlist>}
       {isInfoModalOpen && <InfoModal></InfoModal>}
       {isTermsModalOpen && <TermsConditionsModal />}
