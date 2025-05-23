@@ -351,7 +351,7 @@ interface BrandData {
   environment_name: string;
   email: string;
   shopify_store_name: string;
-  shopify_storefront_access_token: string;
+  original_brand_name: string;
 }
 
 interface BrandStore {
