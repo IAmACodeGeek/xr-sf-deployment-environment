@@ -11,6 +11,7 @@ import { ProductService } from "./api/shopifyAPIService";
 import { useComponentStore, useEnvAssetStore, useEnvironmentStore, useBrandStore, useResourceFetchStore, useEnvProductStore, EnvProduct, EnvAsset } from "./stores/ZustandStores";
 import BrandService from "./api/brandService";
 import EnvStoreService from "./api/envStoreService";
+import Load from "./UI/Components/Loader.js";
 
 function CanvasWrapper() {
   // Load brand data
@@ -250,29 +251,7 @@ function CanvasWrapper() {
         {myProgress >= 100 ? (
           <UI />
         ) : (
-          <div className="video-loader">
-            <video
-              ref={videoRef}
-              src= {isMobile? "/media/Intro.mp4" : "/media/Intro.MOV"}
-              autoPlay
-              muted
-              playsInline
-              onEnded={() => setVideoLoaded(true)}
-            />
-            {videoLoaded && (
-              <>
-                <div className="loading-text">{brandStatus === 'INVALID'? 'Brand name does not exist': 'Your experience is loading!'}</div>
-                {brandStatus === 'VALID' && (
-                  <div className="progress-bar">
-                    <div
-                      className="progress-bar-inner"
-                      style={{ width: `${Math.min(myProgress, 100)}%` }}
-                    />
-                  </div>
-                )}
-              </>
-            )}
-          </div>
+          <Load progress={myProgress} />
         )}
         {myProgress >= 100 &&
           <Canvas camera={{ fov: 45 }} shadows>
