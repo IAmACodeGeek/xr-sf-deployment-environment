@@ -3,6 +3,7 @@ import castlePlaceHolderData from "./placeHolderData/Castle";
 import singleRoomPlaceHolderData from "./placeHolderData/SingleRoom";
 
 import PlaceHolderData from "./placeHolderData/PlaceHolderData";
+import ShowRoomPlaceHolderData from "./placeHolderData/ShowRoom";
 
 interface EnvironmentData {
   [environment_name: string]: {
@@ -157,6 +158,39 @@ const environmentData: EnvironmentData = {
         scale: 3
       }
     ]
+  },
+  "SHOWROOM": {
+    playerSpeed: 15,
+    playerHeight: 7,
+    placeHolderData: ShowRoomPlaceHolderData,
+    initialGSAP: {
+      start: {
+        position: [-20, 7, 0],
+        rotation: [0, 90, 0],
+        duration: 0
+      },
+      update: [
+        {
+          position: [30, 10, 0],
+          rotation: [0, 90, 0],
+          duration: 2
+        },
+      ]
+    },
+    televisions: [
+      {
+        position: [11, 10, -23.5],
+        rotation: [0, -90, 0],
+        scale: 1
+      }
+    ],
+    brandPosters: [
+      {
+        position: [-22.5, 10, 0],
+        rotation: [0, 90, 0],
+        scale: 5
+      }
+    ],
   },
 };
 
