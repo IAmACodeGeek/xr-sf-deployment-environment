@@ -1,22 +1,36 @@
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
-import { useTourStore } from "../stores/ZustandStores";
+import { useTourStore, useEnvironmentStore } from "../stores/ZustandStores";
 import { useEffect } from "react";
+import environmentData from "../data/environment/EnvironmentData";
 
 export const CameraController = ({ setAnimating, playerRef }) => {
   const { camera } = useThree();
   const { tourComplete } = useTourStore();
+  const { environmentType } = useEnvironmentStore();
 
   useEffect(() => {
     if (tourComplete && playerRef.current) {
       setAnimating(true);
 
+      const envConfig = environmentData[environmentType];
+      if (!envConfig) {
+        console.error(`No environment configuration found for ${environmentType}`);
+        return;
+      }
+
+      const { position, rotation } = envConfig.initialGSAP.start;
       const targetPosition = {
-        x: 0.5,
-        y: -4 + 1.95,
-        z: -64
+        x: position[0],
+        y: position[1],
+        z: position[2]
       };
 
+      const targetRotation = {
+        x: rotation[0] * (Math.PI / 180), // Convert degrees to radians
+        y: rotation[1] * (Math.PI / 180),
+        z: rotation[2] * (Math.PI / 180)
+      };
       
       const timeline = gsap.timeline({
         onComplete: () => {
@@ -31,15 +45,13 @@ export const CameraController = ({ setAnimating, playerRef }) => {
         }
       });
 
-    
       timeline.to(camera.rotation, {
-        x: 0,
-        y: 0,
-        z: 0,
+        x: targetRotation.x,
+        y: targetRotation.y,
+        z: targetRotation.z,
         duration: 2,
         ease: "power2.inOut"
       });
-
 
       timeline.to(camera.position, {
         x: targetPosition.x,
@@ -51,7 +63,7 @@ export const CameraController = ({ setAnimating, playerRef }) => {
 
       return () => timeline.kill();
     }
-  }, [tourComplete, camera, setAnimating, playerRef]);
+  }, [tourComplete, camera, setAnimating, playerRef, environmentType]);
 
   return null;
 };

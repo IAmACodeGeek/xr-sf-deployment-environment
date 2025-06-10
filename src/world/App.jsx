@@ -73,8 +73,8 @@ export const App = () => {
     unlockPointer();
   };
 
-  // ✅ Prevent Rendering until brandData is Loaded
-  if (!brandData) {
+  // ✅ Prevent Rendering until brandData is Loaded and environmentType is valid
+  if (!brandData || !environmentType || !environmentData[environmentType]) {
     return null; // or a loading state
   }
 

@@ -22,8 +22,10 @@ const Modal = () => {
     };
   }, [brandData]);
 
-  const containerRef = useRef(null);
-  const modelViewerElement = useRef(null);
+  console.log(brandData);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const modelViewerElement = useRef<any>(null);
   const [arSupported, setArSupported] = useState(false);
 
   useEffect(() => {
@@ -78,6 +80,8 @@ const Modal = () => {
 
   const handleBuyNow = async () => {
     try {
+      console.log('Selected Variant:', selectedVariant);
+      console.log('Client:', client);
       
       Swal.fire({
         title: "Starting Checkout",
@@ -92,6 +96,7 @@ const Modal = () => {
       });
 
       if(!client) {
+        console.error('Client is null');
         Swal.fire({
           title: "Checkout Failed",
           text: "Unable to start checkout. Please try again later.",
@@ -105,7 +110,33 @@ const Modal = () => {
         return;
       }
 
+      if(!selectedVariant) {
+        console.error('Selected variant is null');
+        Swal.fire({
+          title: "Checkout Failed",
+          text: "Please select a product variant before proceeding.",
+          icon: "error",
+          confirmButtonText: "Okay",
+          customClass: {
+            title: styles.swalTitle,
+            popup: styles.swalPopup,
+          },
+        });
+        return;
+      }
+
       // Step 1: Create Cart
+      const cartInput = {
+        lines: [
+          {
+            merchandiseId: `gid://shopify/ProductVariant/${selectedVariant.id}`,
+            quantity: quantity,
+          },
+        ],
+      };
+      
+      console.log('Cart Input:', cartInput);
+      
       const createCartResponse = await fetch(
         `https://${client.domain}/api/${client.apiVersion}/graphql.json`,
         {
@@ -129,23 +160,28 @@ const Modal = () => {
               }
             `,
             variables: {
-              input: {
-                lines: [
-                  {
-                    merchandiseId: `gid://shopify/ProductVariant/${selectedVariant?.id}`,
-                    quantity: quantity,
-                  },
-                ],
-              },
+              input: cartInput,
             },
           }),
         }
       );
 
       const createCartData = await createCartResponse.json();
-      console.log(createCartResponse);
+      console.log('Cart Creation Response:', createCartData);
+      
       if (createCartData.errors) {
+        console.error('GraphQL Errors:', createCartData.errors);
         throw new Error(createCartData.errors[0].message);
+      }
+
+      if (createCartData.data?.cartCreate?.userErrors?.length > 0) {
+        console.error('Shopify User Errors:', createCartData.data.cartCreate.userErrors);
+        throw new Error(createCartData.data.cartCreate.userErrors[0].message);
+      }
+
+      if (!createCartData.data?.cartCreate?.cart) {
+        console.error('Cart creation failed:', createCartData);
+        throw new Error('Failed to create cart');
       }
 
       const checkoutUrl = createCartData.data.cartCreate.cart.checkoutUrl;
@@ -246,12 +282,10 @@ const Modal = () => {
   }, []);
   
   const handleViewInAR = async () => {
-  
     if (mediaType !== MODEL) {
       setMediaType(MODEL); 
-  
 
-      await new Promise((resolve) => {
+      await new Promise<void>((resolve) => {
         const observer = new MutationObserver(() => {
           const element = containerRef.current?.querySelector("model-viewer");
           if (element) {
@@ -267,7 +301,6 @@ const Modal = () => {
       });
     }
   
-    
     if (modelViewerElement.current?.activateAR) {
       modelViewerElement.current.activateAR();
       console.log("AR support exists");
