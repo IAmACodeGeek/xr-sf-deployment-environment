@@ -275,17 +275,18 @@ const UI = () => {
         <img src="/logo.avif" alt="Brand Logo" className={styles.brandLogo} />
       </div>
 
-      {/* <div className={styles.chatLogoContainer}>
+      <div className={styles.chatLogoContainer}>
         <img
-          src="/icons/Chatbot.svg"
-          alt="Chatbot"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/767px-WhatsApp.svg.png"
+          alt="WhatsApp"
           className={styles.chatLogo}
           onPointerDown={(e) => {
-            openChatbotModal();
-            hideCrosshair();
+            e.preventDefault();
+            const contactNumber = Number(brandData?.contact_number.replace(/[^a-zA-Z0-9]/g, ''));
+            window.open(`https://wa.me/${contactNumber}`, '_blank');
           }}
         />
-      </div> */}
+      </div>
 
       {shopifyConfig && <ShopifyProvider
         countryIsoCode="ID"

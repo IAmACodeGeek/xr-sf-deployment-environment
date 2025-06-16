@@ -376,6 +376,7 @@ interface BrandData {
   shopify_storefront_access_token: string;
   original_brand_name: string;
   about_brand: string;
+  contact_number: string;
 }
 
 interface BrandStore {
