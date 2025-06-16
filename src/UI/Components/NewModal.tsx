@@ -916,7 +916,7 @@ const Modal = () => {
         }
       };
       const increment = () => {
-        if (quantity < 5) {
+        if (quantity < selectedVariant.quantity) {
           setQuantity(quantity + 1);
         }
       };

@@ -19,11 +19,11 @@ function CanvasWrapper() {
   const [brandStatus, setBrandStatus] = useState<'LOADING' | 'VALID' | 'INVALID' | null>(null);
 
   useEffect(() => {
-    // const queryParams = new URLSearchParams(window.location.search);
-    // const brandName = queryParams.get('brandName');
-    const host = window.location.hostname;
-    const parts = host.split(".");
-    const brandName = parts[0];
+    const queryParams = new URLSearchParams(window.location.search);
+    const brandName = queryParams.get('brandName');
+    // const host = window.location.hostname;
+    // const parts = host.split(".");
+    // const brandName = parts[0];
 
     if(brandStatus !== null) return;
 
@@ -77,7 +77,15 @@ function CanvasWrapper() {
         if (!productsLoaded && !productsLoading && brandData) {
           setProductsLoading(true);
           const response = (brandData.shopify_store_name !== 'h49c6z-yr.myshopify.com')? await ProductService.getAllProducts(brandData.brand_name) : await ProductService.getAllProductsFromVendor(brandData.original_brand_name);
-          setProducts(response);
+          // Set the quantity of the variants to 5 need to delete this after testing from backend
+          const responseWithVariantQuantity = response.map(product => ({
+            ...product,
+            variants: product.variants.map(variant => ({
+              ...variant,
+              quantity: 5
+            }))
+          }));
+          setProducts(responseWithVariantQuantity);
 
           const newEnvProducts: { [id: number]: EnvProduct } = {};
           for (const product of response) {
