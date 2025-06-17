@@ -7,7 +7,7 @@ import { useComponentStore } from "../../stores/ZustandStores"
 
 const Cart = () => {
   const { lines, linesUpdate, checkoutUrl, linesRemove } = useCart();
-  const { closeCart } = useComponentStore();
+  const { closeCart ,products} = useComponentStore();
 
   useEffect(() => {
     const scrollY = window.scrollY;
@@ -204,7 +204,10 @@ const Cart = () => {
               }
             };
             const increment = () => {
-              if (line?.quantity as number < 5) {
+              const productVariant = products.find(p => p.variants.some(v => {
+                return v.id === Number(line?.merchandise?.id?.split('/')[4])
+              }))?.variants.find(v => v.id === Number(line?.merchandise?.id?.split('/')[4]));
+              if (line?.quantity as number < (productVariant?.inventoryQuantity || 5)) {
                 linesUpdate([
                   {
                     id: line?.id || "",
@@ -295,7 +298,7 @@ const Cart = () => {
                       {line?.merchandise?.price?.currencyCode} {line?.merchandise?.price?.amount}
                     </Typography>
                   </Box>
-                  <Typography
+                  {/* <Typography
                     sx={{
                       width: { xs: "20%", md: "10%" }, height: "30px",
                       fontSize: { xs: "14px", sm: "14px", md: "16px" }, fontFamily: "'Poppins', sans-serif", fontWeight: "bold",
@@ -311,7 +314,7 @@ const Cart = () => {
                         return option.name.toLowerCase() === "size";
                       })?.value.toUpperCase()
                     }
-                  </Typography>
+                  </Typography> */}
                   <Box
                     sx={{
                       minWidth: "70px", width: { xs: "90%", sm: "40%", md: "35%", lg: "30%" }, height: "24px",

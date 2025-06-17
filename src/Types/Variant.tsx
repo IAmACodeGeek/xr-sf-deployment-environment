@@ -7,5 +7,6 @@ export default interface Variant{
     name: string,
     value: string
   }[];
-  availableForSale: boolean;
+  availableForSale: boolean;  
+  inventoryQuantity: number;
 }
