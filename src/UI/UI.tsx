@@ -277,7 +277,7 @@ const UI = () => {
 
       <div className={styles.chatLogoContainer}>
         <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/767px-WhatsApp.svg.png"
+          src="/icons/Whatsapp.png"
           alt="WhatsApp"
           className={styles.chatLogo}
           onPointerDown={(e) => {
