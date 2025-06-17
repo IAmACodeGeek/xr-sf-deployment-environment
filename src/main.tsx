@@ -77,15 +77,7 @@ function CanvasWrapper() {
         if (!productsLoaded && !productsLoading && brandData) {
           setProductsLoading(true);
           const response = (brandData.shopify_store_name !== 'h49c6z-yr.myshopify.com')? await ProductService.getAllProducts(brandData.brand_name) : await ProductService.getAllProductsFromVendor(brandData.original_brand_name);
-          // Set the quantity of the variants to 5 need to delete this after testing from backend
-          const responseWithVariantQuantity = response.map(product => ({
-            ...product,
-            variants: product.variants.map(variant => ({
-              ...variant,
-              quantity: 5
-            }))
-          }));
-          setProducts(responseWithVariantQuantity);
+          setProducts(response);
 
           const newEnvProducts: { [id: number]: EnvProduct } = {};
           for (const product of response) {

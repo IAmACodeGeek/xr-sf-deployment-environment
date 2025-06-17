@@ -107,7 +107,8 @@ export const ProductService = {
           compareAtPrice: variant.node.compareAtPrice,
           productId: Number(product.node.id.split("/").pop()),
           selectedOptions: variant.node.selectedOptions,
-          availableForSale: variant.node.availableForSale
+          availableForSale: variant.node.availableForSale,
+          inventoryQuantity: variant.node.inventoryQuantity
         };
       });
 
@@ -188,6 +189,7 @@ export const ProductService = {
               productId: Number(product.node.id.split("/").pop()),
               selectedOptions: variant.node.selectedOptions,
               availableForSale: variant.node.availableForSale,
+              inventoryQuantity: variant.node.inventoryQuantity
             };
           }
         );

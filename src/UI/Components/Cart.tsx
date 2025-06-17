@@ -207,7 +207,7 @@ const Cart = () => {
               const productVariant = products.find(p => p.variants.some(v => {
                 return v.id === Number(line?.merchandise?.id?.split('/')[4])
               }))?.variants.find(v => v.id === Number(line?.merchandise?.id?.split('/')[4]));
-              if (line?.quantity as number < (productVariant?.quantity || 5)) {
+              if (line?.quantity as number < (productVariant?.inventoryQuantity || 5)) {
                 linesUpdate([
                   {
                     id: line?.id || "",
