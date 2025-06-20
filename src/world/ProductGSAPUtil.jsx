@@ -13,7 +13,8 @@ export const ProductGSAPUtil = ({ setAnimating, playerRef }) => {
 
     setAnimating(true);
     const getPositionOffset = (face) => {
-      const baseY = environmentType === "SHOWROOM" ? 8 : 1;
+      // If searchResult.y > 5, use baseY of 1, otherwise use environment-specific value
+      const baseY = searchResult.y > 5 ? 1 : (environmentType === "SHOWROOM" ? 6 : 1);
       switch(face) {
         case 'N': return { x: 0, y: baseY, z: 3 }; // North - default forward
         case 'S': return { x: 0, y: baseY, z: -3 }; // South - opposite z
