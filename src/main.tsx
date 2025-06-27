@@ -216,12 +216,12 @@ function CanvasWrapper() {
     <>
       {brandData && (
         <Helmet>
-          <title>{brandData.brand_name} - Official Store</title>
+          <title>{brandData.original_brand_name} - Official Store</title>
 
           {/* Open Graph Meta Tags (For Social Sharing) */}
           <meta
             property="og:title"
-            content={`${brandData.brand_name} - Official Store`}
+            content={`${brandData.original_brand_name} - Official Store`}
           />
           {brandData.brand_logo_url && (
             <>
@@ -234,11 +234,11 @@ function CanvasWrapper() {
 
           <meta
             property="og:description"
-            content={`Shop the latest products from ${brandData.brand_name}`}
+            content={`Shop the latest products from ${brandData.original_brand_name}`}
           />
           <meta
             name="description"
-            content={`Welcome to ${brandData.brand_name} store!`}
+            content={`Welcome to ${brandData.original_brand_name} store!`}
           />
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="theme-color" content="#ffffff" />
