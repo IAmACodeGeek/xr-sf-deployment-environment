@@ -4,6 +4,7 @@ import singleRoomPlaceHolderData from "./placeHolderData/SingleRoom";
 
 import PlaceHolderData from "./placeHolderData/PlaceHolderData";
 import ShowRoomPlaceHolderData from "./placeHolderData/ShowRoom";
+import LotusDomePlaceHolderData from "./placeHolderData/LotusDome";
 
 interface EnvironmentData {
   [environment_name: string]: {
@@ -190,6 +191,44 @@ const environmentData: EnvironmentData = {
         rotation: [0, 90, 0],
         scale: 5
       }
+    ],
+  },
+  LOTUSDOME: {
+    playerSpeed: 15,
+    playerHeight: 1.5,
+    placeHolderData: LotusDomePlaceHolderData,
+    initialGSAP: {
+      start: {
+        position: [10, 5, 0],
+        rotation: [0, 90, 0],
+        duration: 0,
+      },
+      update: [
+        {
+          position: [0, 3, 0],
+          rotation: [0, 90, 0],
+          duration: 2,
+        },
+      ],
+    },
+    televisions: [
+      {
+        position: [-22, 4, 6],
+        rotation: [0, 10, 0],
+        scale: 0.3,
+      },
+    ],
+    brandPosters: [
+      {
+        position: [-22, 4, -6],
+        rotation: [0, 80, 0],
+        scale: 2.5,
+      },
+      {
+        position: [-18.686, 4, 13.965],
+        rotation: [0, 123.0, 0],
+        scale: 2.5,
+      },
     ],
   },
 };
