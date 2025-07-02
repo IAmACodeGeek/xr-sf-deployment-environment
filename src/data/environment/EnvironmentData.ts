@@ -5,6 +5,7 @@ import singleRoomPlaceHolderData from "./placeHolderData/SingleRoom";
 import PlaceHolderData from "./placeHolderData/PlaceHolderData";
 import ShowRoomPlaceHolderData from "./placeHolderData/ShowRoom";
 import LotusDomePlaceHolderData from "./placeHolderData/LotusDome";
+import LunoxPlaceHolderData from "./placeHolderData/Lunox";
 
 interface EnvironmentData {
   [environment_name: string]: {
@@ -38,7 +39,7 @@ interface EnvironmentData {
 }
 
 const environmentData: EnvironmentData = {
-  "BIGROOM": {
+  BIGROOM: {
     playerSpeed: 10,
     playerHeight: 2,
     placeHolderData: bigRoomPlaceHolderData,
@@ -46,44 +47,43 @@ const environmentData: EnvironmentData = {
       start: {
         position: [40, 4, 0],
         rotation: [0, 90, 0],
-        duration: 0
+        duration: 0,
       },
       update: [
         {
           position: [40, 4, 0],
           rotation: [0, 270, 0],
-          duration: 5
+          duration: 5,
         },
         {
           position: [20, 3.2, 0],
           rotation: [0, 270, 0],
-          duration: 2
+          duration: 2,
         },
-      ]
+      ],
     },
     televisions: [
       {
         position: [47.8, 4.5, 0],
         rotation: [0, 180, 0],
-        scale: 0.37
-      }
+        scale: 0.37,
+      },
     ],
     brandPosters: [
       {
         position: [-5, 3.2, 14.3],
         rotation: [0, 90, 0],
-        scale: 4
+        scale: 4,
       },
       {
         position: [-5, 3.2, -12.4],
         rotation: [0, 90, 0],
-        scale: 4
-      }
-    ]
-    
+        scale: 4,
+      },
+    ],
   },
-  
-  "CASTLE": {
+
+  CASTLE: {
     playerSpeed: 17,
     playerHeight: 2,
     placeHolderData: castlePlaceHolderData,
@@ -98,26 +98,26 @@ const environmentData: EnvironmentData = {
           position: [10, 2.5, -25],
           rotation: [0, 0, 0],
           duration: 4,
-          ease: "power2.inOut"
-        }
-      ]
+          ease: "power2.inOut",
+        },
+      ],
     },
     televisions: [
       {
         position: [-7.3, 33, -136.5],
         rotation: [0, 276, 0],
-        scale: 0.8
-      }
+        scale: 0.8,
+      },
     ],
     brandPosters: [
       {
         position: [-3.2, 10, -84],
         rotation: [2, 90, 0],
-        scale: 5
-      }
-    ]
+        scale: 5,
+      },
+    ],
   },
-  "SINGLEROOM": {
+  SINGLEROOM: {
     playerSpeed: 15,
     playerHeight: 2,
     placeHolderData: singleRoomPlaceHolderData,
@@ -125,42 +125,42 @@ const environmentData: EnvironmentData = {
       start: {
         position: [0, 3, 0],
         rotation: [0, 0, 0],
-        duration: 0
+        duration: 0,
       },
       update: [
         {
           position: [0, 4, 0],
           rotation: [0, 360, 0],
-          duration: 5
+          duration: 5,
         },
         {
           position: [0, 3.2, 18],
           rotation: [0, 360, 0],
-          duration: 2
+          duration: 2,
         },
-      ]
+      ],
     },
     televisions: [
       {
         position: [0, 4.5, -17.1],
         rotation: [0, -90, 0],
-        scale: 0.6
-      }
+        scale: 0.6,
+      },
     ],
     brandPosters: [
       {
         position: [9, 4.5, -17.1],
         rotation: [0, 0, 0],
-        scale: 3
+        scale: 3,
       },
       {
         position: [-9, 4.5, -17.1],
         rotation: [0, 0, 0],
-        scale: 3
-      }
-    ]
+        scale: 3,
+      },
+    ],
   },
-  "SHOWROOM": {
+  SHOWROOM: {
     playerSpeed: 15,
     playerHeight: 7,
     placeHolderData: ShowRoomPlaceHolderData,
@@ -168,29 +168,29 @@ const environmentData: EnvironmentData = {
       start: {
         position: [-20, 7, 0],
         rotation: [0, 90, 0],
-        duration: 0
+        duration: 0,
       },
       update: [
         {
           position: [30, 10, 0],
           rotation: [0, 90, 0],
-          duration: 2
+          duration: 2,
         },
-      ]
+      ],
     },
     televisions: [
       {
         position: [11, 10, -23.5],
         rotation: [0, -90, 0],
-        scale: 1
-      }
+        scale: 1,
+      },
     ],
     brandPosters: [
       {
         position: [-22.5, 10, 0],
         rotation: [0, 90, 0],
-        scale: 5
-      }
+        scale: 5,
+      },
     ],
   },
   LOTUSDOME: {
@@ -227,6 +227,44 @@ const environmentData: EnvironmentData = {
       {
         position: [-18.686, 4, 13.965],
         rotation: [0, 123.0, 0],
+        scale: 2.5,
+      },
+    ],
+  },
+  LUNOX: {
+    playerSpeed: 8,
+    playerHeight: 2,
+    placeHolderData: LunoxPlaceHolderData,
+    initialGSAP: {
+      start: {
+        position: [10, 5, 0],
+        rotation: [0, 90, 0],
+        duration: 0,
+      },
+      update: [
+        {
+          position: [0, 3, 0],
+          rotation: [0, 90, 0],
+          duration: 2,
+        },
+      ],
+    },
+    televisions: [
+      {
+        position: [-34, 5.2, 0],
+        rotation: [0, 0, 0],
+        scale: 0.45,
+      },
+    ],
+    brandPosters: [
+      {
+        position: [17.2, 5, 7],
+        rotation: [0, -90, 0],
+        scale: 2.5,
+      },
+      {
+        position: [17.2, 5, -8],
+        rotation: [0, -90, 0],
         scale: 2.5,
       },
     ],

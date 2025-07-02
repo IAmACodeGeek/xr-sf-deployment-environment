@@ -4,6 +4,7 @@ import CastleLighting from '@/data/environment/environmentLighting/Castle';
 import SingleRoomLighting from '@/data/environment/environmentLighting/SingleRoom';
 import ShowroomLighting from '@/data/environment/environmentLighting/ShowRoom';
 import LotusDomeLighting from '@/data/environment/environmentLighting/LotusDome';
+import LunoxLighting from '@/data/environment/environmentLighting/Lunox';
 
 const Lights = () => {
   const {environmentType} = useEnvironmentStore();
@@ -15,6 +16,7 @@ const Lights = () => {
       {environmentType === "SINGLEROOM" && <SingleRoomLighting/>}
       {environmentType === "SHOWROOM" && <ShowroomLighting/>}
       {environmentType === "LOTUSDOME" && <LotusDomeLighting/>}
+      {environmentType === "LUNOX" && <LunoxLighting />}
     </>
   );
 };
