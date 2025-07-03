@@ -83,18 +83,6 @@ const Modal = () => {
       console.log('Selected Variant:', selectedVariant);
       console.log('Client:', client);
       
-      Swal.fire({
-        title: "Starting Checkout",
-        text: "Preparing your order...",
-        icon: "info",
-        showConfirmButton: false,
-        allowOutsideClick: false,
-        customClass: {
-          title: styles.swalTitle,
-          popup: styles.swalPopup,
-        },
-      });
-
       if(!client) {
         console.error('Client is null');
         Swal.fire({
@@ -124,6 +112,33 @@ const Modal = () => {
         });
         return;
       }
+
+      // Check if variant is available for sale
+      if (!selectedVariant.availableForSale) {
+        Swal.fire({
+          title: "Product Unavailable",
+          text: "This product variant is currently not available for purchase.",
+          icon: "warning",
+          confirmButtonText: "Okay",
+          customClass: {
+            title: styles.swalTitle,
+            popup: styles.swalPopup,
+          },
+        });
+        return;
+      }
+      
+      Swal.fire({
+        title: "Starting Checkout",
+        text: "Preparing your order...",
+        icon: "info",
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        customClass: {
+          title: styles.swalTitle,
+          popup: styles.swalPopup,
+        },
+      });
 
       // Step 1: Create Cart
       const cartInput = {
@@ -224,9 +239,21 @@ const Modal = () => {
   
     } catch(e) {
       console.error('Checkout error:', e);
+      
+      let errorMessage = "Unable to start checkout. Please try again.";
+      if (e instanceof Error) {
+        if (e.message.includes("does not exist")) {
+          errorMessage = "This product variant is not available in your current market. Please try a different variant or check back later.";
+        } else if (e.message.includes("unavailable")) {
+          errorMessage = "This product is currently unavailable in your region.";
+        } else {
+          errorMessage = `Checkout failed: ${e.message}`;
+        }
+      }
+      
       Swal.fire({
         title: "Checkout Failed",
-        text: "Unable to start checkout. Please try again.",
+        text: errorMessage,
         icon: "error",
         confirmButtonText: "Okay",
         customClass: {
@@ -376,14 +403,37 @@ const Modal = () => {
       return;
     }
 
+    // Check if variant is available for sale
+    if (!selectedVariant.availableForSale) {
+      Swal.fire({
+        title: "Product Unavailable",
+        text: "This product variant is currently not available for purchase.",
+        icon: "warning",
+        confirmButtonText: "Okay",
+        customClass: {
+          title: styles.swalTitle,
+          popup: styles.swalPopup,
+        },
+      });
+      return;
+    }
+
     try {
+      console.log('Adding to cart:', {
+        variantId: selectedVariant.id,
+        merchandiseId: `gid://shopify/ProductVariant/${selectedVariant.id}`,
+        quantity: quantity,
+        selectedVariant: selectedVariant,
+        availableForSale: selectedVariant.availableForSale
+      });
+
       const result = await linesAdd([
         {
           merchandiseId: `gid://shopify/ProductVariant/${selectedVariant.id}`,
           quantity: quantity,
         },
       ]);
-      console.log(result);
+      console.log('Cart add result:', result);
 
       Swal.fire({
         title: "Success",
@@ -396,9 +446,22 @@ const Modal = () => {
         },
       });
     } catch (error) {
+      console.error('Cart add error:', error);
+      
+      let errorMessage = "Cannot add product to cart";
+      if (error instanceof Error) {
+        if (error.message.includes("does not exist")) {
+          errorMessage = "This product variant is not available in your current market. Please try a different variant or check back later.";
+        } else if (error.message.includes("unavailable")) {
+          errorMessage = "This product is currently unavailable in your region.";
+        } else {
+          errorMessage = `Cannot add product to cart: ${error.message}`;
+        }
+      }
+      
       Swal.fire({
         title: "Error",
-        text: "Cannot add product to cart!",
+        text: errorMessage,
         icon: "error",
         confirmButtonText: "Okay",
         customClass: {
@@ -406,7 +469,6 @@ const Modal = () => {
           popup: styles.swalPopup,
         },
       });
-      console.error(error);
       return;
     }
   };
@@ -741,7 +803,7 @@ const Modal = () => {
             }}
             className="ProductPrice"
           >
-            &#8377; {selectedVariant && selectedVariant.price}
+            {selectedVariant && selectedVariant.currencyCode} {selectedVariant && selectedVariant.price}
           </Typography>
           {selectedVariant && selectedVariant.compareAtPrice && (
             <Typography
@@ -753,7 +815,7 @@ const Modal = () => {
               }}
               className="Price"
             >
-              {selectedVariant.compareAtPrice}
+              {selectedVariant.currencyCode} {selectedVariant.compareAtPrice}
             </Typography>
           )}
         </Box>

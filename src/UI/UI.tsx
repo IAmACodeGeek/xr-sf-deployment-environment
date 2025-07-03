@@ -60,11 +60,51 @@ const UI = () => {
   const {brandData} = useBrandStore();
 
   const shopifyConfig = useMemo(() => {
-    if(!brandData) return;
+    if(!brandData) return null;
+    
+    // Determine country and language based on market from brand data
+    let countryCode: "US" | "GB" | "FR" | "IN" = "IN"; // Default to India
+    let languageCode: "EN" | "FR" | "HI" = "EN"; // Default to English
+    
+    // Use market field from brand data response
+    if (brandData.market) {
+      switch (brandData.market) {
+        case "USD":
+          countryCode = "US";
+          languageCode = "EN";
+          break;
+        case "GBP":
+          countryCode = "GB";
+          languageCode = "EN";
+          break;
+        case "EUR":
+          countryCode = "FR";
+          languageCode = "FR";
+          break;
+        case "INR":
+          countryCode = "IN";
+          languageCode = "HI";
+          break;
+        default:
+          // Fallback to India if market is not recognized
+          countryCode = "IN";
+          languageCode = "EN";
+      }
+    }
+    
+    console.log('Shopify Config:', {
+      storeDomain: brandData.shopify_store_name,
+      countryCode,
+      languageCode,
+      market: brandData.market
+    });
+    
     return {
       storeDomain: brandData.shopify_store_name,
       storefrontToken: brandData.shopify_storefront_access_token,
       storefrontApiVersion: "2024-10",
+      countryIsoCode: countryCode,
+      languageIsoCode: languageCode
     };
   }, [brandData]);
 
@@ -288,16 +328,20 @@ const UI = () => {
         />
       </div>
 
-      {shopifyConfig && <ShopifyProvider
-        countryIsoCode="ID"
-        languageIsoCode="ID"
-        {...shopifyConfig}
-      >
-        <CartProvider>
-          {isModalOpen && <Modal />}
-          {isCartOpen && <Cart></Cart>}
-        </CartProvider>
-      </ShopifyProvider>}
+      {shopifyConfig && brandData && (
+        <ShopifyProvider
+          storeDomain={shopifyConfig.storeDomain}
+          storefrontToken={shopifyConfig.storefrontToken}
+          storefrontApiVersion={shopifyConfig.storefrontApiVersion}
+          countryIsoCode={shopifyConfig.countryIsoCode}
+          languageIsoCode={shopifyConfig.languageIsoCode}
+        >
+          <CartProvider>
+            {isModalOpen && <Modal />}
+            {isCartOpen && <Cart></Cart>}
+          </CartProvider>
+        </ShopifyProvider>
+      )}
       {isWishlistOpen && <Wishlist></Wishlist>}
       {isInfoModalOpen && <InfoModal></InfoModal>}
       {isTermsModalOpen && <TermsConditionsModal />}

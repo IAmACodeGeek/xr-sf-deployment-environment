@@ -39,13 +39,24 @@ interface ProductResponse {
               node: {
                 id: string,
                 title: string,
-                price: string,
+                price?: string,
                 compareAtPrice?: string,
                 availableForSale: boolean,
+                inventoryQuantity: number,
                 selectedOptions: {
                   name: string,
                   value: string
                 }[],
+                contextualPricing?: {
+                  price?: {
+                    amount: string;
+                    currencyCode: string;
+                  };
+                  compareAtPrice?: {
+                    amount: string;
+                    currencyCode: string;
+                  };
+                };
               }
             }[]
           },
@@ -69,8 +80,47 @@ interface ProductResponse {
 }
 
 export const ProductService = {
-  async getAllProducts(brandName: string): Promise<Product[]> {
-    const response = await fetch(BASE_URL + brandName);
+  async getAllProducts(brandName: string, brandData?: any): Promise<Product[]> {
+    // Determine region and country based on brand market
+    let region = "india"; // default to india region
+    let country = ""; // no country for india region
+    
+    if (brandData?.market) {
+      switch (brandData.market) {
+        case "USD":
+        case "GBP":
+        case "EUR":
+        case "INR":
+          region = "global";
+          switch (brandData.market) {
+            case "USD":
+              country = "US";
+              break;
+            case "GBP":
+              country = "GB";
+              break;
+            case "EUR":
+              country = "FR";
+              break;
+            case "INR":
+              country = "IN";
+              break;
+          }
+          break;
+        default:
+          region = "india";
+          country = "";
+      }
+    }
+
+    // Build URL with query parameters
+    const url = new URL(BASE_URL + brandName);
+    url.searchParams.set('region', region);
+    if (country) {
+      url.searchParams.set('country', country);
+    }
+
+    const response = await fetch(url.toString());
     const resultJSON: ProductResponse = await response.json();
 
     const products: Product[] = resultJSON.data.products.edges.map((product) => {
@@ -101,14 +151,41 @@ export const ProductService = {
 
       
       const productVariants: Variant[] = product.node.variants.edges.map((variant) => {
+        const v = variant.node;
+
+        // Debug logging
+        console.log('Variant pricing data:', {
+          variantId: v.id,
+          scalarPrice: v.price,
+          scalarComparePrice: v.compareAtPrice,
+          contextualPricing: v.contextualPricing,
+          brandMarket: brandData?.market
+        });
+
+        // prefer contextualPricing if it exists, else fall back to scalar
+        const priceAmount =
+          v.contextualPricing?.price?.amount ?? v.price ?? "0.00";
+        const compareAmount =
+          v.contextualPricing?.compareAtPrice?.amount ?? v.compareAtPrice ?? undefined;
+        const currency =
+          v.contextualPricing?.price?.currencyCode ?? brandData?.market ?? "INR";  // use brand market as fallback
+
+        console.log('Processed pricing:', {
+          variantId: v.id,
+          finalPrice: priceAmount,
+          finalComparePrice: compareAmount,
+          finalCurrency: currency
+        });
+
         return {
-          id: Number(variant.node.id.split("/").pop()),
-          price: variant.node.price,
-          compareAtPrice: variant.node.compareAtPrice,
+          id: Number(v.id.split("/").pop()),
+          price: priceAmount,
+          compareAtPrice: compareAmount,
+          currencyCode: currency,
           productId: Number(product.node.id.split("/").pop()),
-          selectedOptions: variant.node.selectedOptions,
-          availableForSale: variant.node.availableForSale,
-          inventoryQuantity: variant.node.inventoryQuantity
+          selectedOptions: v.selectedOptions,
+          availableForSale: v.availableForSale,
+          inventoryQuantity: v.inventoryQuantity
         };
       });
 
@@ -134,14 +211,42 @@ export const ProductService = {
 
     return products;
   },
-  async getAllProductsFromVendor(brandName: string): Promise<Product[]> {
+  async getAllProductsFromVendor(brandName: string, brandData?: any): Promise<Product[]> {
+    // Determine region and country based on brand market
+    let region = "global"; // default to global region
+    let countryCode = "US"; // default to US
+    
+    if (brandData?.market) {
+      if (brandData.market === "INR") {
+        region = "india";
+        countryCode = "IN";
+      } else {
+        region = "global";
+        switch (brandData.market) {
+          case "USD":
+            countryCode = "US";
+            break;
+          case "GBP":
+            countryCode = "GB";
+            break;
+          case "EUR":
+            countryCode = "FR";
+            break;
+          default:
+            countryCode = "US";
+        }
+      }
+    }
+
     const response = await fetch(OWN_STORE_PRODUCT_URL + brandName, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        vendor: brandName
+        vendor: brandName,
+        region: region,
+        country: countryCode
       })
     });
     const resultJSON: ProductResponse = await response.json();
@@ -182,14 +287,41 @@ export const ProductService = {
 
         const productVariants: Variant[] = product.node.variants.edges.map(
           (variant) => {
+            const v = variant.node;
+
+            // Debug logging
+            console.log('Variant pricing data:', {
+              variantId: v.id,
+              scalarPrice: v.price,
+              scalarComparePrice: v.compareAtPrice,
+              contextualPricing: v.contextualPricing,
+              brandMarket: brandData?.market
+            });
+
+            // prefer contextualPricing if it exists, else fall back to scalar
+            const priceAmount =
+              v.contextualPricing?.price?.amount ?? v.price ?? "0.00";
+            const compareAmount =
+              v.contextualPricing?.compareAtPrice?.amount ?? v.compareAtPrice ?? undefined;
+            const currency =
+              v.contextualPricing?.price?.currencyCode ?? brandData?.market ?? "INR";  // use brand market as fallback
+
+            console.log('Processed pricing:', {
+              variantId: v.id,
+              finalPrice: priceAmount,
+              finalComparePrice: compareAmount,
+              finalCurrency: currency
+            });
+
             return {
-              id: Number(variant.node.id.split("/").pop()),
-              price: variant.node.price,
-              compareAtPrice: variant.node.compareAtPrice,
+              id: Number(v.id.split("/").pop()),
+              price: priceAmount,
+              compareAtPrice: compareAmount,
+              currencyCode: currency,
               productId: Number(product.node.id.split("/").pop()),
-              selectedOptions: variant.node.selectedOptions,
-              availableForSale: variant.node.availableForSale,
-              inventoryQuantity: variant.node.inventoryQuantity
+              selectedOptions: v.selectedOptions,
+              availableForSale: v.availableForSale,
+              inventoryQuantity: v.inventoryQuantity
             };
           }
         );
@@ -219,3 +351,4 @@ export const ProductService = {
     return products;
   }
 };
+

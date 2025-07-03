@@ -377,6 +377,7 @@ interface BrandData {
   original_brand_name: string;
   about_brand: string;
   contact_number: string;
+  market?: "INR" | "GBP" | "EUR" | "USD";
 }
 
 interface BrandStore {

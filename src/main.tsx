@@ -76,7 +76,9 @@ function CanvasWrapper() {
       try {
         if (!productsLoaded && !productsLoading && brandData) {
           setProductsLoading(true);
-          const response = (brandData.shopify_store_name !== 'h49c6z-yr.myshopify.com')? await ProductService.getAllProducts(brandData.brand_name) : await ProductService.getAllProductsFromVendor(brandData.brand_name);
+          const response = (brandData.shopify_store_name !== 'h49c6z-yr.myshopify.com')? 
+            await ProductService.getAllProducts(brandData.brand_name, brandData) : 
+            await ProductService.getAllProductsFromVendor(brandData.brand_name, brandData);
           setProducts(response);
 
           const newEnvProducts: { [id: number]: EnvProduct } = {};
