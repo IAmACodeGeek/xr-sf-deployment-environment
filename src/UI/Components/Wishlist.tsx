@@ -51,32 +51,30 @@ const Wishlist = () => {
   }, []);
 
   const deleteWishlist = () => {
-    Swal.fire({
-      title: "Clear Wishlist",
-      text: "Are you sure you want to clear your wishlist?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, clear it!",
-      cancelButtonText: "No, keep it!",
-      customClass: {
-        title: styles.swalTitle,
-        popup: styles.swalPopup,
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        clearWishlist();
-        Swal.fire({
-          title: "Cleared!",
-          text: "Your wishlist has been cleared.",
-          icon: "success",
-          customClass: {
-            title: styles.swalTitle,
-            popup: styles.swalPopup,
-          },
-        });
-      }
-    });
-  };
+    if (wishlist.length > 0) { 
+      Swal.fire({
+        title: `Clear your Wishlist?`,
+        text: "This action is permanent. You cannot recover the wishlist items once deleted.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Clear Wishlist",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "rgb(234, 34, 34)",
+        cancelButtonColor: "rgb(57, 177, 57)",
+        customClass: {
+          popup: styles.swalPopup,
+          title: styles.swalTitle,
+          confirmButton: styles.swalButton,
+          cancelButton: styles.swalButton,
+          actions: styles.swalActions
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          clearWishlist();
+        }
+      });
+    }
+  }
   return (
     <div
       style={{
