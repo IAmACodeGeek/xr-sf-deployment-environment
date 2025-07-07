@@ -92,6 +92,7 @@ export const ProductService = {
         case "EUR":
         case "GER":
         case "INR":
+        case "GER":
           region = "global";
           switch (brandData.market) {
             case "USD":
@@ -108,6 +109,9 @@ export const ProductService = {
               break;
             case "INR":
               country = "IN";
+              break;
+            case "GER":
+              country = "DE";
               break;
           }
           break;
