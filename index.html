@@ -34,18 +34,30 @@
       defer
       src="https://tools.luckyorange.com/core/lo.js?site-id=281c98f1"
     ></script>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-R8CH61ZG9C"
-    ></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
+      (function() {
+        var host = window.location.hostname;
+        var measurementId;
+        if (host.indexOf('shackit.in') !== -1) {
+          measurementId = 'G-FVTE1K2VN6'; // SHACKIT IND
+        } else if (host.indexOf('shackit.com') !== -1) {
+          measurementId = 'G-XY9BCKKH0M'; // SHACKIT ROW
+        } else {
+          return;
+        }
 
-      gtag("config", "G-R8CH61ZG9C");
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+        document.head.appendChild(script);
+
+        script.onload = function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){ dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', measurementId);
+        };
+      })();
     </script>
   </head>
   <body>
