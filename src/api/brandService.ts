@@ -4,7 +4,7 @@ const BrandService = {
   fetchBrandData: async function(brandName: string){
     try{
       // Determine domain extension based on current window URL
-      const domainExtension = window.location.hostname.includes('shackit.in') ? 'com' : 'in';
+      const domainExtension = window.location.hostname.includes('shackit.in') ? 'in' : 'com';
       
       const response = await fetch(`${BASE_URL}?customurl=${brandName}.shackit.${domainExtension}`, {
         method: 'GET'
