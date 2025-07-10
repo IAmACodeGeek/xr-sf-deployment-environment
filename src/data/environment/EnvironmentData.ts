@@ -9,6 +9,7 @@ import LunoxPlaceHolderData from "./placeHolderData/Lunox";
 import ShelfscapePlaceHolderData from "./placeHolderData/Shelfscape";
 import KidsStorePlaceHolderData from "./placeHolderData/KidsStore";
 import ArcadeZonePlaceHolderData from "./placeHolderData/ArcadeZone";
+import VarsityVaultPlaceHolderData from "./placeHolderData/VarsityVault";
 
 interface EnvironmentData {
   [environment_name: string]: {
@@ -373,6 +374,39 @@ const environmentData: EnvironmentData = {
         position: [0, 3.5, -21],
         rotation: [0, 0, 0],
         scale: 3,
+      },
+    ],
+  },
+  VARSITYVAULT: {
+    playerSpeed: 15,
+    playerHeight: 2.5,
+    placeHolderData: VarsityVaultPlaceHolderData,
+    initialGSAP: {
+      start: {
+        position: [0, 4, 10],
+        rotation: [0, 180, 0],
+        duration: 0,
+      },
+      update: [
+        {
+          position: [0, 3, -20],
+          rotation: [0, 180, 0],
+          duration: 2,
+        },
+      ],
+    },
+    televisions: [
+      {
+        position: [7, 4, -27.6],
+        rotation: [0, -90, 0],
+        scale: 0.4,
+      },
+    ],
+    brandPosters: [
+      {
+        position: [3, 5, 29],
+        rotation: [0, 180, 0],
+        scale: 2.5,
       },
     ],
   },
