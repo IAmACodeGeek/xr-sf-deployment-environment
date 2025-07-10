@@ -1,16 +1,24 @@
-const BASE_URL = 'https://function-11-201137466588.asia-south1.run.app?brandname=';
+const BASE_URL = 'https://get-brand-details-via-customurl-201137466588.asia-south1.run.app';
 
 const BrandService = {
   fetchBrandData: async function(brandName: string){
     try{
-      const response = await fetch(BASE_URL + brandName, {
+      // Determine domain extension based on current window URL
+      const domainExtension = window.location.hostname.includes('shackit.in') ? 'com' : 'in';
+      
+      const response = await fetch(`${BASE_URL}?customurl=${brandName}.shackit.${domainExtension}`, {
         method: 'GET'
       });
-      const result = response.json();
-      return result;
+
+      if(response.ok){
+        return response.json();
+      }
+      else {
+        return response;
+      }
     }
     catch(error){
-      console.error(error);
+      console.error(error); 
     }
   }
 };
