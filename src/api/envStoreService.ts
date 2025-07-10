@@ -6,7 +6,7 @@ const EnvStoreService = {
   getEnvData: async function (brandName: string) : Promise<{envProducts: {[id: number]: EnvProduct}, envAssets: {[id: string]: EnvAsset}}> {
     try{
       // Determine domain extension based on current window URL
-      const domainExtension = window.location.hostname.includes('shackit.in') ? 'com' : 'in';
+      const domainExtension = window.location.hostname.includes('shackit.in') ? 'in' : 'com';
       
       const response = await fetch(`${BASE_URL}?brandname=${brandName}.shackit.${domainExtension}`, {
         method: 'GET'
