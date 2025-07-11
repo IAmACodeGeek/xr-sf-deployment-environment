@@ -78,6 +78,4 @@ const ShowroomModel = () => {
   );
 };
 
-useGLTF.preload("/models/new cloth store.glb"); // Preload the GLTF fil
-
 export default ShowroomModel;
