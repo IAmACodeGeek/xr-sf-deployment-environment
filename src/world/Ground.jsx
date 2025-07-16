@@ -12,6 +12,7 @@ import { ArcadeZoneModel } from '@/data/environment/environmentModel/ArcadeZone'
 import { VarsityVaultModel } from '@/data/environment/environmentModel/VarsityVault';
 import { GlowBarModel } from '@/data/environment/environmentModel/Glowbar';
 import { LuxeCradleModel } from '@/data/environment/environmentModel/LuxeCradle';
+import { FlareSuiteModel } from '@/data/environment/environmentModel/FlareSuite';
 
 export function Ground() {
   const { environmentType } = useEnvironmentStore();
@@ -29,6 +30,7 @@ export function Ground() {
       {environmentType === "VARSITYVAULT" && <VarsityVaultModel />}
       {environmentType === "GLOWBAR" && <GlowBarModel />}
       {environmentType === "LUXECRADLE" && <LuxeCradleModel />}
+      {environmentType === "FLARESUITE" && <FlareSuiteModel />}
     </RigidBody>
   );
 }
