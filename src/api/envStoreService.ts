@@ -1,6 +1,7 @@
 import { EnvAsset, EnvProduct } from "@/stores/ZustandStores";
+import { CLOUD_RUN_ENDPOINTS } from './cloudUtil';
 
-const BASE_URL = "https://get-env-data-201137466588.asia-south1.run.app";
+const BASE_URL = CLOUD_RUN_ENDPOINTS.ENV_STORE.GET_ENV_DATA;
 
 const EnvStoreService = {
   getEnvData: async function (brandName: string) : Promise<{envProducts: {[id: number]: EnvProduct}, envAssets: {[id: string]: EnvAsset}}> {

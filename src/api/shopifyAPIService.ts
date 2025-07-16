@@ -1,8 +1,9 @@
 import Variant from '@/Types/Variant';
 import Product from '../Types/Product';
+import { CLOUD_RUN_ENDPOINTS } from './cloudUtil';
 
-const BASE_URL = "https://function-14-201137466588.asia-south1.run.app?brandname=";
-const OWN_STORE_PRODUCT_URL = "https://fetch-products-by-vendor-201137466588.asia-south1.run.app?vendor=";
+const BASE_URL = CLOUD_RUN_ENDPOINTS.PRODUCT_FETCH.SHOPIFY_PRODUCTS + '?brandname=';
+const OWN_STORE_PRODUCT_URL = CLOUD_RUN_ENDPOINTS.OWN_STORE.FETCH_PRODUCTS + '?vendor=';
 
 interface ProductResponse {
   data: {
