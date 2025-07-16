@@ -378,6 +378,7 @@ interface BrandData {
   about_brand: string;
   contact_number: string;
   market?: "INR" | "GBP" | "EUR" | "USD" | "GER";
+  account_status?: "active" | "inactive";
 }
 
 interface BrandStore {
