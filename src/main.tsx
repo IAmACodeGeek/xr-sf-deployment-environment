@@ -12,11 +12,16 @@ import { useComponentStore, useEnvAssetStore, useEnvironmentStore, useBrandStore
 import BrandService from "./api/brandService";
 import EnvStoreService from "./api/envStoreService";
 import Load from "./UI/Components/Loader.js";
+import { LinearToneMapping, NoToneMapping } from "three";
 
 function CanvasWrapper() {
   // Load brand data
   const { brandData, setBrandData } = useBrandStore();
   const [brandStatus, setBrandStatus] = useState<'LOADING' | 'VALID' | 'INVALID' | null>(null);
+  const { environmentType } = useEnvironmentStore();
+  
+  // Environments that should use LinearToneMapping
+  const linearToneMappingEnvironments = ["GLOWBAR", "LUXECRADLE"];
 
   useEffect(() => {
     // const queryParams = new URLSearchParams(window.location.search);
@@ -387,7 +392,11 @@ function CanvasWrapper() {
           <Load progress={myProgress} />
         )}
         {myProgress >= 100 && brandData?.account_status === 'active' &&
-          <Canvas camera={{ fov: 45 }} shadows>
+          <Canvas camera={{ fov: 45 }} 
+           gl={{
+            toneMapping: environmentType && linearToneMappingEnvironments.includes(environmentType) ? LinearToneMapping : NoToneMapping,
+          }}
+          shadows>
             <React.Suspense fallback={null}>
               <App />
             </React.Suspense>
