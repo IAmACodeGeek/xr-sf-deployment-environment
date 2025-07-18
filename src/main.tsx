@@ -12,7 +12,7 @@ import { useComponentStore, useEnvAssetStore, useEnvironmentStore, useBrandStore
 import BrandService from "./api/brandService";
 import EnvStoreService from "./api/envStoreService";
 import Load from "./UI/Components/Loader.js";
-import { LinearToneMapping, NoToneMapping } from "three";
+import { ACESFilmicToneMapping, LinearToneMapping } from "three";
 
 function CanvasWrapper() {
   // Load brand data
@@ -21,14 +21,14 @@ function CanvasWrapper() {
   const { environmentType } = useEnvironmentStore();
   
   // Environments that should use LinearToneMapping
-  const linearToneMappingEnvironments = ["GLOWBAR", "LUXECRADLE"];
+  const linearToneMappingEnvironments = ["GLOWBAR", "LUXECRADLE","GARDENATELIER"];
 
   useEffect(() => {
-    // const queryParams = new URLSearchParams(window.location.search);
-    // const brandName = queryParams.get('brandName');
-    const host = window.location.hostname;
-    const parts = host.split(".");
-    const brandName = parts[0];
+    const queryParams = new URLSearchParams(window.location.search);
+    const brandName = queryParams.get('brandName');
+    // const host = window.location.hostname;
+    // const parts = host.split(".");
+    // const brandName = parts[0];
 
     if(brandStatus !== null) return;
 
@@ -394,7 +394,7 @@ function CanvasWrapper() {
         {myProgress >= 100 && brandData?.account_status === 'active' &&
           <Canvas camera={{ fov: 45 }} 
            gl={{
-            toneMapping: environmentType && linearToneMappingEnvironments.includes(environmentType) ? LinearToneMapping : NoToneMapping,
+            toneMapping: environmentType && linearToneMappingEnvironments.includes(environmentType) ? LinearToneMapping : ACESFilmicToneMapping,
           }}
           shadows>
             <React.Suspense fallback={null}>
