@@ -21,7 +21,6 @@ import ContactUsModal from "@/UI/Components/ContactUsModal";
 import ReactAudioPlayer from "react-audio-player";
 import ModalWrapper from "@/UI/Components/ModalWrapper";
 import ProductSearcher from "@/UI/Components/ProductSearcher";
-import { showPremiumPopup } from "./Components/PremiumRequired";
 
 const customDriverStyles = `
   .driver-popover {
@@ -371,7 +370,7 @@ const UI = () => {
       </div>
       <ReactAudioPlayer
         ref={audioPlayerRef}
-        src="/media/Soundtrack.mp3"
+        src={brandData?.brand_music_url}
         autoPlay={false}
         loop
       />

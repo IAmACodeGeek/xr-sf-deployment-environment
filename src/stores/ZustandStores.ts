@@ -370,6 +370,7 @@ interface BrandData {
   brand_logo_url: string;
   brand_poster_url: string;
   brand_video_url: string;
+  brand_music_url: string;
   environment_name: string;
   email: string;
   shopify_store_name: string;

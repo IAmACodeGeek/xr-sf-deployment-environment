@@ -225,7 +225,7 @@ const SettingsModal = () => {
           <ChevronRightIcon />
         </Box>
         <br />
-        {/* <Box
+        <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
@@ -241,7 +241,7 @@ const SettingsModal = () => {
             Music
           </Typography>
           <IOSSwitch checked={isAudioPlaying} onChange={handleSwitchToggle} />
-        </Box> */}
+        </Box>
       </Card>
     </div>
   );
