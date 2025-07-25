@@ -14,6 +14,7 @@ import GlowBarPlaceHolderData from "./placeHolderData/Glowbar";
 import LuxeCradlePlaceHolderData from "./placeHolderData/LuxeCradle";
 import FlareSuitePlaceHolderData from "./placeHolderData/FlareSuite";
 import GardenAtlierPlaceHolderData from "./placeHolderData/GardenAtelier";
+import CocktailDenPlaceHolderData from "./placeHolderData/CocktailDen";
 
 interface EnvironmentData {
   [environment_name: string]: {
@@ -544,7 +545,40 @@ const environmentData: EnvironmentData = {
         rotation: [0, 0, 0],
         scale: 2.8,
       },
-     
+    ],
+  },
+  
+  COCKTAILDEN: {
+    playerSpeed: 10,
+    playerHeight: 5,
+    placeHolderData: CocktailDenPlaceHolderData,
+    initialGSAP: {
+      start: {
+        position: [0, 6, 0],
+        rotation: [0, 45, 0],
+        duration: 0,
+      },
+      update: [
+        {
+          position: [22, 6, 22],
+          rotation: [0, 45, 0],
+          duration: 2,
+        },
+      ],
+    },
+    televisions: [
+      {
+        position: [4.102, 10.115, 22.392],
+        rotation: [0, 90, 0],
+        scale: 0.6,
+      },
+    ],
+    brandPosters: [
+      {
+        position: [22.875, 10.115, -0.785],
+        rotation: [0, -90, 0],
+        scale: 4,
+      },
     ],
   },
 };
