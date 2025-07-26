@@ -8,7 +8,7 @@ const BrandService = {
       // Determine domain extension based on current window URL
       const domainExtension = window.location.hostname.includes('shackit.in') ? 'in' : 'com';
       
-      const response = await fetch(`${BASE_URL}?customurl=${brandName}.shackit.${domainExtension}`, {
+      const response = await fetch(`${BASE_URL}?customurl=${brandName}.shackit.${"in"}`, {
         method: 'GET'
       });
 
