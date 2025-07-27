@@ -13,11 +13,11 @@ const Load: React.FC<LoadProps> = ({ progress }) => {
           {/* Logo and Title Section */}
           <div className="loader-header">
             <img
-              src="logo.avif"
+              src="shackit.png"
               alt="Strategy Fox"
               className="powered-by-loader"
             />
-            <div className="loading-text">Delta XR</div>
+            <div className="loading-text">Shackit XR</div>
           </div>
 
           {/* Spinner Section */}
