@@ -43,7 +43,7 @@ const TourPopover = ({
   onClose: () => void;
   isMobile: boolean;
 }) => {
-  const steps = [
+  const steps = useMemo(() => [
     {
       title: "How to Navigate",
       description: isMobile 
@@ -92,7 +92,7 @@ const TourPopover = ({
       leftLabel: "Chat",
       rightLabel: "WhatsApp"
     }
-  ];
+  ], [isMobile]);
 
   if (!isVisible) return null;
 
