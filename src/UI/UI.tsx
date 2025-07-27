@@ -21,6 +21,7 @@ import ModalWrapper from "@/UI/Components/ModalWrapper";
 import ProductSearcher from "@/UI/Components/ProductSearcher";
 import CartCount from "@/UI/Components/CartCount";
 import { showPremiumPopup } from "./Components/PremiumRequired";
+import { MoveLeft } from "lucide-react";
 
 
 
@@ -122,25 +123,25 @@ const TourPopover = ({
     onPrevious();
   };
 
-  return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 9999,
-        pointerEvents: "auto",
-      }}
-      onClick={handleClose}
-    >
-      <div
-        style={{
+  // Calculate positioning based on current step
+  const getPopoverPosition = () => {
+    if (currentStep <= 2) {
+      // Steps 1-2: Center the popover
+      return {
+        container: {
+          position: "fixed" as const,
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          display: "flex" as const,
+          justifyContent: "center" as const,
+          alignItems: "center" as const,
+          zIndex: 9999,
+          pointerEvents: "auto" as const,
+        },
+        popover: {
           backgroundColor: "rgba(0, 0, 0, 0.9)",
           backdropFilter: "blur(15px)",
           borderRadius: "20px",
@@ -149,8 +150,93 @@ const TourPopover = ({
           width: "90%",
           border: "1px solid rgba(255, 255, 255, 0.2)",
           boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5)",
-          pointerEvents: "auto",
-        }}
+          pointerEvents: "auto" as const,
+        }
+      };
+    } else {
+      // Steps 3-7: Position near the buttons
+      const isTopPosition = currentStep <= 6; // Steps 3-6 at top, step 7 at bottom
+      
+      if (isMobile) {
+        // Mobile: Same positioning as desktop but with mobile sizing
+        return {
+          container: {
+            position: "fixed" as const,
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex" as const,
+            justifyContent: "flex-start" as const,
+            alignItems: isTopPosition ? "flex-start" as const : "flex-end" as const,
+            paddingTop: isTopPosition ? "20px" : "0",
+            paddingBottom: isTopPosition ? "0" : "20px",
+            paddingRight: "80px",
+            zIndex: 9999,
+            pointerEvents: "auto" as const,
+          },
+          popover: {
+            backgroundColor: "rgba(0, 0, 0, 0.9)",
+            backdropFilter: "blur(15px)",
+            borderRadius: "20px",
+            padding: "20px",
+            maxWidth: "280px",
+            width: "280px",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5)",
+            pointerEvents: "auto" as const,
+            marginTop: isTopPosition ? "60px" : "0",
+            marginBottom: isTopPosition ? "0" : "60px",
+          }
+        };
+      } else {
+        // Desktop: Position to the right side with up/down movement
+        return {
+          container: {
+            position: "fixed" as const,
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex" as const,
+            justifyContent: "center" as const,
+            alignItems: isTopPosition ? "flex-start" as const : "flex-end" as const,
+            paddingTop: isTopPosition ? "20px" : "0",
+            paddingBottom: isTopPosition ? "0" : "20px",
+            zIndex: 9999,
+            pointerEvents: "auto" as const,
+          },
+          popover: {
+            backgroundColor: "rgba(0, 0, 0, 0.9)",
+            backdropFilter: "blur(15px)",
+            borderRadius: "20px",
+            padding: "20px",
+            maxWidth: "280px",
+            width: "280px",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5)",
+            pointerEvents: "auto" as const,
+            marginTop: isTopPosition ? "60px" : "0",
+            marginBottom: isTopPosition ? "0" : "60px",
+            marginLeft: "auto",
+            marginRight: "100px",
+          }
+        };
+      }
+    }
+  };
+
+  const position = getPopoverPosition();
+
+  return (
+    <div
+      style={position.container}
+      onClick={handleClose}
+    >
+      <div
+        style={position.popover}
         onClick={(e) => {
           e.stopPropagation();
         }}
@@ -166,7 +252,7 @@ const TourPopover = ({
           <h2 style={{ 
             color: "white", 
             margin: 0, 
-            fontSize: "24px", 
+            fontSize: isMobile ? "14px" : "24px", 
             fontFamily: "'Poppins', sans-serif",
             fontWeight: "600"
           }}>
@@ -200,7 +286,7 @@ const TourPopover = ({
           <div style={{ 
             color: "white", 
             marginBottom: "30px",
-            fontSize: "16px",
+            fontSize: isMobile ? "10px" : "16px",
             lineHeight: "1.5",
             fontFamily: "'Poppins', sans-serif"
           }}>
@@ -237,7 +323,7 @@ const TourPopover = ({
                 />
                 <div style={{ 
                   color: "white", 
-                  fontSize: "16px",
+                  fontSize: isMobile ? "10px" : "16px",
                   fontFamily: "'Poppins', sans-serif",
                   fontWeight: "600"
                 }}>
@@ -272,7 +358,7 @@ const TourPopover = ({
                 />
                 <div style={{ 
                   color: "white", 
-                  fontSize: "16px",
+                  fontSize: isMobile ? "10px" : "16px",
                   fontFamily: "'Poppins', sans-serif",
                   fontWeight: "600"
                 }}>
@@ -300,7 +386,7 @@ const TourPopover = ({
                 />
                 <div style={{ 
                   color: "white", 
-                  fontSize: "18px",
+                  fontSize: isMobile ? "11px" : "18px",
                   fontFamily: "'Poppins', sans-serif",
                   fontWeight: "600"
                 }}>
@@ -316,7 +402,7 @@ const TourPopover = ({
               }}>
                 <div style={{ 
                   color: "white", 
-                  fontSize: "16px",
+                  fontSize: isMobile ? "10px" : "16px",
                   lineHeight: "1.6",
                   fontFamily: "'Poppins', sans-serif",
                   fontWeight: "400"
@@ -337,7 +423,7 @@ const TourPopover = ({
                 </div>
                 <div style={{ 
                   color: "white", 
-                  fontSize: "14px",
+                  fontSize: isMobile ? "9px" : "14px",
                   fontFamily: "'Poppins', sans-serif",
                   fontWeight: "500"
                 }}>
@@ -362,7 +448,7 @@ const TourPopover = ({
                 </div>
                 <div style={{ 
                   color: "white", 
-                  fontSize: "14px",
+                  fontSize: isMobile ? "9px" : "14px",
                   fontFamily: "'Poppins', sans-serif",
                   fontWeight: "500"
                 }}>
@@ -382,7 +468,7 @@ const TourPopover = ({
         }}>
           <div style={{ 
             color: "white", 
-            fontSize: "14px",
+            fontSize: isMobile ? "9px" : "14px",
             fontFamily: "'Poppins', sans-serif",
             fontWeight: "500"
           }}>
@@ -399,7 +485,7 @@ const TourPopover = ({
                 color: "white",
                 borderRadius: "8px",
                 cursor: currentStep === 1 ? "not-allowed" : "pointer",
-                fontSize: "14px",
+                fontSize: isMobile ? "9px" : "14px",
                 fontFamily: "'Poppins', sans-serif",
                 pointerEvents: "auto",
                 userSelect: "none",
@@ -419,7 +505,7 @@ const TourPopover = ({
                 color: "white",
                 borderRadius: "8px",
                 cursor: "pointer",
-                fontSize: "14px",
+                fontSize: isMobile ? "9px" : "14px",
                 fontFamily: "'Poppins', sans-serif",
                 fontWeight: "500",
                 pointerEvents: "auto",
