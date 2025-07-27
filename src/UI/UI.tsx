@@ -43,6 +43,8 @@ const TourPopover = ({
   onClose: () => void;
   isMobile: boolean;
 }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  
   const steps = useMemo(() => [
     {
       title: "How to Navigate",
@@ -97,7 +99,6 @@ const TourPopover = ({
   if (!isVisible) return null;
 
   const currentStepData = steps[currentStep - 1];
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleClose = () => {
     console.log('Closing tour');
@@ -328,7 +329,8 @@ const TourPopover = ({
                     marginBottom: "15px",
                     filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.4))",
                     objectFit: "contain",
-                    display: imageLoaded ? "block" : "none"
+                    display: imageLoaded ? "block" : "none",
+                    margin: imageLoaded ? "0 auto" : "0"
                   }}
                   onLoad={() => setImageLoaded(true)}
                 />
@@ -381,7 +383,8 @@ const TourPopover = ({
                     marginBottom: "15px",
                     filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.4))",
                     objectFit: "contain",
-                    display: imageLoaded ? "block" : "none"
+                    display: imageLoaded ? "block" : "none",
+                    margin: imageLoaded ? "0 auto" : "0"
                   }}
                   onLoad={() => setImageLoaded(true)}
                 />
@@ -427,7 +430,8 @@ const TourPopover = ({
                     marginBottom: "15px",
                     filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.5))",
                     objectFit: "contain",
-                    display: imageLoaded ? "block" : "none"
+                    display: imageLoaded ? "block" : "none",
+                    margin: imageLoaded ? "0 auto" : "0"
                   }}
                   onLoad={() => setImageLoaded(true)}
                 />
