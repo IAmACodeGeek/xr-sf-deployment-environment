@@ -68,7 +68,7 @@ export const Player = () => {
     const joystickZone = document.createElement("div");
     joystickZone.id = "joystickZone";
     joystickZone.style.position = "absolute";
-    joystickZone.style.bottom = "15vh"; 
+    joystickZone.style.bottom = "19vh"; 
     joystickZone.style.left = "13vw"; 
     joystickZone.style.width = "150px";
     joystickZone.style.height = "150px";

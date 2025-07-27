@@ -58,47 +58,37 @@ const TourPopover = ({
       title: "How to Interact",
       description: "Point and click on products to view them in 3D/2D, read more details, and add them to your cart or wishlist. There's a lot more you can do!",
       leftImage: "/Product-Click.png",
-      rightImage: undefined,
+      rightImage: "/Product-Click.png",
       leftLabel: "Product Interaction",
       rightLabel: ""
     },
     {
       title: "Search Products",
       description: "Search for products and go there with a single click",
-      leftIcon: "🔍",
-      rightIcon: "📍",
       leftLabel: "Search",
       rightLabel: "Navigate"
     },
     {
       title: "Shopping Cart",
       description: "View and manage items in your shopping cart",
-      leftIcon: "🛒",
-      rightIcon: "💳",
       leftLabel: "Cart",
       rightLabel: "Checkout"
     },
     {
       title: "Wishlist",
       description: "Save items for later in your wishlist",
-      leftIcon: "❤️",
-      rightIcon: "📝",
       leftLabel: "Save",
       rightLabel: "List"
     },
     {
       title: "Settings",
       description: "Manage your preferences, explore app features, and customize your experience",
-      leftIcon: "⚙️",
-      rightIcon: "🎵",
       leftLabel: "Settings",
       rightLabel: "Audio"
     },
     {
       title: "Chat Assistant",
       description: "Need more help? Chat with us on WhatsApp.",
-      leftIcon: "💬",
-      rightIcon: "📱",
       leftLabel: "Chat",
       rightLabel: "WhatsApp"
     }
@@ -411,52 +401,7 @@ const TourPopover = ({
                 </div>
               </div>
             </>
-          ) : (
-            <>
-              <div style={{ textAlign: "center", flex: 1 }}>
-                <div style={{ 
-                  fontSize: "48px", 
-                  marginBottom: "10px",
-                  filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))"
-                }}>
-                  {currentStepData.leftIcon}
-                </div>
-                <div style={{ 
-                  color: "white", 
-                  fontSize: isMobile ? "9px" : "14px",
-                  fontFamily: "'Poppins', sans-serif",
-                  fontWeight: "500"
-                }}>
-                  {currentStepData.leftLabel}
-                </div>
-              </div>
-              
-              <div style={{ 
-                width: "60px", 
-                height: "2px", 
-                backgroundColor: "rgba(255, 255, 255, 0.3)",
-                margin: "0 20px"
-              }} />
-              
-              <div style={{ textAlign: "center", flex: 1 }}>
-                <div style={{ 
-                  fontSize: "48px", 
-                  marginBottom: "10px",
-                  filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))"
-                }}>
-                  {currentStepData.rightIcon}
-                </div>
-                <div style={{ 
-                  color: "white", 
-                  fontSize: isMobile ? "9px" : "14px",
-                  fontFamily: "'Poppins', sans-serif",
-                  fontWeight: "500"
-                }}>
-                  {currentStepData.rightLabel}
-                </div>
-              </div>
-            </>
-          )}
+          ) : null}
         </div>
 
         {/* Footer */}
