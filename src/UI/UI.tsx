@@ -97,6 +97,7 @@ const TourPopover = ({
   if (!isVisible) return null;
 
   const currentStepData = steps[currentStep - 1];
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleClose = () => {
     console.log('Closing tour');
@@ -105,11 +106,13 @@ const TourPopover = ({
 
   const handleNext = () => {
     console.log('Next step');
+    setImageLoaded(false);
     onNext();
   };
 
   const handlePrevious = () => {
     console.log('Previous step');
+    setImageLoaded(false);
     onPrevious();
   };
 
@@ -300,6 +303,22 @@ const TourPopover = ({
                 width: isMobile ? "100%" : "50%",
                 flex: isMobile ? "none" : "1"
               }}>
+                {!imageLoaded && (
+                  <div style={{ 
+                    width: "auto", 
+                    height: isMobile ? "120px" : "100px", 
+                    marginBottom: "15px",
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    borderRadius: "8px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "rgba(255, 255, 255, 0.5)",
+                    fontSize: "12px"
+                  }}>
+                    Loading...
+                  </div>
+                )}
                 <img 
                   src={currentStepData.leftImage} 
                   alt="Left Control"
@@ -308,8 +327,10 @@ const TourPopover = ({
                     height: isMobile ? "120px" : "100px", 
                     marginBottom: "15px",
                     filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.4))",
-                    objectFit: "contain"
+                    objectFit: "contain",
+                    display: imageLoaded ? "block" : "none"
                   }}
+                  onLoad={() => setImageLoaded(true)}
                 />
                 <div style={{ 
                   color: "white", 
@@ -335,6 +356,22 @@ const TourPopover = ({
                 width: isMobile ? "100%" : "50%",
                 flex: isMobile ? "none" : "1"
               }}>
+                {!imageLoaded && (
+                  <div style={{ 
+                    width: "auto", 
+                    height: isMobile ? "120px" : "100px", 
+                    marginBottom: "15px",
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    borderRadius: "8px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "rgba(255, 255, 255, 0.5)",
+                    fontSize: "12px"
+                  }}>
+                    Loading...
+                  </div>
+                )}
                 <img 
                   src={currentStepData.rightImage} 
                   alt="Right Control"
@@ -343,8 +380,10 @@ const TourPopover = ({
                     height: isMobile ? "120px" : "100px", 
                     marginBottom: "15px",
                     filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.4))",
-                    objectFit: "contain"
+                    objectFit: "contain",
+                    display: imageLoaded ? "block" : "none"
                   }}
+                  onLoad={() => setImageLoaded(true)}
                 />
                 <div style={{ 
                   color: "white", 
@@ -363,6 +402,22 @@ const TourPopover = ({
                 width: isMobile ? "100%" : "60%",
                 flex: isMobile ? "none" : "1"
               }}>
+                {!imageLoaded && (
+                  <div style={{ 
+                    width: "auto", 
+                    height: isMobile ? "200px" : "250px", 
+                    marginBottom: "15px",
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    borderRadius: "8px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "rgba(255, 255, 255, 0.5)",
+                    fontSize: "12px"
+                  }}>
+                    Loading...
+                  </div>
+                )}
                 <img 
                   src={currentStepData.leftImage} 
                   alt="Product Interaction"
@@ -371,8 +426,10 @@ const TourPopover = ({
                     height: isMobile ? "200px" : "250px", 
                     marginBottom: "15px",
                     filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.5))",
-                    objectFit: "contain"
+                    objectFit: "contain",
+                    display: imageLoaded ? "block" : "none"
                   }}
+                  onLoad={() => setImageLoaded(true)}
                 />
                 <div style={{ 
                   color: "white", 
