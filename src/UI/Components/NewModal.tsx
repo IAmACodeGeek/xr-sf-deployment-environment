@@ -1255,6 +1255,7 @@ const Modal = () => {
         height: "100vh",
         backgroundColor: "rgba(0, 0, 0, 0)",
         pointerEvents: "auto",
+        zIndex : 99999
       }}
       onClick={onClickOutside}
     >
