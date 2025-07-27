@@ -246,7 +246,7 @@ const TourPopover = ({
           <h2 style={{ 
             color: "white", 
             margin: 0, 
-            fontSize: isMobile ? "14px" : "24px", 
+            fontSize: isMobile ? "18px" : "24px", 
             fontFamily: "'Poppins', sans-serif",
             fontWeight: "600"
           }}>
@@ -280,7 +280,7 @@ const TourPopover = ({
           <div style={{ 
             color: "white", 
             marginBottom: "30px",
-            fontSize: isMobile ? "10px" : "16px",
+            fontSize: isMobile ? "14px" : "16px",
             lineHeight: "1.5",
             fontFamily: "'Poppins', sans-serif"
           }}>
@@ -336,7 +336,7 @@ const TourPopover = ({
                 />
                 <div style={{ 
                   color: "white", 
-                  fontSize: isMobile ? "10px" : "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   fontFamily: "'Poppins', sans-serif",
                   fontWeight: "600"
                 }}>
@@ -390,7 +390,7 @@ const TourPopover = ({
                 />
                 <div style={{ 
                   color: "white", 
-                  fontSize: isMobile ? "10px" : "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   fontFamily: "'Poppins', sans-serif",
                   fontWeight: "600"
                 }}>
@@ -437,7 +437,7 @@ const TourPopover = ({
                 />
                 <div style={{ 
                   color: "white", 
-                  fontSize: isMobile ? "11px" : "18px",
+                  fontSize: isMobile ? "16px" : "18px",
                   fontFamily: "'Poppins', sans-serif",
                   fontWeight: "600"
                 }}>
@@ -453,7 +453,7 @@ const TourPopover = ({
               }}>
                 <div style={{ 
                   color: "white", 
-                  fontSize: isMobile ? "10px" : "16px",
+                  fontSize: isMobile ? "14px" : "16px",
                   lineHeight: "1.6",
                   fontFamily: "'Poppins', sans-serif",
                   fontWeight: "400"
@@ -474,7 +474,7 @@ const TourPopover = ({
         }}>
           <div style={{ 
             color: "white", 
-            fontSize: isMobile ? "9px" : "14px",
+            fontSize: isMobile ? "12px" : "14px",
             fontFamily: "'Poppins', sans-serif",
             fontWeight: "500"
           }}>
@@ -491,7 +491,7 @@ const TourPopover = ({
                 color: "white",
                 borderRadius: "8px",
                 cursor: currentStep === 1 ? "not-allowed" : "pointer",
-                fontSize: isMobile ? "9px" : "14px",
+                fontSize: isMobile ? "12px" : "14px",
                 fontFamily: "'Poppins', sans-serif",
                 pointerEvents: "auto",
                 userSelect: "none",
@@ -511,7 +511,7 @@ const TourPopover = ({
                 color: "white",
                 borderRadius: "8px",
                 cursor: "pointer",
-                fontSize: isMobile ? "9px" : "14px",
+                fontSize: isMobile ? "12px" : "14px",
                 fontFamily: "'Poppins', sans-serif",
                 fontWeight: "500",
                 pointerEvents: "auto",
@@ -669,9 +669,15 @@ const UI = () => {
     if (isSettingsModalOpen) closeSettingsModal();
     if (isProductSearcherOpen) closeProductSearcher();
 
+    // Hide joystick when tour starts
+    const joystickZone = document.getElementById("joystickZone");
+    if (joystickZone) {
+      joystickZone.style.display = "none";
+    }
+
     setTourVisible(true);
     setCurrentTourStep(1);
-      activateDriver();
+    activateDriver();
   };
 
   const nextTourStep = () => {
@@ -692,7 +698,12 @@ const UI = () => {
     setTourVisible(false);
     setCurrentTourStep(1);
     deactivateDriver();
-    // Removed setTourComplete(true) to prevent camera animation
+    
+    // Show joystick when tour ends
+    const joystickZone = document.getElementById("joystickZone");
+    if (joystickZone) {
+      joystickZone.style.display = "block";
+    }
   };
 
 
@@ -730,10 +741,13 @@ const UI = () => {
                     onClick={openCart}
                     style={{
                       zIndex: tourVisible && currentTourStep === 4 ? 10000 : 1,
-                      filter: tourVisible && currentTourStep === 4 ? "invert(1)" : "none"
+                      filter: tourVisible && currentTourStep === 4 ? "invert(1) brightness(1.5)" : "none"
                     }}
                   />
-                  <CartCount />
+                  <CartCount 
+                    tourZIndex={tourVisible && currentTourStep === 4 ? 10001 : undefined}
+                    tourFilter={tourVisible && currentTourStep === 4 ? "invert(1) brightness(1.5)" : undefined}
+                  />
                 </div>
                 <img
                   src="/icons/Wishlist.svg"
@@ -857,7 +871,7 @@ const UI = () => {
                 onClick={openCart}
                 style={{
                   zIndex: tourVisible && currentTourStep === 4 ? 10000 : 1,
-                  filter: tourVisible && currentTourStep === 4 ? "invert(1)" : "none"
+                  filter: tourVisible && currentTourStep === 4 ? "invert(1) brightness(1.5)" : "none"
                 }}
               />
             </div>

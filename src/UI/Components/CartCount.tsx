@@ -1,6 +1,11 @@
 import { useCart } from "@shopify/hydrogen-react";
 
-const CartCount = () => {
+interface CartCountProps {
+  tourZIndex?: number;
+  tourFilter?: string;
+}
+
+const CartCount = ({ tourZIndex, tourFilter }: CartCountProps) => {
   const { lines } = useCart();
 
   // Calculate total quantity from all cart lines
@@ -32,9 +37,9 @@ const CartCount = () => {
         fontFamily: "'Poppins', sans-serif",
         border: "2px solid rgba(0, 0, 0, 0.8)",
         boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)",
-        zIndex: 10,
+        zIndex: tourZIndex || 9999,
         minWidth: "20px",
-        minHeight: "20px",
+        minHeight: "20px"
       }}
     >
       {totalQuantity > 99 ? "99+" : totalQuantity}
