@@ -24,11 +24,11 @@ function CanvasWrapper() {
   const linearToneMappingEnvironments = ["GLOWBAR", "LUXECRADLE","GARDENATELIER"];
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const brandName = queryParams.get('brandName');
-    // const host = window.location.hostname;
-    // const parts = host.split(".");
-    // const brandName = parts[0];
+    // const queryParams = new URLSearchParams(window.location.search);
+    // const brandName = queryParams.get('brandName');
+    const host = window.location.hostname;
+    const parts = host.split(".");
+    const brandName = parts[0];
 
     if(brandStatus !== null) return;
 
