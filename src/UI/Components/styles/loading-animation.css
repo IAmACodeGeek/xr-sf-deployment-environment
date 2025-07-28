@@ -9,7 +9,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  justify-content: center;
+  gap: min(2rem, 3vh);
+  height: 100vh;
+  width: 100vw;
 }
 
 .loader-background {
@@ -29,8 +32,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3rem;
-  padding: 2rem;
+  justify-content: center;
+  gap: min(3rem, 4vh);
+  padding: min(2rem, 3vh);
+  max-height: 90vh;
+  width: 100%;
 }
 
 /* Header Section */
@@ -38,32 +44,36 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: min(0.5rem, 1vh);
+  flex-shrink: 0;
 }
 
 .powered-by-loader {
-  width: 300px;
+  width: min(300px, 25vw);
   height: auto;
-  margin-bottom: 0.5rem;
+  max-width: 100%;
+  margin-bottom: min(0.5rem, 1vh);
 }
 
 .loading-text {
   color: #fff;
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 600;
   font-family: "SF Pro Display", sans-serif;
-  margin-bottom: 0.5rem;
+  margin-bottom: min(0.5rem, 1vh);
+  text-align: center;
 }
 
 /* Spinner Section */
 .spinner {
-  width: 70.4px;
-  height: 70.4px;
+  width: clamp(50px, 8vw, 70.4px);
+  height: clamp(50px, 8vw, 70.4px);
   --clr: rgb(234, 80, 35);
   --clr-alpha: rgba(234, 80, 35, 0.1);
   animation: spinner 1.6s infinite ease;
   transform-style: preserve-3d;
-  margin-bottom: 30px;
+  margin-bottom: min(30px, 4vh);
+  flex-shrink: 0;
 }
 
 .spinner > div {
@@ -71,7 +81,7 @@
   height: 100%;
   position: absolute;
   width: 100%;
-  border: 3.5px solid var(--clr);
+  border: clamp(2px, 0.5vw, 3.5px) solid var(--clr);
 }
 
 .spinner div:nth-of-type(1) {
@@ -107,21 +117,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
+  gap: min(0.25rem, 0.5vh);
+  flex-shrink: 0;
 }
 
 .progress-text {
   color: #fff;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
   font-family: "SF Pro Display", sans-serif;
   opacity: 0.8;
+  text-align: center;
 }
 
 .progress-percentage {
   color: #fff;
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 600;
   font-family: "SF Pro Display", sans-serif;
+  text-align: center;
 }
 
 /* Loading Line */
@@ -130,13 +143,120 @@
   bottom: 0;
   left: 0;
   width: 100vw;
-  height: 4px;
+  height: clamp(2px, 0.5vh, 4px);
   background: linear-gradient(to right, #e1401d, #f39c12, #e1401d);
   background-size: 200% 100%;
   box-shadow: 0 0 10px rgba(255, 87, 34, 0.6);
   transform-origin: left;
   z-index: 10000;
   transition: transform 0.3s ease-out, background-position 0.3s ease-out;
+}
+
+/* Responsive adjustments for very small heights */
+@media (max-height: 600px) {
+  .loader-container {
+    gap: min(1rem, 2vh);
+    padding: min(0.5rem, 1vh);
+    max-height: 95vh;
+  }
+  
+  .loader-header {
+    gap: min(0.25rem, 0.5vh);
+  }
+  
+  .powered-by-loader {
+    width: min(180px, 18vw);
+    margin-bottom: min(0.25rem, 0.5vh);
+  }
+  
+  .loading-text {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    margin-bottom: min(0.25rem, 0.5vh);
+  }
+  
+  .spinner {
+    width: clamp(40px, 6vw, 60px);
+    height: clamp(40px, 6vw, 60px);
+    margin-bottom: min(10px, 1.5vh);
+  }
+  
+  .progress-section {
+    gap: min(0.125rem, 0.25vh);
+  }
+  
+  .progress-text {
+    font-size: clamp(0.8rem, 2vw, 1rem);
+  }
+  
+  .progress-percentage {
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+  }
+}
+
+/* Specific adjustments for very small landscape devices */
+@media (max-height: 600px) and (min-width: 1000px) {
+  .loader-container {
+    flex-direction: row;
+    gap: min(2rem, 3vw);
+    align-items: center;
+    justify-content: center;
+    padding: min(1rem, 2vh) min(2rem, 3vw);
+  }
+  
+  .loader-header {
+    flex-shrink: 0;
+    min-width: 0;
+  }
+  
+  .powered-by-loader {
+    width: min(120px, 12vw);
+    margin-bottom: min(0.25rem, 0.5vh);
+  }
+  
+  .loading-text {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    margin-bottom: 0;
+  }
+  
+  .spinner {
+    width: clamp(35px, 5vw, 50px);
+    height: clamp(35px, 5vw, 50px);
+    margin-bottom: 0;
+    margin-right: min(1rem, 2vw);
+    margin-left: min(1rem, 2vw);
+  }
+  
+  .progress-section {
+    flex-shrink: 0;
+    min-width: 0;
+  }
+  
+  .progress-text {
+    font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+  }
+  
+  .progress-percentage {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+  }
+}
+
+/* Responsive adjustments for very small widths */
+@media (max-width: 480px) {
+  .powered-by-loader {
+    width: min(250px, 80vw);
+  }
+  
+  .loading-text {
+    font-size: clamp(1.2rem, 5vw, 1.5rem);
+  }
+  
+  .progress-text {
+    font-size: clamp(0.9rem, 3vw, 1rem);
+  }
+  
+  .progress-percentage {
+    font-size: clamp(1.3rem, 5vw, 1.5rem);
+  }
 }
 
 /* Animations */
