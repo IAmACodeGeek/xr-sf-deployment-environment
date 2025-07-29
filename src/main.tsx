@@ -12,6 +12,8 @@ import { useComponentStore, useEnvAssetStore, useEnvironmentStore, useBrandStore
 import BrandService from "./api/brandService";
 import EnvStoreService from "./api/envStoreService";
 import Load from "./UI/Components/Loader.js";
+import ErrorBoundary from "./UI/Components/ErrorBoundary";
+import ThreeJSErrorBoundary from "./UI/Components/ThreeJSErrorBoundary";
 import { ACESFilmicToneMapping, LinearToneMapping } from "three";
 
 function CanvasWrapper() {
@@ -256,7 +258,9 @@ function CanvasWrapper() {
       )}
       <div id="container">
         {myProgress >= 100 && brandData?.account_status === 'active' ? (
-          <UI />
+          <ErrorBoundary>
+            <UI />
+          </ErrorBoundary>
         ) : myProgress >= 100 && brandData?.account_status === 'inactive' ? (
           <div style={{
             position: 'fixed',
@@ -392,15 +396,17 @@ function CanvasWrapper() {
           <Load progress={myProgress} />
         )}
         {myProgress >= 100 && brandData?.account_status === 'active' &&
-          <Canvas camera={{ fov: 45 }} 
-           gl={{
-            toneMapping: environmentType && linearToneMappingEnvironments.includes(environmentType) ? LinearToneMapping : ACESFilmicToneMapping,
-          }}
-          shadows>
-            <React.Suspense fallback={null}>
-              <App />
-            </React.Suspense>
-          </Canvas>
+          <ThreeJSErrorBoundary>
+            <Canvas camera={{ fov: 45 }} 
+             gl={{
+               toneMapping: environmentType && linearToneMappingEnvironments.includes(environmentType) ? LinearToneMapping : ACESFilmicToneMapping,
+             }}
+            shadows>
+              <React.Suspense fallback={null}>
+                <App />
+              </React.Suspense>
+            </Canvas>
+          </ThreeJSErrorBoundary>
         }
       </div>
     </>
@@ -433,7 +439,9 @@ if (import.meta.env.PROD) {
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <HelmetProvider>
-      <CanvasWrapper />
+      <ErrorBoundary>
+        <CanvasWrapper />
+      </ErrorBoundary>
     </HelmetProvider>
   </React.StrictMode>
 );

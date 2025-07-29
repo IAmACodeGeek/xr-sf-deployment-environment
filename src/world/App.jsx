@@ -10,6 +10,7 @@ import Products from "./Products.jsx";
 import Lights from "./Lights.jsx";
 import { Suspense, useState, useEffect } from "react";
 import Skybox from "./Skybox.jsx";
+import ThreeJSErrorBoundary from "../UI/Components/ThreeJSErrorBoundary";
 import {
   useComponentStore,
   usePointerLockStore,
@@ -79,54 +80,56 @@ export const App = () => {
   }
 
   return (
-    <>
-      {!isMobile && (
-        <PointerLockControls
-          onLock={pointerLockControlsLockHandler}
-          onUnlock={pointerLockControlsUnlockHandler}
-        />
-      )}
-      <Skybox />
-      <Lights />
-      <Physics gravity={[0, -20, 0]}>
-        <Ground />
-        <Suspense fallback={null}>
-          <Player />
-        </Suspense>
-        <Products />
-        {brandData && (
-          <>
-            {environmentData[environmentType].televisions && 
-              environmentData[environmentType].televisions.map((television, index) => {
-                return (
-                  <Television
-                    videoPath={brandData.brand_video_url}
-                    scale={television.scale}
-                    position={television.position}
-                    rotation={television.rotation}
-                    key={index}
-                  />
-                );
-              })
-            }
-            {
-              environmentData[environmentType].brandPosters &&
-                environmentData[environmentType].brandPosters.map((brandPoster, index) => {
+    <ThreeJSErrorBoundary>
+      <>
+        {!isMobile && (
+          <PointerLockControls
+            onLock={pointerLockControlsLockHandler}
+            onUnlock={pointerLockControlsUnlockHandler}
+          />
+        )}
+        <Skybox />
+        <Lights />
+        <Physics gravity={[0, -20, 0]}>
+          <Ground />
+          <Suspense fallback={null}>
+            <Player />
+          </Suspense>
+          <Products />
+          {brandData && (
+            <>
+              {environmentData[environmentType].televisions && 
+                environmentData[environmentType].televisions.map((television, index) => {
                   return (
-                    <BrandPoster
-                      imageUrl={brandData.brand_poster_url}
-                      position={brandPoster.position}
-                      rotation={brandPoster.rotation}
-                      scale={brandPoster.scale}
+                    <Television
+                      videoPath={brandData.brand_video_url}
+                      scale={television.scale}
+                      position={television.position}
+                      rotation={television.rotation}
                       key={index}
                     />
                   );
                 })
-            }
-          </>
-        )}
-      </Physics>
-    </>
+              }
+              {
+                environmentData[environmentType].brandPosters &&
+                  environmentData[environmentType].brandPosters.map((brandPoster, index) => {
+                    return (
+                      <BrandPoster
+                        imageUrl={brandData.brand_poster_url}
+                        position={brandPoster.position}
+                        rotation={brandPoster.rotation}
+                        scale={brandPoster.scale}
+                        key={index}
+                      />
+                    );
+                  })
+              }
+            </>
+          )}
+        </Physics>
+      </>
+    </ThreeJSErrorBoundary>
   );
 };
 
