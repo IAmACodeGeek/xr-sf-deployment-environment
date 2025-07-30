@@ -80,9 +80,13 @@ interface ComponentStore {
   // Settings Handling
   isSettingsModalOpen: boolean;
   isAudioPlaying: boolean;
+  touchSensitivityMultiplier: number;
+  playerSpeedMultiplier: number;
   openSettingsModal: () => void;
   closeSettingsModal: () => void;
   setAudioPlaying: (play: boolean) => void;
+  setTouchSensitivityMultiplier: (multiplier: number) => void;
+  setPlayerSpeedMultiplier: (multiplier: number) => void;
 
   // Discount Handling
   discountCode: string;
@@ -196,6 +200,8 @@ const useComponentStore = create<ComponentStore>((set) => ({
   // Settings Handling
   isSettingsModalOpen: false,
   isAudioPlaying: false,
+  touchSensitivityMultiplier: 1,
+  playerSpeedMultiplier: 1,
   openSettingsModal: () => {
     set({ crosshairVisible: false });
     set({ isSettingsModalOpen: true });
@@ -205,6 +211,8 @@ const useComponentStore = create<ComponentStore>((set) => ({
     set({ isSettingsModalOpen: false });
   },
   setAudioPlaying: (play: boolean) => set({ isAudioPlaying: play }),
+  setTouchSensitivityMultiplier: (multiplier: number) => set({ touchSensitivityMultiplier: multiplier }),
+  setPlayerSpeedMultiplier: (multiplier: number) => set({ playerSpeedMultiplier: multiplier }),
 
   // Discount Handling
   discountCode: "",

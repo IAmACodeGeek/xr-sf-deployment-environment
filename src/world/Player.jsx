@@ -22,8 +22,14 @@ export const Player = () => {
   // Set player speed based on environment
   const [moveSpeed, setMoveSpeed] = useState(0);
   const {environmentType} = useEnvironmentStore();
-  // Set initial position & rotation
-      const startPosition = new THREE.Vector3(...environmentData[environmentType].initialGSAP.start.position);
+  
+
+  
+  // Set initial position & rotation with safety check
+  const startPosition = environmentType && environmentData[environmentType] && environmentData[environmentType].initialGSAP
+    ? new THREE.Vector3(...environmentData[environmentType].initialGSAP.start.position)
+    : new THREE.Vector3(0, 7, -5);
+    
   useEffect(() => {
     if(!environmentData[environmentType]) return;
     setMoveSpeed(environmentData[environmentType].playerSpeed);
@@ -65,15 +71,24 @@ export const Player = () => {
   useEffect(() => {
     if (!isMobile) return;
 
+    // Clean up existing joystick if it exists
+    const existingJoystick = document.getElementById("joystickZone");
+    if (existingJoystick) {
+      existingJoystick.remove();
+    }
+
     const joystickZone = document.createElement("div");
     joystickZone.id = "joystickZone";
     joystickZone.style.position = "absolute";
     joystickZone.style.bottom = "19vh"; 
-    joystickZone.style.left = "13vw"; 
     joystickZone.style.width = "150px";
     joystickZone.style.height = "150px";
     joystickZone.style.zIndex = "3"; 
     joystickZone.style.pointerEvents = "all"; 
+    
+    // Set default position
+    joystickZone.style.left = "13vw";
+    
     document.body.appendChild(joystickZone);
 
     const JOYSTICK_SIZE = 130; 
@@ -123,7 +138,7 @@ export const Player = () => {
 
       const { angle, distance } = data;
       const radian = angle.radian; 
-      const speed = (distance / 100) * moveSpeed;
+      const speed = (distance / 100) * moveSpeed * (playerSpeedMultiplier || 1);
 
       direction.set(Math.cos(radian) * speed, 0, -Math.sin(radian) * speed * 2);
     };
@@ -141,11 +156,14 @@ export const Player = () => {
     };
   }, [isMobile, moveSpeed]);
 
+
+
   // Initial Tour of the environment
   const initialTourComplete = useRef(false);
   const { 
     isModalOpen, isCartOpen, isWishlistOpen, crosshairVisible ,
     isInfoModalOpen , isDiscountModalOpen , isSettingsModalOpen , isTermsModalOpen , isContactModalOpen , isProductSearcherOpen,
+    touchSensitivityMultiplier = 1, playerSpeedMultiplier = 1,
   } = useComponentStore();
   
   const { isTouchEnabled, enableTouch} = useTouchStore();
@@ -243,7 +261,10 @@ export const Player = () => {
       const deltaX = touch.clientX - touchRef.current.previousCameraTouch.x;
       const deltaY = touch.clientY - touchRef.current.previousCameraTouch.y;
 
-      const sensitivity = TOUCH_SENSITIVITY;
+      const sensitivity = {
+        x: TOUCH_SENSITIVITY.x * touchSensitivityMultiplier,
+        y: TOUCH_SENSITIVITY.y * touchSensitivityMultiplier
+      };
 
       camera.rotation.order = "YXZ";
       camera.rotation.y -= deltaX * sensitivity.x;
@@ -282,7 +303,7 @@ export const Player = () => {
       document.removeEventListener("touchmove", handleTouchMove);
       document.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [camera, isPortrait, isTouchEnabled, isModalOpen, isCartOpen, isWishlistOpen, isInfoModalOpen,isDiscountModalOpen,isSettingsModalOpen,isTermsModalOpen,isContactModalOpen,crosshairVisible,isProductSearcherOpen]);
+  }, [camera, isPortrait, isTouchEnabled, isModalOpen, isCartOpen, isWishlistOpen, isInfoModalOpen,isDiscountModalOpen,isSettingsModalOpen,isTermsModalOpen,isContactModalOpen,crosshairVisible,isProductSearcherOpen, touchSensitivityMultiplier]);
 
   const combinedInput = new THREE.Vector3();
   const movementDirection = new THREE.Vector3();
@@ -310,7 +331,7 @@ export const Player = () => {
         .copy(combinedInput)
         .applyQuaternion(state.camera.quaternion) 
         .normalize()
-        .multiplyScalar(moveSpeed);
+        .multiplyScalar(moveSpeed * playerSpeedMultiplier);
 
     
       playerRef.current.wakeUp();

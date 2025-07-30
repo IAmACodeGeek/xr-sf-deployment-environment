@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
 import { useComponentStore } from "../../stores/ZustandStores";
-import { Card, Box, Typography } from "@mui/material";
+import { Card, Box, Typography, Slider, Switch } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { styled } from "@mui/material/styles";
-import Switch, { SwitchProps } from "@mui/material/Switch";
+import { SwitchProps } from "@mui/material/Switch";
 
 const SettingsModal = () => {
   const modalRef = useRef<HTMLDivElement>(null);
@@ -12,6 +12,10 @@ const SettingsModal = () => {
     closeSettingsModal,
     isAudioPlaying,
     setAudioPlaying,
+    touchSensitivityMultiplier,
+    setTouchSensitivityMultiplier,
+    playerSpeedMultiplier,
+    setPlayerSpeedMultiplier,
     openInfoModal,
     openTermsModal,
     openContactModal,
@@ -22,8 +26,18 @@ const SettingsModal = () => {
     if (modal && !modal.contains(event.target as Node)) closeSettingsModal();
   };
 
-  const handleSwitchToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAudioToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAudioPlaying(event.target.checked);
+  };
+
+
+
+  const handleTouchSensitivityChange = (event: Event, newValue: number | number[]) => {
+    setTouchSensitivityMultiplier(newValue as number);
+  };
+
+  const handlePlayerSpeedChange = (event: Event, newValue: number | number[]) => {
+    setPlayerSpeedMultiplier(newValue as number);
   };
 
   const IOSSwitch = styled((props: SwitchProps) => (
@@ -90,7 +104,44 @@ const SettingsModal = () => {
     },
   }));
 
-
+  const StyledSlider = styled(Slider)(({ theme }) => ({
+    color: "#65C466",
+    height: 3,
+    "& .MuiSlider-track": {
+      border: "none",
+    },
+    "& .MuiSlider-thumb": {
+      height: 24,
+      width: 24,
+      backgroundColor: "#fff",
+      border: "2px solid currentColor",
+      "&:focus, &:hover, &.Mui-active, &.Mui-focusVisible": {
+        boxShadow: "inherit",
+      },
+      "&:before": {
+        display: "none",
+      },
+    },
+    "& .MuiSlider-valueLabel": {
+      lineHeight: 1.2,
+      fontSize: 12,
+      background: "unset",
+      padding: 0,
+      width: 32,
+      height: 32,
+      borderRadius: "50% 50% 50% 0",
+      backgroundColor: "#65C466",
+      transformOrigin: "bottom left",
+      transform: "translate(50%, -100%) rotate(-45deg) scale(0)",
+      "&:before": { display: "none" },
+      "&.MuiSlider-valueLabelOpen": {
+        transform: "translate(50%, -100%) rotate(-45deg) scale(1)",
+      },
+      "& > *": {
+        transform: "rotate(45deg)",
+      },
+    },
+  }));
 
   return (
     <div
@@ -105,6 +156,7 @@ const SettingsModal = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        zIndex: 10000,
       }}
       onClick={onClickOutside}
     >
@@ -126,6 +178,8 @@ const SettingsModal = () => {
           borderRadius: { xs: "10px", md: "25px" },
           border: "1px solid rgba(255, 255, 255, 0.2)",
           padding: 2,
+          maxHeight: "80vh",
+          overflowY: "auto",
         }}
       >
         <Box
@@ -155,54 +209,8 @@ const SettingsModal = () => {
           </Typography>
         </Box>
         <br />
-        {/* <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            padding: 2,
-            backgroundColor: "#424147",
-            color: "white",
-            borderRadius: "10px",
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            openInfoModal();
-          }}
-        >
-          <Typography
-            sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: "medium" }}
-          >
-            Privacy Policy
-          </Typography>
-          <ChevronRightIcon />
-        </Box>
-        <br /> */}
-        {/* <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            padding: 2,
-            backgroundColor: "#424147",
-            color: "white",
-            borderRadius: "10px",
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            openTermsModal();
-          }}
-        >
-          <Typography
-            sx={{
-              fontFamily: "'Poppins', sans-serif",
-              fontWeight: "medium",
-              backgroundColor: "#424147",
-            }}
-          >
-            Terms & Conditions
-          </Typography>
-          <ChevronRightIcon />
-        </Box>
-        <br /> */}
+        
+        {/* About Us */}
         <Box
           sx={{
             display: "flex",
@@ -212,6 +220,7 @@ const SettingsModal = () => {
             color: "white",
             borderRadius: "10px",
             cursor: "pointer",
+            marginBottom: 1,
           }}
           onClick={() => {
             openContactModal();
@@ -224,15 +233,18 @@ const SettingsModal = () => {
           </Typography>
           <ChevronRightIcon />
         </Box>
-        <br />
+
+        {/* Music Toggle */}
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
             padding: 2,
             backgroundColor: "#424147",
             color: "white",
             borderRadius: "10px",
+            marginBottom: 1,
           }}
         >
           <Typography
@@ -240,7 +252,69 @@ const SettingsModal = () => {
           >
             Music
           </Typography>
-          <IOSSwitch checked={isAudioPlaying} onChange={handleSwitchToggle} />
+          <IOSSwitch checked={isAudioPlaying} onChange={handleAudioToggle} />
+        </Box>
+
+
+
+        {/* Touch Sensitivity Slider */}
+        <Box
+          sx={{
+            padding: 2,
+            backgroundColor: "#424147",
+            color: "white",
+            borderRadius: "10px",
+            marginBottom: 1,
+          }}
+        >
+          <Typography
+            sx={{ 
+              fontFamily: "'Poppins', sans-serif", 
+              fontWeight: "medium",
+              marginBottom: 1
+            }}
+          >
+            Touch Sensitivity
+          </Typography>
+          <StyledSlider
+            value={touchSensitivityMultiplier}
+            onChange={handleTouchSensitivityChange}
+            min={0.5}
+            max={2}
+            step={0.1}
+            valueLabelDisplay="auto"
+            valueLabelFormat={(value) => `${value}x`}
+          />
+        </Box>
+
+        {/* Player Speed Slider */}
+        <Box
+          sx={{
+            padding: 2,
+            backgroundColor: "#424147",
+            color: "white",
+            borderRadius: "10px",
+            marginBottom: 1,
+          }}
+        >
+          <Typography
+            sx={{ 
+              fontFamily: "'Poppins', sans-serif", 
+              fontWeight: "medium",
+              marginBottom: 1
+            }}
+          >
+            Player Speed
+          </Typography>
+          <StyledSlider
+            value={playerSpeedMultiplier}
+            onChange={handlePlayerSpeedChange}
+            min={0.5}
+            max={2}
+            step={0.1}
+            valueLabelDisplay="auto"
+            valueLabelFormat={(value) => `${value}x`}
+          />
         </Box>
       </Card>
     </div>
