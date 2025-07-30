@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useComponentStore } from "../../stores/ZustandStores";
-import { Card, Box, Typography, Slider, Switch } from "@mui/material";
+import { Card, Box, Typography, Switch, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { styled } from "@mui/material/styles";
@@ -38,13 +38,31 @@ const SettingsModal = () => {
 
 
 
-  const handleTouchSensitivityChange = (event: Event, newValue: number | number[]) => {
-    setTouchSensitivityMultiplier(newValue as number);
+  const handleTouchSensitivityChange = (value: number) => {
+    setTouchSensitivityMultiplier(value);
   };
 
-  const handlePlayerSpeedChange = (event: Event, newValue: number | number[]) => {
-    setPlayerSpeedMultiplier(newValue as number);
+  const handlePlayerSpeedChange = (value: number) => {
+    setPlayerSpeedMultiplier(value);
   };
+
+  const StyledButton = styled(Button)<{ isActive: boolean }>(({ isActive }) => ({
+    padding: "6px 12px",
+    borderRadius: "16px",
+    border: "none",
+    cursor: "pointer",
+    fontFamily: "'Poppins', sans-serif",
+    fontSize: "11px",
+    fontWeight: "medium",
+    textTransform: "none",
+    minWidth: "auto",
+    transition: "all 0.3s ease",
+    backgroundColor: isActive ? "#FF6B35" : "rgba(255, 255, 255, 0.1)",
+    color: isActive ? "#fff" : "#fff",
+    "&:hover": {
+      backgroundColor: isActive ? "#FF6B35" : "rgba(255, 255, 255, 0.2)",
+    }
+  }));
 
   const IOSSwitch = styled((props: SwitchProps) => (
     <Switch
@@ -110,44 +128,7 @@ const SettingsModal = () => {
     },
   }));
 
-  const StyledSlider = styled(Slider)(({ theme }) => ({
-    color: "#65C466",
-    height: 3,
-    "& .MuiSlider-track": {
-      border: "none",
-    },
-    "& .MuiSlider-thumb": {
-      height: 24,
-      width: 24,
-      backgroundColor: "#fff",
-      border: "2px solid currentColor",
-      "&:focus, &:hover, &.Mui-active, &.Mui-focusVisible": {
-        boxShadow: "inherit",
-      },
-      "&:before": {
-        display: "none",
-      },
-    },
-    "& .MuiSlider-valueLabel": {
-      lineHeight: 1.2,
-      fontSize: 12,
-      background: "unset",
-      padding: 0,
-      width: 32,
-      height: 32,
-      borderRadius: "50% 50% 50% 0",
-      backgroundColor: "#65C466",
-      transformOrigin: "bottom left",
-      transform: "translate(50%, -100%) rotate(-45deg) scale(0)",
-      "&:before": { display: "none" },
-      "&.MuiSlider-valueLabelOpen": {
-        transform: "translate(50%, -100%) rotate(-45deg) scale(1)",
-      },
-      "& > *": {
-        transform: "rotate(45deg)",
-      },
-    },
-  }));
+
 
   return (
     <div
@@ -298,7 +279,7 @@ const SettingsModal = () => {
 
 
 
-        {/* Touch Sensitivity Slider */}
+        {/* Touch Sensitivity Buttons */}
         <Box
           sx={{
             padding: 2,
@@ -312,23 +293,30 @@ const SettingsModal = () => {
             sx={{ 
               fontFamily: "'Poppins', sans-serif", 
               fontWeight: "medium",
-              marginBottom: 1
+              marginBottom: 2
             }}
           >
             Touch Sensitivity
           </Typography>
-          <StyledSlider
-            value={touchSensitivityMultiplier}
-            onChange={handleTouchSensitivityChange}
-            min={0.5}
-            max={2}
-            step={0.1}
-            valueLabelDisplay="auto"
-            valueLabelFormat={(value) => `${value}x`}
-          />
+          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+            {[
+              { label: "Low", value: 0.5 },
+              { label: "Med", value: 1.0 },
+              { label: "High", value: 1.5 },
+              { label: "Very High", value: 2.0 }
+            ].map((option) => (
+              <StyledButton
+                key={option.label}
+                onClick={() => handleTouchSensitivityChange(option.value)}
+                isActive={touchSensitivityMultiplier === option.value}
+              >
+                {option.label}
+              </StyledButton>
+            ))}
+          </Box>
         </Box>
 
-        {/* Player Speed Slider */}
+        {/* Player Speed Buttons */}
         <Box
           sx={{
             padding: 2,
@@ -342,20 +330,27 @@ const SettingsModal = () => {
             sx={{ 
               fontFamily: "'Poppins', sans-serif", 
               fontWeight: "medium",
-              marginBottom: 1
+              marginBottom: 2
             }}
           >
             Player Speed
           </Typography>
-          <StyledSlider
-            value={playerSpeedMultiplier}
-            onChange={handlePlayerSpeedChange}
-            min={0.5}
-            max={2}
-            step={0.1}
-            valueLabelDisplay="auto"
-            valueLabelFormat={(value) => `${value}x`}
-          />
+          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+            {[
+              { label: "Low", value: 0.5 },
+              { label: "Med", value: 1.0 },
+              { label: "High", value: 1.5 },
+              { label: "Very High", value: 2.0 }
+            ].map((option) => (
+              <StyledButton
+                key={option.label}
+                onClick={() => handlePlayerSpeedChange(option.value)}
+                isActive={playerSpeedMultiplier === option.value}
+              >
+                {option.label}
+              </StyledButton>
+            ))}
+          </Box>
         </Box>
       </Card>
     </div>
