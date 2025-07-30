@@ -14,7 +14,7 @@ export const CLOUD_RUN_ENDPOINTS = {
 
   // Own Store API
   OWN_STORE: {
-    FETCH_PRODUCTS: fn('fetch-products-by-vendor'),
+    FETCH_PRODUCTS: fn('fetch-products-vendor-deploy'),
   },
 
   // Environment Store API
