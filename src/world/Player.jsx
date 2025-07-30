@@ -86,8 +86,14 @@ export const Player = () => {
     joystickZone.style.zIndex = "3"; 
     joystickZone.style.pointerEvents = "all"; 
     
-    // Set default position
-    joystickZone.style.left = "13vw";
+    // Set initial position based on stored preference
+    if (joystickPosition === "right") {
+      joystickZone.style.right = "-3vw";
+      joystickZone.style.left = "auto";
+    } else {
+      joystickZone.style.left = "13vw";
+      joystickZone.style.right = "auto";
+    }
     
     document.body.appendChild(joystickZone);
 
@@ -163,7 +169,7 @@ export const Player = () => {
   const { 
     isModalOpen, isCartOpen, isWishlistOpen, crosshairVisible ,
     isInfoModalOpen , isDiscountModalOpen , isSettingsModalOpen , isTermsModalOpen , isContactModalOpen , isProductSearcherOpen,
-    touchSensitivityMultiplier = 1, playerSpeedMultiplier = 1,
+    touchSensitivityMultiplier = 1, playerSpeedMultiplier = 1, joystickPosition = "left",
   } = useComponentStore();
   
   const { isTouchEnabled, enableTouch} = useTouchStore();

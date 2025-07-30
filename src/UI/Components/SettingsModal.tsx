@@ -16,6 +16,8 @@ const SettingsModal = () => {
     setTouchSensitivityMultiplier,
     playerSpeedMultiplier,
     setPlayerSpeedMultiplier,
+    joystickPosition,
+    setJoystickPosition,
     openInfoModal,
     openTermsModal,
     openContactModal,
@@ -28,6 +30,10 @@ const SettingsModal = () => {
 
   const handleAudioToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAudioPlaying(event.target.checked);
+  };
+
+  const handleJoystickToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setJoystickPosition(event.target.checked ? "right" : "left");
   };
 
 
@@ -253,6 +259,41 @@ const SettingsModal = () => {
             Music
           </Typography>
           <IOSSwitch checked={isAudioPlaying} onChange={handleAudioToggle} />
+        </Box>
+
+        {/* Joystick Position Toggle */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: 2,
+            backgroundColor: "#424147",
+            color: "white",
+            borderRadius: "10px",
+            marginBottom: 1,
+          }}
+        >
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Typography
+              sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: "medium" }}
+            >
+              Joystick Position
+            </Typography>
+            <Typography
+              sx={{ 
+                fontFamily: "'Poppins', sans-serif", 
+                fontSize: "12px",
+                color: "rgba(255, 255, 255, 0.7)"
+              }}
+            >
+              {joystickPosition === "left" ? "Left" : "Right"}
+            </Typography>
+          </Box>
+          <IOSSwitch 
+            checked={joystickPosition === "right"} 
+            onChange={handleJoystickToggle} 
+          />
         </Box>
 
 

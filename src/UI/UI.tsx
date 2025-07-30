@@ -16,6 +16,7 @@ import DiscountModal from "@/UI/Components/DiscountModal";
 import SettingsModal from "@/UI/Components/SettingsModal";
 import TermsConditionsModal from "@/UI/Components/TermsModal";
 import ContactUsModal from "@/UI/Components/ContactUsModal";
+import JoystickPositionHandler from "@/UI/Components/JoystickPositionHandler";
 
 import ModalWrapper from "@/UI/Components/ModalWrapper";
 import ProductSearcher from "@/UI/Components/ProductSearcher";
@@ -721,6 +722,9 @@ const UI = () => {
           <CartProvider>
             <div className="ui-root">
               {crosshairVisible && !isMobile && <div className={styles.aim} />}
+              
+              {/* Joystick Position Management */}
+              <JoystickPositionHandler />
 
               <div className={styles.iconsContainer}>
                 <img

@@ -82,11 +82,13 @@ interface ComponentStore {
   isAudioPlaying: boolean;
   touchSensitivityMultiplier: number;
   playerSpeedMultiplier: number;
+  joystickPosition: "left" | "right";
   openSettingsModal: () => void;
   closeSettingsModal: () => void;
   setAudioPlaying: (play: boolean) => void;
   setTouchSensitivityMultiplier: (multiplier: number) => void;
   setPlayerSpeedMultiplier: (multiplier: number) => void;
+  setJoystickPosition: (position: "left" | "right") => void;
 
   // Discount Handling
   discountCode: string;
@@ -202,6 +204,7 @@ const useComponentStore = create<ComponentStore>((set) => ({
   isAudioPlaying: false,
   touchSensitivityMultiplier: 1,
   playerSpeedMultiplier: 1,
+  joystickPosition: "left",
   openSettingsModal: () => {
     set({ crosshairVisible: false });
     set({ isSettingsModalOpen: true });
@@ -213,6 +216,7 @@ const useComponentStore = create<ComponentStore>((set) => ({
   setAudioPlaying: (play: boolean) => set({ isAudioPlaying: play }),
   setTouchSensitivityMultiplier: (multiplier: number) => set({ touchSensitivityMultiplier: multiplier }),
   setPlayerSpeedMultiplier: (multiplier: number) => set({ playerSpeedMultiplier: multiplier }),
+  setJoystickPosition: (position: "left" | "right") => set({ joystickPosition: position }),
 
   // Discount Handling
   discountCode: "",
