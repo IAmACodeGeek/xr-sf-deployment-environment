@@ -16,6 +16,7 @@ import { FlareSuiteModel } from "@/data/environment/environmentModel/FlareSuite"
 import { GardenAtelierModel } from "@/data/environment/environmentModel/GardenAtelier";
 import { CocktailDenModel } from "@/data/environment/environmentModel/CocktailDen";
 import { PetalPavilionModel } from "@/data/environment/environmentModel/PetalPavilion";
+import { AutoHavenModel } from "@/data/environment/environmentModel/AutoHaven";
 
 export function Ground() {
   const { environmentType } = useEnvironmentStore();
@@ -38,6 +39,7 @@ export function Ground() {
         {environmentType === "FLARESUITE" && <FlareSuiteModel />}
         {environmentType === "GARDENATELIER" && <GardenAtelierModel />}
         {environmentType === "COCKTAILDEN" && <CocktailDenModel />}
+        {environmentType === "AUTOHAVEN" && <AutoHavenModel />}
       </RigidBody>
       // Custom Physics
         {environmentType === "PETALPAVILION" && <PetalPavilionModel />}

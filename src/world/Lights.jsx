@@ -15,6 +15,7 @@ import FlareSuiteLighting from '@/data/environment/environmentLighting/FlareSuit
 import GardenAtelierLighting from '@/data/environment/environmentLighting/GardenAtelier';
 import CocktailDenLighting from '@/data/environment/environmentLighting/CocktailDen';
 import PetalPavilionLighting from '@/data/environment/environmentLighting/PetalPavilion';
+import AutoHavenLighting from '@/data/environment/environmentLighting/AutoHaven';
 
 const Lights = () => {
   const {environmentType} = useEnvironmentStore();
@@ -37,6 +38,7 @@ const Lights = () => {
       {environmentType === "GARDENATELIER" && <GardenAtelierLighting />}
       {environmentType === "COCKTAILDEN" && <CocktailDenLighting />}
       {environmentType === "PETALPAVILION" && <PetalPavilionLighting />}
+      {environmentType === "AUTOHAVEN" && <AutoHavenLighting />}
     </>
   );
 };
