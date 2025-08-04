@@ -6,6 +6,7 @@ import {
   useComponentStore,
   useDriverStore,
   useTourStore,
+  useTouchStore,
 } from "../stores/ZustandStores";
 import { ShopifyProvider, CartProvider } from "@shopify/hydrogen-react";
 import Modal from "@/UI/Components/NewModal";
@@ -616,7 +617,7 @@ const UI = () => {
     closeProductSearcher,
   } = useComponentStore();
   const { activateDriver, deactivateDriver } = useDriverStore();
-  const { setTourComplete } = useTourStore();
+  const { isTouchEnabled } = useTouchStore();
 
   const audioPlayerRef = useRef<HTMLAudioElement>(null);
   const shouldMoveCamera = useRef(false);
@@ -632,6 +633,18 @@ const UI = () => {
   const [tourVisible, setTourVisible] = useState(false);
   const [currentTourStep, setCurrentTourStep] = useState(1);
   const totalTourSteps = 7;
+
+  // Auto-start tour when touch is enabled (after spawn GSAP completes)
+  useEffect(() => {
+    if (isTouchEnabled) {
+      // Small delay to ensure everything is ready
+      const timer = setTimeout(() => {
+        startTour();
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isTouchEnabled]);
 
   const openChatbotModal = () => {
     setChatbotOpen(true);

@@ -309,6 +309,21 @@ const Modal = () => {
   }, []);
   
   const handleViewInAR = async () => {
+    // Only work for mobile devices
+    if (!isMobile) {
+      Swal.fire({
+        title: "Mobile Only Feature",
+        text: "View in AR is only available on mobile devices.",
+        icon: "info",
+        confirmButtonText: "Okay",
+        customClass: {
+          title: styles.swalTitle,
+          popup: styles.swalPopup,
+        },
+      });
+      return;
+    }
+
     if (mediaType !== MODEL) {
       setMediaType(MODEL); 
 
@@ -338,46 +353,16 @@ const Modal = () => {
   
 
     const handleARTryOn = () => {
-      if (selectedProduct && selectedProduct.arLensLink) {
-   
-        const arLink = document.createElement('a');
-        arLink.href = selectedProduct.arLensLink;
-        arLink.target = '_blank';
-        arLink.rel = 'noopener noreferrer';
-        arLink.style.display = 'none';
-        document.body.appendChild(arLink);
-    
-       
-        Swal.fire({
-          title: "Opening AR Try-On",
-          text: "Click 'Continue' to open AR experience in a new window",
-          icon: "info",
-          confirmButtonText: "Continue",
-          confirmButtonColor: "green",
-          showCancelButton: true,
-          cancelButtonColor: "red",
-          allowOutsideClick: true,
-          customClass: {
-            title: styles.swalTitle,
-            popup: styles.swalPopup,
-          },
-        }).then((result) => {
-          if (result.isConfirmed) {
-            
-            const clickEvent = new MouseEvent('click', {
-              view: window,
-              bubbles: true,
-              cancelable: true
-            });
-            arLink.dispatchEvent(clickEvent);
-            
-          
-            setTimeout(() => {
-              document.body.removeChild(arLink);
-            }, 100);
-          }
-        });
-      }
+      Swal.fire({
+        title: "Currently Unavailable",
+        text: "AR Try-On feature is coming soon! Stay tuned for updates.",
+        icon: "info",
+        confirmButtonText: "Okay",
+        customClass: {
+          title: styles.swalTitle,
+          popup: styles.swalPopup,
+        },
+      });
     };
 
 
@@ -717,9 +702,7 @@ const Modal = () => {
           }}
         >
           <Button
-            onClick={() => {
-              showPremiumPopup("Upgrade to premium to unlock this feature. Contact sales right away!");
-            }}
+            onClick={handleViewInAR}
             sx={{
               minWidth: "30%",
               backgroundColor: "#424147",
@@ -742,7 +725,7 @@ const Modal = () => {
             View in AR
           </Button>
           <Button
-            onClick={() => showPremiumPopup("Upgrade to premium to unlock this feature. Contact sales right away!")}
+            onClick={handleARTryOn}
             sx={{
               minWidth: "30%",
               backgroundColor: "#424147",
