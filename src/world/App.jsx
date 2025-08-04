@@ -88,7 +88,7 @@ export const App = () => {
             onUnlock={pointerLockControlsUnlockHandler}
           />
         )}
-        <Skybox />
+        {/* <Skybox /> */}
         <Lights />
         <Physics gravity={[0, -20, 0]}>
           <Ground />
