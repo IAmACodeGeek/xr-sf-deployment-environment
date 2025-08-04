@@ -17,6 +17,7 @@ import GardenAtlierPlaceHolderData from "./placeHolderData/GardenAtelier";
 import CocktailDenPlaceHolderData from "./placeHolderData/CocktailDen";
 import PetalPavilionPlaceHolderData from "./placeHolderData/PetalPavilion";
 import AutoHavenPlaceHolderData from "./placeHolderData/AutoHaven";
+import BarbieClutchPlaceHolderData from "./placeHolderData/BarbieClutch";
 
 interface EnvironmentData {
   [environment_name: string]: {
@@ -651,7 +652,39 @@ const environmentData: EnvironmentData = {
         rotation: [0, 90, 0],
         scale: 3,
       },
-      
+    ],
+  },
+  BARBIECLUTCH: {
+    playerSpeed: 17,
+    playerHeight: 5,
+    placeHolderData: BarbieClutchPlaceHolderData,
+    initialGSAP: {
+      start: {
+        position: [0, 6, 10],
+        rotation: [5, 0, 0],
+        duration: 0,
+      },
+      update: [
+        {
+          position: [0, 6, 43],
+          rotation: [5, 0, 0],
+          duration: 2,
+        },
+      ],
+    },
+    televisions: [
+      {
+        position: [-10.86, 8, 2],
+        rotation: [0, 0, -5],
+        scale: 0.45,
+      },
+    ],
+    brandPosters: [
+      {
+        position: [10.8, 8, 2],
+        rotation: [0, -90, 0],
+        scale: 4,
+      },
     ],
   },
 };
