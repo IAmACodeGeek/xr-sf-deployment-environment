@@ -18,6 +18,7 @@ import PetalPavilionLighting from '@/data/environment/environmentLighting/PetalP
 import AutoHavenLighting from '@/data/environment/environmentLighting/AutoHaven';
 import BarbieClutchLighting from '@/data/environment/environmentLighting/BarbieClutch';
 import MerryMeadowLighting from '@/data/environment/environmentLighting/MerryMeadow';
+import SovereignAtriumLighting from '@/data/environment/environmentLighting/SovereignAtrium';
 
 const Lights = () => {
   const {environmentType} = useEnvironmentStore();
@@ -43,6 +44,7 @@ const Lights = () => {
       {environmentType === "AUTOHAVEN" && <AutoHavenLighting />}
       {environmentType === "BARBIECLUTCH" && <BarbieClutchLighting />}
       {environmentType === "MERRYMEADOW" && <MerryMeadowLighting />}
+      {environmentType === "SOVEREIGNATRIUM" && <SovereignAtriumLighting />}
     </>
   );
 };
