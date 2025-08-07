@@ -19,6 +19,7 @@ import AutoHavenLighting from '@/data/environment/environmentLighting/AutoHaven'
 import BarbieClutchLighting from '@/data/environment/environmentLighting/BarbieClutch';
 import MerryMeadowLighting from '@/data/environment/environmentLighting/MerryMeadow';
 import SovereignAtriumLighting from '@/data/environment/environmentLighting/SovereignAtrium';
+import SilkenHallLighting from '@/data/environment/environmentLighting/SilkenHall';
 
 const Lights = () => {
   const {environmentType} = useEnvironmentStore();
@@ -45,6 +46,7 @@ const Lights = () => {
       {environmentType === "BARBIECLUTCH" && <BarbieClutchLighting />}
       {environmentType === "MERRYMEADOW" && <MerryMeadowLighting />}
       {environmentType === "SOVEREIGNATRIUM" && <SovereignAtriumLighting />}
+      {environmentType === "SILKENHALL" && <SilkenHallLighting />}
     </>
   );
 };
