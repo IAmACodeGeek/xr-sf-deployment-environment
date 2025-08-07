@@ -28,14 +28,14 @@ import { MoveLeft } from "lucide-react";
 
 
 // Custom Tour Popover Component
-const TourPopover = ({ 
-  isVisible, 
-  currentStep, 
-  totalSteps, 
-  onNext, 
-  onPrevious, 
+const TourPopover = ({
+  isVisible,
+  currentStep,
+  totalSteps,
+  onNext,
+  onPrevious,
   onClose,
-  isMobile
+  isMobile,
 }: {
   isVisible: boolean;
   currentStep: number;
@@ -46,75 +46,76 @@ const TourPopover = ({
   isMobile: boolean;
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
-  
-  const steps = useMemo(() => [
-    {
-      title: "How to Navigate",
-      description: isMobile 
-        ? "Use the virtual joystick to move around and touch to interact with products"
-        : "Use the WASD keys to navigate. W (Forward), A (Left), S (Backward), D (Right). Use your mouse or trackpad to look around. Press Esc to regain control of your mouse.",
-      leftImage: isMobile ? "/Mobile-Controls.png" : "/PC-Controls.png",
-      rightImage: isMobile ? "/Mobile-Controls-.png" : "/PC-Controls-.png",
-      leftLabel: "Look Around",
-      rightLabel: "Move"
-    },
-    {
-      title: "How to Interact",
-      description: "Point and click on products to view them in 3D/2D, read more details, and add them to your cart or wishlist. There's a lot more you can do!",
-      leftImage: "/Product-Click.png",
-      rightImage: "/Product-Click.png",
-      leftLabel: "Product Interaction",
-      rightLabel: ""
-    },
-    {
-      title: "Search Products",
-      description: "Search for products and go there with a single click",
-      leftLabel: "Search",
-      rightLabel: "Navigate"
-    },
-    {
-      title: "Shopping Cart",
-      description: "View and manage items in your shopping cart",
-      leftLabel: "Cart",
-      rightLabel: "Checkout"
-    },
-    {
-      title: "Wishlist",
-      description: "Save items for later in your wishlist",
-      leftLabel: "Save",
-      rightLabel: "List"
-    },
-    {
-      title: "Settings",
-      description: "Manage your preferences, explore app features, and customize your experience",
-      leftLabel: "Settings",
-      rightLabel: "Audio"
-    },
-    {
-      title: "Chat Assistant",
-      description: "Need more help? Chat with us on WhatsApp.",
-      leftLabel: "Chat",
-      rightLabel: "WhatsApp"
-    }
-  ], [isMobile]);
+  const [isClicked, setIsClicked] = useState(false);
+  const steps = useMemo(
+    () => [
+      {
+        title: "How to Navigate",
+        description: isMobile
+          ? "Use the virtual joystick to move around and touch to interact with products"
+          : "Use the WASD keys to navigate. W (Forward), A (Left), S (Backward), D (Right). Use your mouse or trackpad to look around. Press Esc to regain control of your mouse.",
+        leftImage: isMobile ? "/Mobile-Controls.png" : "/PC-Controls.png",
+        rightImage: isMobile ? "/Mobile-Controls-.png" : "/PC-Controls-.png",
+        leftLabel: "Look Around",
+        rightLabel: "Move",
+      },
+      {
+        title: "How to Interact",
+        description:
+          "Point and click on products to view them in 3D/2D, read more details, and add them to your cart or wishlist.",
+        leftImage: "/Product-Click.png",
+        rightImage: "/Product-Click.png",
+        leftLabel: "Product Interaction",
+        rightLabel: "",
+      },
+      {
+        title: "Search Products",
+        description: "Search for products and go there with a single click",
+        leftLabel: "Search",
+        rightLabel: "Navigate",
+      },
+      {
+        title: "Shopping Cart",
+        description: "View and manage items in your shopping cart",
+        leftLabel: "Cart",
+        rightLabel: "Checkout",
+      },
+      {
+        title: "Wishlist",
+        description: "Save items for later in your wishlist",
+        leftLabel: "Save",
+        rightLabel: "List",
+      },
+      {
+        title: "Settings",
+        description:
+          "Manage your preferences, explore app features, and customize your experience",
+        leftLabel: "Settings",
+        rightLabel: "Audio",
+      },
+      {
+        title: "Voice Assistant",
+        description: "Start interacting with the assistant using your voice.",
+        leftLabel: "Voice Assistant",
+        rightLabel: "WhatsApp",
+      },
+    ],
+    [isMobile]
+  );
 
   if (!isVisible) return null;
 
   const currentStepData = steps[currentStep - 1];
-
   const handleClose = () => {
-    console.log('Closing tour');
     onClose();
   };
 
   const handleNext = () => {
-    console.log('Next step');
     setImageLoaded(false);
     onNext();
   };
 
   const handlePrevious = () => {
-    console.log('Previous step');
     setImageLoaded(false);
     onPrevious();
   };
@@ -147,25 +148,28 @@ const TourPopover = ({
           border: "1px solid rgba(255, 255, 255, 0.2)",
           boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5)",
           pointerEvents: "auto" as const,
-        }
+        },
       };
     } else {
       // Steps 3-7: Position near the buttons
       const isTopPosition = currentStep <= 6; // Steps 3-6 at top, step 7 at bottom
-      
+
       if (isMobile) {
         // Mobile: Same positioning as desktop but with mobile sizing
         return {
           container: {
             position: "fixed" as const,
-            top: 0,
+            top: isTopPosition ? 0 : "auto",
+            bottom: isTopPosition ? "auto" : 0,
             left: 0,
             width: "100vw",
             height: "100vh",
             backgroundColor: "rgba(0, 0, 0, 0.5)",
             display: "flex" as const,
             justifyContent: "flex-start" as const,
-            alignItems: isTopPosition ? "flex-start" as const : "flex-end" as const,
+            alignItems: isTopPosition
+              ? ("flex-start" as const)
+              : ("flex-end" as const),
             paddingTop: isTopPosition ? "20px" : "0",
             paddingBottom: isTopPosition ? "0" : "20px",
             paddingRight: "80px",
@@ -184,7 +188,7 @@ const TourPopover = ({
             pointerEvents: "auto" as const,
             marginTop: isTopPosition ? "60px" : "0",
             marginBottom: isTopPosition ? "0" : "60px",
-          }
+          },
         };
       } else {
         // Desktop: Position to the right side with up/down movement
@@ -198,7 +202,11 @@ const TourPopover = ({
             backgroundColor: "rgba(0, 0, 0, 0.5)",
             display: "flex" as const,
             justifyContent: "center" as const,
-            alignItems: isTopPosition ? "flex-start" as const : "flex-end" as const,
+            alignItems: isTopPosition
+              ? currentStep === 1 || currentStep === 2
+                ? ("center" as const)
+                : ("flex-start" as const)
+              : ("flex-end" as const),
             paddingTop: isTopPosition ? "20px" : "0",
             paddingBottom: isTopPosition ? "0" : "20px",
             zIndex: 9999,
@@ -218,7 +226,7 @@ const TourPopover = ({
             marginBottom: isTopPosition ? "0" : "60px",
             marginLeft: "auto",
             marginRight: "100px",
-          }
+          },
         };
       }
     }
@@ -227,10 +235,7 @@ const TourPopover = ({
   const position = getPopoverPosition();
 
   return (
-    <div
-      style={position.container}
-      onClick={handleClose}
-    >
+    <div style={position.container} onClick={handleClose}>
       <div
         style={position.popover}
         onClick={(e) => {
@@ -238,24 +243,30 @@ const TourPopover = ({
         }}
       >
         {/* Header */}
-        <div style={{ 
-          display: "flex", 
-          justifyContent: "space-between", 
-          alignItems: "center", 
-          marginBottom: "20px",
-          pointerEvents: "auto"
-        }}>
-          <h2 style={{ 
-            color: "white", 
-            margin: 0, 
-            fontSize: isMobile ? "18px" : "24px", 
-            fontFamily: "'Poppins', sans-serif",
-            fontWeight: "600"
-          }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "20px",
+            pointerEvents: "auto",
+          }}
+        >
+          <h2
+            style={{
+              color: "white",
+              margin: 0,
+              fontSize: isMobile ? "18px" : "24px",
+              fontFamily: "'Poppins', sans-serif",
+              fontWeight: "600",
+            }}
+          >
             {currentStepData.title}
           </h2>
           <div
             onClick={handleClose}
+            onPointerDown={() => setIsClicked(true)}
+            onPointerUp={() => setIsClicked(false)}
             style={{
               background: "rgba(255, 255, 255, 0.1)",
               border: "none",
@@ -264,6 +275,8 @@ const TourPopover = ({
               cursor: "pointer",
               padding: "8px",
               borderRadius: "50%",
+              transform: isClicked ? "scale(0.85)" : "scale(1)",
+              transition: "transform 150ms ease",
               width: "35px",
               height: "35px",
               display: "flex",
@@ -279,187 +292,221 @@ const TourPopover = ({
 
         {/* Content */}
         {currentStep !== 2 && (
-          <div style={{ 
-            color: "white", 
-            marginBottom: "30px",
-            fontSize: isMobile ? "14px" : "16px",
-            lineHeight: "1.5",
-            fontFamily: "'Poppins', sans-serif"
-          }}>
+          <div
+            style={{
+              color: "white",
+              marginBottom: "30px",
+              fontSize: isMobile ? "14px" : "16px",
+              lineHeight: "1.5",
+              fontFamily: "'Poppins', sans-serif",
+            }}
+          >
             {currentStepData.description}
           </div>
         )}
 
         {/* Icons Section */}
-        <div style={{ 
-          display: "flex", 
-          flexDirection: (currentStep === 1 || currentStep === 2) ? (isMobile ? "column" : "row") : "row",
-          justifyContent: "space-between", 
-          alignItems: "center",
-          marginBottom: "30px",
-          gap: (currentStep === 1 || currentStep === 2) ? (isMobile ? "20px" : "40px") : "0"
-        }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection:
+              currentStep === 2 ? (isMobile ? "column" : "row") : "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "30px",
+            gap:
+              currentStep === 1 || currentStep === 2
+                ? isMobile
+                  ? "20px"
+                  : "40px"
+                : "0",
+          }}
+        >
           {currentStep === 1 ? (
             <>
-              <div style={{ 
-                textAlign: "center", 
-                width: isMobile ? "100%" : "50%",
-                flex: isMobile ? "none" : "1"
-              }}>
+              <div
+                style={{
+                  textAlign: "center",
+                  width: "50%",
+                  flex: "1",
+                }}
+              >
                 {!imageLoaded && (
-                  <div style={{ 
-                    width: "auto", 
-                    height: isMobile ? "120px" : "100px", 
-                    marginBottom: "15px",
-                    backgroundColor: "rgba(255, 255, 255, 0.1)",
-                    borderRadius: "8px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "rgba(255, 255, 255, 0.5)",
-                    fontSize: "12px"
-                  }}>
+                  <div
+                    style={{
+                      width: "auto",
+                      height: isMobile ? "90px" : "100px",
+                      marginBottom: "15px",
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      borderRadius: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "rgba(255, 255, 255, 0.5)",
+                      fontSize: "12px",
+                    }}
+                  >
                     Loading...
                   </div>
                 )}
-                <img 
-                  src={currentStepData.leftImage} 
+                <img
+                  src={currentStepData.leftImage}
                   alt="Left Control"
-                  style={{ 
-                    width: "auto", 
-                    height: isMobile ? "120px" : "100px", 
+                  style={{
+                    width: "auto",
+                    height: isMobile ? "90px" : "100px",
                     marginBottom: "15px",
                     filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.4))",
                     objectFit: "contain",
                     display: imageLoaded ? "block" : "none",
-                    margin: imageLoaded ? "0 auto" : "0"
+                    margin: imageLoaded ? "0 auto" : "0",
                   }}
                   onLoad={() => setImageLoaded(true)}
                 />
-                <div style={{ 
-                  color: "white", 
-                  fontSize: isMobile ? "14px" : "16px",
-                  fontFamily: "'Poppins', sans-serif",
-                  fontWeight: "600"
-                }}>
+                <div
+                  style={{
+                    color: "white",
+                    fontSize: isMobile ? "14px" : "16px",
+                    fontFamily: "'Poppins', sans-serif",
+                    fontWeight: "600",
+                  }}
+                >
                   {currentStepData.leftLabel}
                 </div>
               </div>
-              
-              {isMobile && (
-                <div style={{ 
-                  width: "100%", 
-                  height: "2px", 
-                  backgroundColor: "rgba(255, 255, 255, 0.3)",
-                  margin: "10px 0"
-                }} />
-              )}
-              
-              <div style={{ 
-                textAlign: "center", 
-                width: isMobile ? "100%" : "50%",
-                flex: isMobile ? "none" : "1"
-              }}>
+
+              {/* {isMobile && (
+                <div
+                  style={{
+                    width: "100%",
+                    height: "2px",
+                    backgroundColor: "rgba(255, 255, 255, 0.3)",
+                    margin: "10px 0",
+                  }}
+                />
+              )} */}
+
+              <div
+                style={{
+                  textAlign: "center",
+                  width: "50%",
+                  flex: "1",
+                }}
+              >
                 {!imageLoaded && (
-                  <div style={{ 
-                    width: "auto", 
-                    height: isMobile ? "120px" : "100px", 
-                    marginBottom: "15px",
-                    backgroundColor: "rgba(255, 255, 255, 0.1)",
-                    borderRadius: "8px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "rgba(255, 255, 255, 0.5)",
-                    fontSize: "12px"
-                  }}>
+                  <div
+                    style={{
+                      width: "auto",
+                      height: isMobile ? "90px" : "100px",
+                      marginBottom: "15px",
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      borderRadius: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "rgba(255, 255, 255, 0.5)",
+                      fontSize: "12px",
+                    }}
+                  >
                     Loading...
                   </div>
                 )}
-                <img 
-                  src={currentStepData.rightImage} 
+                <img
+                  src={currentStepData.rightImage}
                   alt="Right Control"
-                  style={{ 
-                    width: "auto", 
-                    height: isMobile ? "120px" : "100px", 
+                  style={{
+                    width: "auto",
+                    height: isMobile ? "90px" : "100px",
                     marginBottom: "15px",
                     filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.4))",
                     objectFit: "contain",
                     display: imageLoaded ? "block" : "none",
-                    margin: imageLoaded ? "0 auto" : "0"
+                    margin: imageLoaded ? "0 auto" : "0",
                   }}
                   onLoad={() => setImageLoaded(true)}
                 />
-                <div style={{ 
-                  color: "white", 
-                  fontSize: isMobile ? "14px" : "16px",
-                  fontFamily: "'Poppins', sans-serif",
-                  fontWeight: "600"
-                }}>
+                <div
+                  style={{
+                    color: "white",
+                    fontSize: isMobile ? "14px" : "16px",
+                    fontFamily: "'Poppins', sans-serif",
+                    fontWeight: "600",
+                  }}
+                >
                   {currentStepData.rightLabel}
                 </div>
               </div>
             </>
           ) : currentStep === 2 ? (
             <>
-              <div style={{ 
-                textAlign: "center", 
-                width: isMobile ? "100%" : "60%",
-                flex: isMobile ? "none" : "1"
-              }}>
+              <div
+                style={{
+                  textAlign: "center",
+                  width: isMobile ? "100%" : "60%",
+                  flex: isMobile ? "none" : "1",
+                }}
+              >
                 {!imageLoaded && (
-                  <div style={{ 
-                    width: "auto", 
-                    height: isMobile ? "200px" : "250px", 
-                    marginBottom: "15px",
-                    backgroundColor: "rgba(255, 255, 255, 0.1)",
-                    borderRadius: "8px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "rgba(255, 255, 255, 0.5)",
-                    fontSize: "12px"
-                  }}>
+                  <div
+                    style={{
+                      width: "auto",
+                      height: isMobile ? "150px" : "250px",
+                      marginBottom: "15px",
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      borderRadius: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "rgba(255, 255, 255, 0.5)",
+                      fontSize: "12px",
+                    }}
+                  >
                     Loading...
                   </div>
                 )}
-                <img 
-                  src={currentStepData.leftImage} 
+                <img
+                  src={currentStepData.leftImage}
                   alt="Product Interaction"
-                  style={{ 
-                    width: "auto", 
-                    height: isMobile ? "200px" : "250px", 
+                  style={{
+                    width: "auto",
+                    height: isMobile ? "150px" : "250px",
                     marginBottom: "15px",
                     filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.5))",
                     objectFit: "contain",
                     display: imageLoaded ? "block" : "none",
-                    margin: imageLoaded ? "0 auto" : "0"
+                    margin: imageLoaded ? "0 auto" : "0",
                   }}
                   onLoad={() => setImageLoaded(true)}
                 />
-                <div style={{ 
-                  color: "white", 
-                  fontSize: isMobile ? "16px" : "18px",
-                  fontFamily: "'Poppins', sans-serif",
-                  fontWeight: "600"
-                }}>
+                <div
+                  style={{
+                    color: "white",
+                    fontSize: isMobile ? "16px" : "18px",
+                    fontFamily: "'Poppins', sans-serif",
+                    fontWeight: "600",
+                  }}
+                >
                   {currentStepData.leftLabel}
                 </div>
               </div>
-              
-              <div style={{ 
-                textAlign: "left", 
-                width: isMobile ? "100%" : "40%",
-                flex: isMobile ? "none" : "1",
-                paddingLeft: isMobile ? "0" : "20px"
-              }}>
-                <div style={{ 
-                  color: "white", 
-                  fontSize: isMobile ? "14px" : "16px",
-                  lineHeight: "1.6",
-                  fontFamily: "'Poppins', sans-serif",
-                  fontWeight: "400"
-                }}>
+
+              <div
+                style={{
+                  textAlign: "left",
+                  width: isMobile ? "100%" : "40%",
+                  flex: isMobile ? "none" : "1",
+                  paddingLeft: isMobile ? "0" : "20px",
+                }}
+              >
+                <div
+                  style={{
+                    color: "white",
+                    fontSize: isMobile ? "14px" : "16px",
+                    lineHeight: "1.6",
+                    fontFamily: "'Poppins', sans-serif",
+                    fontWeight: "400",
+                  }}
+                >
                   {currentStepData.description}
                 </div>
               </div>
@@ -468,28 +515,35 @@ const TourPopover = ({
         </div>
 
         {/* Footer */}
-        <div style={{ 
-          display: "flex", 
-          justifyContent: "space-between", 
-          alignItems: "center",
-          pointerEvents: "auto"
-        }}>
-          <div style={{ 
-            color: "white", 
-            fontSize: isMobile ? "12px" : "14px",
-            fontFamily: "'Poppins', sans-serif",
-            fontWeight: "500"
-          }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            pointerEvents: "auto",
+          }}
+        >
+          <div
+            style={{
+              color: "white",
+              fontSize: isMobile ? "12px" : "14px",
+              fontFamily: "'Poppins', sans-serif",
+              fontWeight: "500",
+            }}
+          >
             {currentStep} of {totalSteps}
           </div>
-          
+
           <div style={{ display: "flex", gap: "10px", pointerEvents: "auto" }}>
             <div
               onClick={currentStep === 1 ? undefined : handlePrevious}
               style={{
                 padding: "10px 20px",
                 border: "1px solid rgba(255, 255, 255, 0.3)",
-                backgroundColor: currentStep === 1 ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.2)",
+                backgroundColor:
+                  currentStep === 1
+                    ? "rgba(255, 255, 255, 0.1)"
+                    : "rgba(255, 255, 255, 0.2)",
                 color: "white",
                 borderRadius: "8px",
                 cursor: currentStep === 1 ? "not-allowed" : "pointer",
@@ -503,7 +557,7 @@ const TourPopover = ({
             >
               ← Previous
             </div>
-            
+
             <div
               onClick={handleNext}
               style={{

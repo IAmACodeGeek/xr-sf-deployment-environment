@@ -174,6 +174,12 @@ const SettingsModal = () => {
         >
           <CloseIcon
             sx={{
+              height : "30px",
+              width : "30px",
+              transition: 'transform 150ms ease',
+                '&:active': {
+                  transform: 'scale(0.88)',
+              },
               backgroundColor: "#424147",
               borderRadius: "50%",
               fontSize: "18px",
