@@ -16,6 +16,10 @@ import FlareSuitePlaceHolderData from "./placeHolderData/FlareSuite";
 import GardenAtlierPlaceHolderData from "./placeHolderData/GardenAtelier";
 import CocktailDenPlaceHolderData from "./placeHolderData/CocktailDen";
 import PetalPavilionPlaceHolderData from "./placeHolderData/PetalPavilion";
+import AutoHavenPlaceHolderData from "./placeHolderData/AutoHaven";
+import BarbieClutchPlaceHolderData from "./placeHolderData/BarbieClutch";
+import MerryMeadowPlaceHolderData from "./placeHolderData/MerryMeadow";
+import SovereignAtriumPlaceHolderData from "./placeHolderData/SovereignAtrium";
 
 interface EnvironmentData {
   [environment_name: string]: {
@@ -616,6 +620,138 @@ const environmentData: EnvironmentData = {
         position: [-19.022, 2, -18.814],
         rotation: [0, 45, 0],
         scale: 3,
+      },
+    ],
+  },
+  AUTOHAVEN: {
+    playerSpeed: 17,
+    playerHeight: 5,
+    placeHolderData: AutoHavenPlaceHolderData,
+    initialGSAP: {
+      start: {
+        position: [0, 6, 0],
+        rotation: [0, 90, 0],
+        duration: 0,
+      },
+      update: [
+        {
+          position: [13, 6, 0],
+          rotation: [0, 90, 0],
+          duration: 2,
+        },
+      ],
+    },
+    televisions: [
+      {
+        position: [-20.424, 13.619, 21.2],
+        rotation: [0, 0, 0],
+        scale: 0.45,
+      },
+    ],
+    brandPosters: [
+      {
+        position: [-29.977, 13.619, -21],
+        rotation: [0, 90, 0],
+        scale: 3,
+      },
+    ],
+  },
+  BARBIECLUTCH: {
+    playerSpeed: 17,
+    playerHeight: 5,
+    placeHolderData: BarbieClutchPlaceHolderData,
+    initialGSAP: {
+      start: {
+        position: [0, 6, 10],
+        rotation: [5, 0, 0],
+        duration: 0,
+      },
+      update: [
+        {
+          position: [0, 6, 43],
+          rotation: [5, 0, 0],
+          duration: 2,
+        },
+      ],
+    },
+    televisions: [
+      {
+        position: [-10.86, 8, 2],
+        rotation: [0, 0, -5],
+        scale: 0.45,
+      },
+    ],
+    brandPosters: [
+      {
+        position: [10.8, 8, 2],
+        rotation: [0, -90, 0],
+        scale: 4,
+      },
+    ],
+  },
+  MERRYMEADOW: {
+    playerSpeed: 17,
+    playerHeight: 4,
+    placeHolderData: MerryMeadowPlaceHolderData,
+    initialGSAP: {
+      start: {
+        position: [0, 6, -15],
+        rotation: [5, 180, 0],
+        duration: 0,
+      },
+      update: [
+        {
+          position: [0, 6, -45],
+          rotation: [5, 180, 0],
+          duration: 2,
+        },
+      ],
+    },
+    televisions: [
+      {
+        position: [11.019, 11, 25.11],
+        rotation: [0, 180 - 45 - 10, 0],
+        scale: 2.45,
+      },
+    ],
+    brandPosters: [
+      {
+        position: [23.150, 2.766, -1.351],
+        rotation: [0, -90 - 45, 0],
+        scale: 3,
+      },
+    ],
+  },
+  SOVEREIGNATRIUM: {
+    playerSpeed: 17,
+    playerHeight: 4,
+    placeHolderData: SovereignAtriumPlaceHolderData,
+    initialGSAP: {
+      start: {
+        position: [0, 6, 0],
+        rotation: [5, 30, 0],
+        duration: 0,
+      },
+      update: [
+        {
+          position: [0, 6, 15],
+          rotation: [5, 0, 0],
+          duration: 2,
+        },
+      ],
+    },
+    televisions: [
+      {
+        position: [0, 5.400, 18.5],
+        rotation: [0, 90, 0],
+        scale: 0.45,
+      },
+    ],
+    brandPosters: [
+      {
+        position: [-12, 5.400, -18.7],
+        rotation: [0, 0 , 0],
+        scale: 2,
       },
     ],
   },
