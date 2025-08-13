@@ -390,7 +390,7 @@ interface BrandData {
   original_brand_name: string;
   about_brand: string;
   contact_number: string;
-  market?: "INR" | "GBP" | "EUR" | "USD" | "GER"| "UAE";
+  market?: "INR" | "GBP" | "EUR" | "USD" | "GER" | "UAE" | "AUS";
   account_status?: "active" | "inactive";
 }
 
