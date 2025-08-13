@@ -538,8 +538,8 @@ const UI = () => {
     if(!brandData) return null;
     
     // Determine country and language based on market from brand data
-    let countryCode: "US" | "GB" | "FR" | "IN" | "DE" = "IN"; // Default to India
-    let languageCode: "EN" | "FR" | "HI" = "EN"; // Default to English
+    let countryCode: "US" | "GB" | "FR" | "IN" | "DE" | "AE" = "IN"; // Default to India
+    let languageCode: "EN" | "FR" | "HI" | "AR" = "EN"; // Default to English
     
     // Use market field from brand data response
     if (brandData.market) {
@@ -563,6 +563,10 @@ const UI = () => {
         case "INR":
           countryCode = "IN";
           languageCode = "HI";
+          break;
+        case "UAE":
+          countryCode = "AE";
+          languageCode = "EN";
           break;
         default:
           // Fallback to India if market is not recognized
