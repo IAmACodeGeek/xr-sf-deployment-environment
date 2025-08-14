@@ -248,6 +248,12 @@ export const ProductService = {
           case "GER":
             countryCode = "DE";
             break;
+          case "UAE":
+            countryCode = "AE";
+              break;
+          case "AUS":
+            countryCode = "AU";
+              break;
           default:
             countryCode = "US";
         }
@@ -321,6 +327,8 @@ export const ProductService = {
               v.contextualPricing?.compareAtPrice?.amount ?? v.compareAtPrice ?? undefined;
             const currency =
               v.contextualPricing?.price?.currencyCode ?? brandData?.market ?? "INR";  // use brand market as fallback
+              console.log('brandData?.market: ', brandData?.market);
+              console.log('v.contextualPricing?.price?.currencyCode: ', v);
 
             console.log('Processed pricing:', {
               variantId: v.id,
