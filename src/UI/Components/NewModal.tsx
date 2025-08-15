@@ -69,7 +69,17 @@ const Modal = () => {
 
   const [selectedVariant, setSelectedVariant] = useState<Variant>();
   useEffect(() => {
-    selectedProduct && setSelectedVariant(selectedProduct.variants.find((variant) => variant.availableForSale));
+    if (selectedProduct) {
+      // First try to find an available variant
+      let variant = selectedProduct.variants.find((variant) => variant.availableForSale);
+      
+      // If no available variant found, but we have variants, select the first one (for default title products)
+      if (!variant && selectedProduct.variants.length > 0) {
+        variant = selectedProduct.variants[0];
+      }
+      
+      setSelectedVariant(variant);
+    }
   }, [selectedProduct]);
 
   const [quantity, setQuantity] = useState<number>(1);
@@ -117,7 +127,7 @@ const Modal = () => {
       if (!selectedVariant.availableForSale) {
         Swal.fire({
           title: "Product Unavailable",
-          text: "This product variant is currently not available for purchase.",
+          text: "This product is currently out of stock and not available for purchase.",
           icon: "warning",
           confirmButtonText: "Okay",
           customClass: {
@@ -392,7 +402,7 @@ const Modal = () => {
     if (!selectedVariant.availableForSale) {
       Swal.fire({
         title: "Product Unavailable",
-        text: "This product variant is currently not available for purchase.",
+        text: "This product is currently out of stock and not available for purchase.",
         icon: "warning",
         confirmButtonText: "Okay",
         customClass: {
@@ -857,7 +867,12 @@ const Modal = () => {
           return false;
         }
       };
-      if(selectedProduct?.options[0].name.toLowerCase() === "title") return null;
+      // Don't show variant selector for products with only "Default Title" option
+      if(selectedProduct?.options[0]?.name.toLowerCase() === "title" && 
+         selectedProduct.options[0]?.values.length === 1 && 
+         selectedProduct.options[0]?.values[0].toLowerCase() === "default title") {
+        return null;
+      }
       return (
         <Box
           sx={{
