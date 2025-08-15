@@ -20,6 +20,7 @@ import AutoHavenPlaceHolderData from "./placeHolderData/AutoHaven";
 import BarbieClutchPlaceHolderData from "./placeHolderData/BarbieClutch";
 import MerryMeadowPlaceHolderData from "./placeHolderData/MerryMeadow";
 import SovereignAtriumPlaceHolderData from "./placeHolderData/SovereignAtrium";
+import SilkenHallPlaceHolderData from "./placeHolderData/SilkenHall";
 
 interface EnvironmentData {
   [environment_name: string]: {
@@ -716,7 +717,7 @@ const environmentData: EnvironmentData = {
     ],
     brandPosters: [
       {
-        position: [23.150, 2.766, -1.351],
+        position: [23.15, 2.766, -1.351],
         rotation: [0, -90 - 45, 0],
         scale: 3,
       },
@@ -742,15 +743,48 @@ const environmentData: EnvironmentData = {
     },
     televisions: [
       {
-        position: [0, 5.400, 18.5],
+        position: [0, 5.4, 18.5],
         rotation: [0, 90, 0],
         scale: 0.45,
       },
     ],
     brandPosters: [
       {
-        position: [-12, 5.400, -18.7],
-        rotation: [0, 0 , 0],
+        position: [-12, 5.4, -18.7],
+        rotation: [0, 0, 0],
+        scale: 2,
+      },
+    ],
+  },
+  SILKENHALL: {
+    playerSpeed: 15,
+    playerHeight: 3,
+    placeHolderData: SilkenHallPlaceHolderData,
+    initialGSAP: {
+      start: {
+        position: [0, 6, 0],
+        rotation: [5, 30, 0],
+        duration: 0,
+      },
+      update: [
+        {
+          position: [0, 6, 15],
+          rotation: [5, 0, 0],
+          duration: 2,
+        },
+      ],
+    },
+    televisions: [
+      {
+        position: [-0.2, 6, -23],
+        rotation: [0, -90, 0],
+        scale: 0.25,
+      },
+    ],
+    brandPosters: [
+      {
+        position: [0, 6, 22.8],
+        rotation: [0, 180, 0],
         scale: 2,
       },
     ],

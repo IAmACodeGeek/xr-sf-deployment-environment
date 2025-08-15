@@ -25,6 +25,11 @@ function CanvasWrapper() {
   // Environments that should use LinearToneMapping
   const linearToneMappingEnvironments = ["GLOWBAR", "LUXECRADLE","GARDENATELIER"];
 
+  const toneMappingExposures: { [key: string]: number } = {
+    SILKENHALL: 1.4,
+    SOVEREIGNATRIUM : 1.24
+  };
+
   useEffect(() => {
     // const queryParams = new URLSearchParams(window.location.search);
     // const brandName = queryParams.get('brandName');
@@ -400,6 +405,7 @@ function CanvasWrapper() {
             <Canvas camera={{ fov: 45 }} 
              gl={{
                toneMapping: environmentType && linearToneMappingEnvironments.includes(environmentType) ? LinearToneMapping : ACESFilmicToneMapping,
+               toneMappingExposure: (environmentType && toneMappingExposures[environmentType]) || 1,
              }}
             shadows>
               <React.Suspense fallback={null}>
