@@ -21,5 +21,6 @@ export default interface Product {
   }[];
   variants: Variant[];
   arLensLink: string | undefined;
-  tags:string;
+  tags: string;
+  status: string;
 }

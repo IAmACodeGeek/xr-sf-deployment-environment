@@ -12,6 +12,7 @@ interface ProductResponse {
         node: {
           id: string,
           title: string,
+          status: string,
           media: {
             edges: {
               node: {
@@ -136,7 +137,9 @@ export const ProductService = {
     const response = await fetch(url.toString());
     const resultJSON: ProductResponse = await response.json();
 
-    const products: Product[] = resultJSON.data.products.edges.map((product) => {
+    const products: Product[] = resultJSON.data.products.edges
+      .filter((product) => product.node.status === "ACTIVE") // Only include ACTIVE products
+      .map((product) => {
       const productImages: { src: string }[] = product.node.media.edges.filter((edge) =>
         edge.node.mediaContentType.toUpperCase() === "IMAGE" 
         && edge.node.image 
@@ -217,6 +220,7 @@ export const ProductService = {
         models: models,
         arLensLink: arLensLink,
         tags: product.node.tags.join(" "),
+        status: product.node.status,
       };
 
       return parsedProduct;
@@ -273,8 +277,9 @@ export const ProductService = {
     });
     const resultJSON: ProductResponse = await response.json();
 
-    const products: Product[] = resultJSON.data.products.edges.map(
-      (product) => {
+    const products: Product[] = resultJSON.data.products.edges
+      .filter((product) => product.node.status === "ACTIVE") // Only include ACTIVE products
+      .map((product) => {
         const productImages: { src: string }[] = product.node.media.edges
           .filter(
             (edge) =>
@@ -366,6 +371,7 @@ export const ProductService = {
           models: models,
           arLensLink: arLensLink,
           tags: product.node.tags.join(" "),
+          status: product.node.status,
         };
 
         return parsedProduct;
