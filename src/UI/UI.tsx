@@ -94,9 +94,9 @@ const TourPopover = ({
         rightLabel: "Audio",
       },
       {
-        title: "Voice Assistant",
-        description: "Start interacting with the assistant using your voice.",
-        leftLabel: "Voice Assistant",
+        title: "Chat Assistant",
+        description: "Need more help? Chat with us on WhatsApp.",
+        leftLabel: "Chat",
         rightLabel: "WhatsApp",
       },
     ],
