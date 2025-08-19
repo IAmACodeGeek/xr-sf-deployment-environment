@@ -867,10 +867,10 @@ const Modal = () => {
           return false;
         }
       };
-      // Don't show variant selector for products with only "Default Title" option
-      if(selectedProduct?.options[0]?.name.toLowerCase() === "title" && 
-         selectedProduct.options[0]?.values.length === 1 && 
-         selectedProduct.options[0]?.values[0].toLowerCase() === "default title") {
+      // Don't show variant selector for products with only "Default" or "Default Title" option
+      if(selectedProduct?.options[0]?.values.length === 1 && 
+         (selectedProduct.options[0]?.values[0].toLowerCase() === "default" ||
+          selectedProduct.options[0]?.values[0].toLowerCase() === "default title")) {
         return null;
       }
       return (
