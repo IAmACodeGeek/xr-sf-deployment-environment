@@ -8,6 +8,8 @@ A cutting-edge web-based XR (Extended Reality) shopping platform that transforms
 
 Delta XR revolutionizes online shopping by creating photorealistic 3D environments where customers can explore products in immersive virtual spaces. The platform supports multiple brand environments, real-time 3D product visualization, and seamless Shopify integration for a complete e-commerce solution.
 
+![image](https://github.com/user-attachments/assets/95840bba-f562-4d5f-b1b1-db731f89d7a9)
+
 ### 🎯 Key Features
 
 - **🏪 Multiple Virtual Environments**: 15+ unique 3D store environments (Sovereign Atrium, Silken Hall, Arcade Zone, etc.)
