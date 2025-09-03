@@ -851,12 +851,12 @@ const environmentData: EnvironmentData = {
     ],
     brandPosters: [
       {
-        position: [11, 7, 22.7],
+        position: [11, 7, 23.2],
         rotation: [0, -180, 0],
         scale: 3,
       },
       {
-        position: [-11, 7, 22.7],
+        position: [-11, 7, 23.2],
         rotation: [0, -180, 0],
         scale: 3,
       },
