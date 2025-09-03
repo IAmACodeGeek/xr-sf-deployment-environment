@@ -22,6 +22,7 @@ import MerryMeadowPlaceHolderData from "./placeHolderData/MerryMeadow";
 import SovereignAtriumPlaceHolderData from "./placeHolderData/SovereignAtrium";
 import SilkenHallPlaceHolderData from "./placeHolderData/SilkenHall";
 import IndigoChamberPlaceHolderData from "./placeHolderData/IndigoChamber";
+import CrystalPalacePlaceHolderData from "./placeHolderData/CrystalPalace";
 
 interface EnvironmentData {
   [environment_name: string]: {
@@ -820,6 +821,44 @@ const environmentData: EnvironmentData = {
         position: [18.25, 5.3, 0],
         rotation: [0, -90, 0],
         scale: 3.5,
+      },
+    ],
+  },
+  CRYSTALPALACE: {
+    playerSpeed: 10,
+    playerHeight: 4,
+    placeHolderData: CrystalPalacePlaceHolderData,
+    initialGSAP: {
+      start: {
+        position: [0, 5.5, 0],
+        rotation: [5, 0, 0],
+        duration: 0,
+      },
+      update: [
+        {
+          position: [0, 4.5, 13],
+          rotation: [0, 360, 0],
+          duration: 4,
+        },
+      ],
+    },
+    televisions: [
+      {
+        position: [0, 7, 22.7],
+        rotation: [0, 90, 0],
+        scale: 0.6,
+      },
+    ],
+    brandPosters: [
+      {
+        position: [11, 7, 22.7],
+        rotation: [0, -180, 0],
+        scale: 3,
+      },
+      {
+        position: [-11, 7, 22.7],
+        rotation: [0, -180, 0],
+        scale: 3,
       },
     ],
   },

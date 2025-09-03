@@ -23,11 +23,12 @@ function CanvasWrapper() {
   const { environmentType } = useEnvironmentStore();
   
   // Environments that should use LinearToneMapping
-  const linearToneMappingEnvironments = ["GLOWBAR", "LUXECRADLE","GARDENATELIER","INDIGOCHAMBER"];
+  const linearToneMappingEnvironments = ["GLOWBAR", "LUXECRADLE","GARDENATELIER","INDIGOCHAMBER", "CRYSTALPALACE"];
 
   const toneMappingExposures: { [key: string]: number } = {
     SILKENHALL: 1.4,
-    SOVEREIGNATRIUM : 1.24
+    SOVEREIGNATRIUM : 1.24,
+    CRYSTALPALACE : 1.4
   };
 
   useEffect(() => {
