@@ -22,6 +22,7 @@ import SovereignAtriumLighting from '@/data/environment/environmentLighting/Sove
 import SilkenHallLighting from '@/data/environment/environmentLighting/SilkenHall';
 import IndigoChamberLighting from '@/data/environment/environmentLighting/IndigoChamber';
 import CrystalPalaceLighting from '@/data/environment/environmentLighting/CrystalPalace';
+import FidgetSpinnerLighting from '@/data/environment/environmentLighting/FidgetSpinner';
 
 const Lights = () => {
   const {environmentType} = useEnvironmentStore();
@@ -51,6 +52,7 @@ const Lights = () => {
       {environmentType === "SILKENHALL" && <SilkenHallLighting />}
       {environmentType === "INDIGOCHAMBER" && <IndigoChamberLighting />}
       {environmentType === "CRYSTALPALACE" && <CrystalPalaceLighting />}
+      {environmentType === "FIDGETSPINNER" && <FidgetSpinnerLighting />}
     </>
   );
 };
