@@ -5,9 +5,8 @@ export function FidgetSpinnerModel() {
   const { scene: Walls } = useGLTF("/models/fidget spinner/walls.glb");
   const { nodes, materials } = useGLTF("/models/fidget spinner/assets.glb");
   return (
-    <RigidBody type="fixed" colliders="trimesh">
-      <primitive object={Walls} scale={55} />
-      <mesh
+    <>
+    <mesh
         castShadow
         receiveShadow
         geometry={nodes.Flower_pot002.geometry}
@@ -16,6 +15,8 @@ export function FidgetSpinnerModel() {
         rotation={[Math.PI /2, 0, 0]}
         scale={0.01 * 55}
       />
+    <RigidBody type="fixed" colliders="trimesh">
+      <primitive object={Walls} scale={55} />
       <group dispose={null} scale={55} position={[0, 0, 0]}>
       <group rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
         <mesh
@@ -94,5 +95,6 @@ export function FidgetSpinnerModel() {
       />
     </group>
     </RigidBody>
+    </>
   );
 }
