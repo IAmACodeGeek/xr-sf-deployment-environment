@@ -23,6 +23,7 @@ import { SovereignAtriumModel } from "@/data/environment/environmentModel/Sovere
 import { SilkenHallModel } from "@/data/environment/environmentModel/SilkenHall";
 import { IndigoChamberModel } from "@/data/environment/environmentModel/IndigoChamber";
 import { CrystalPalaceModel } from "@/data/environment/environmentModel/CrystalPalace";
+import { FidgetSpinnerModel } from "@/data/environment/environmentModel/FidgetSpinner";
 
 export function Ground() {
   const { environmentType } = useEnvironmentStore();
@@ -55,6 +56,7 @@ export function Ground() {
       // Custom Physics
         {environmentType === "PETALPAVILION" && <PetalPavilionModel />}
         {environmentType === "MERRYMEADOW" && <MerryMeadowModel />}
+        {environmentType === "FIDGETSPINNER" && <FidgetSpinnerModel />}
       </>
     )
   );
