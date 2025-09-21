@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
 import { Helmet } from "react-helmet-async";
@@ -400,7 +400,8 @@ function CanvasWrapper() {
         ) : (
           <Load progress={myProgress} />
         )}
-        {myProgress >= 100 && brandData?.account_status === 'active' &&
+        { brandData?.account_status === 'active' &&
+        <Suspense fallback={<Load progress={myProgress} />}>
           <ThreeJSErrorBoundary>
             <Canvas camera={{ fov: 45 }} 
              gl={{
@@ -413,6 +414,7 @@ function CanvasWrapper() {
               </React.Suspense>
             </Canvas>
           </ThreeJSErrorBoundary>
+        </Suspense>
         }
       </div>
     </>

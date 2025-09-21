@@ -1,7 +1,7 @@
 import { EnvAsset } from "@/stores/ZustandStores";
 import { PivotControls, useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import {BackSide, Box3, Euler, Mesh, Object3D, Quaternion, TextureLoader, Vector3} from 'three';
 import { useLoader, useThree } from "@react-three/fiber";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
@@ -310,7 +310,7 @@ const DraggableAssetContainer = ({
   };
 
   return (
-    <>
+    <Suspense fallback={null}>
       {envAsset.type === "MODEL_3D" && memoizedModelScene &&
         <RigidBody ref={rigidBodyRef} type="fixed" colliders="hull">
           <group
@@ -362,7 +362,7 @@ const DraggableAssetContainer = ({
           </group>
         </RigidBody>
       }
-    </>
+    </Suspense>
   );
 };
 
