@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
 import { Helmet } from "react-helmet-async";
 import { Canvas } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, useProgress } from "@react-three/drei";
 import App from "./world/App.jsx";
 import "@/index.scss";
 import UI from "@/UI/UI.tsx";
@@ -21,6 +21,7 @@ function CanvasWrapper() {
   const { brandData, setBrandData } = useBrandStore();
   const [brandStatus, setBrandStatus] = useState<'LOADING' | 'VALID' | 'INVALID' | null>(null);
   const { environmentType } = useEnvironmentStore();
+  const { loaded, total } = useProgress();
   
   // Environments that should use LinearToneMapping
   const linearToneMappingEnvironments = ["GLOWBAR", "LUXECRADLE","GARDENATELIER","INDIGOCHAMBER", "CRYSTALPALACE", "FIDGETSPINNER"];
@@ -401,7 +402,7 @@ function CanvasWrapper() {
           <Load progress={myProgress} />
         )}
         { brandData?.account_status === 'active' &&
-        <Suspense fallback={<Load progress={myProgress} />}>
+        <Suspense fallback={<Load progress={(loaded/total) * 100} />}>
           <ThreeJSErrorBoundary>
             <Canvas camera={{ fov: 45 }} 
              gl={{
@@ -409,9 +410,7 @@ function CanvasWrapper() {
                toneMappingExposure: (environmentType && toneMappingExposures[environmentType]) || 1,
              }}
             shadows>
-              <React.Suspense fallback={null}>
                 <App />
-              </React.Suspense>
             </Canvas>
           </ThreeJSErrorBoundary>
         </Suspense>
