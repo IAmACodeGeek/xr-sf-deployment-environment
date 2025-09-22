@@ -399,7 +399,9 @@ function CanvasWrapper() {
             </div>
           </div>
         ) : (
-          <Load progress={myProgress} />
+          // Loading component not needed since Canvas is wrapped in Suspense which handles loading states
+          // <Load progress={myProgress} />
+          <></>
         )}
         { brandData?.account_status === 'active' &&
         <Suspense fallback={<Load progress={(loaded/total) * 100} />}>
