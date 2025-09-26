@@ -24,6 +24,7 @@ import { SilkenHallModel } from "@/data/environment/environmentModel/SilkenHall"
 import { IndigoChamberModel } from "@/data/environment/environmentModel/IndigoChamber";
 import { CrystalPalaceModel } from "@/data/environment/environmentModel/CrystalPalace";
 import { FidgetSpinnerModel } from "@/data/environment/environmentModel/FidgetSpinner";
+import { GrandGalleriaModel } from "@/data/environment/environmentModel/GrandGalleria";
 
 export function Ground() {
   const { environmentType } = useEnvironmentStore();
@@ -52,6 +53,7 @@ export function Ground() {
         {environmentType === "SILKENHALL" && <SilkenHallModel />}
         {environmentType === "INDIGOCHAMBER" && <IndigoChamberModel />}
         {environmentType === "CRYSTALPALACE" && <CrystalPalaceModel />}
+        {environmentType === "GRANDGALLERIA" && <GrandGalleriaModel />}
       </RigidBody>
       // Custom Physics
         {environmentType === "PETALPAVILION" && <PetalPavilionModel />}
