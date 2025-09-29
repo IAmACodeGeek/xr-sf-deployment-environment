@@ -33,6 +33,10 @@ function CanvasWrapper() {
     FIDGETSPINNER : 1.2,
   };
 
+  const environmentFOV: { [key: string]: number } = {
+    GRANDGALLERIA: 55,
+  };
+
   useEffect(() => {
     // const queryParams = new URLSearchParams(window.location.search);
     // const brandName = queryParams.get('brandName');
@@ -406,7 +410,7 @@ function CanvasWrapper() {
         { brandData?.account_status === 'active' &&
         <Suspense fallback={<Load progress={(loaded/total) * 100} />}>
           <ThreeJSErrorBoundary>
-            <Canvas camera={{ fov: 45 }} 
+            <Canvas camera={{ fov: environmentType && environmentFOV[environmentType] || 45 }} 
              gl={{
                toneMapping: environmentType && linearToneMappingEnvironments.includes(environmentType) ? LinearToneMapping : ACESFilmicToneMapping,
                toneMappingExposure: (environmentType && toneMappingExposures[environmentType]) || 1,
