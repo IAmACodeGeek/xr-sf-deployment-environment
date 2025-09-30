@@ -25,6 +25,7 @@ import IndigoChamberPlaceHolderData from "./placeHolderData/IndigoChamber";
 import CrystalPalacePlaceHolderData from "./placeHolderData/CrystalPalace";
 import FidgetSpinnerPlaceHolderData from "./placeHolderData/FidgetSpinner";
 import GrandGalleriaPlaceHolderData from "./placeHolderData/GrandGalleria";
+import NextronPlaceHolderData from "./placeHolderData/Nextron";
 
 interface EnvironmentData {
   [environment_name: string]: {
@@ -946,6 +947,39 @@ const environmentData: EnvironmentData = {
       {
         position: [44.5, 4.159, 0],
         rotation: [0, -90, 0],
+        scale: 4,
+      },
+    ],
+  },
+  NEXTRON: {
+    playerSpeed: 5,
+    playerHeight: 2,
+    placeHolderData: NextronPlaceHolderData,
+    initialGSAP: {
+      start: {
+        position: [0, 4, 20],
+        rotation: [5, 0, 0],
+        duration: 0,
+      },
+      update: [
+        {
+          position: [0, 4, 0],
+          rotation: [0, 180, 0],
+          duration: 4,
+        },
+      ],
+    },
+    televisions: [
+      {
+        position: [0.1, 4, 26.5],
+        rotation: [0, 90, 0],
+        scale: 0.35,
+      },
+    ],
+    brandPosters: [
+      {
+        position: [0.1, 4, -20.2],
+        rotation: [0, 0, 0],
         scale: 4,
       },
     ],

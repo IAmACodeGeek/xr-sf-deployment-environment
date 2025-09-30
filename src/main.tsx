@@ -24,13 +24,22 @@ function CanvasWrapper() {
   const { loaded, total } = useProgress();
   
   // Environments that should use LinearToneMapping
-  const linearToneMappingEnvironments = ["GLOWBAR", "LUXECRADLE","GARDENATELIER","INDIGOCHAMBER", "CRYSTALPALACE", "FIDGETSPINNER"];
+  const linearToneMappingEnvironments = [
+    "GLOWBAR",
+    "LUXECRADLE",
+    "GARDENATELIER",
+    "INDIGOCHAMBER",
+    "CRYSTALPALACE",
+    "FIDGETSPINNER",
+    "NEXTRON",
+  ];
 
   const toneMappingExposures: { [key: string]: number } = {
     SILKENHALL: 1.4,
-    SOVEREIGNATRIUM : 1.24,
-    CRYSTALPALACE : 1.4,
-    FIDGETSPINNER : 1.2,
+    SOVEREIGNATRIUM: 1.24,
+    CRYSTALPALACE: 1.4,
+    FIDGETSPINNER: 1.2,
+    NEXTRON: 1.2,
   };
 
   const environmentFOV: { [key: string]: number } = {
