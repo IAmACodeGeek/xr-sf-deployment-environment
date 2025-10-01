@@ -23,6 +23,8 @@ import SilkenHallLighting from '@/data/environment/environmentLighting/SilkenHal
 import IndigoChamberLighting from '@/data/environment/environmentLighting/IndigoChamber';
 import CrystalPalaceLighting from '@/data/environment/environmentLighting/CrystalPalace';
 import FidgetSpinnerLighting from '@/data/environment/environmentLighting/FidgetSpinner';
+import GrandGalleriaLighting from '@/data/environment/environmentLighting/GrandGalleria';
+import NextronLighting from '@/data/environment/environmentLighting/Nextron';
 
 const Lights = () => {
   const {environmentType} = useEnvironmentStore();
@@ -53,6 +55,8 @@ const Lights = () => {
       {environmentType === "INDIGOCHAMBER" && <IndigoChamberLighting />}
       {environmentType === "CRYSTALPALACE" && <CrystalPalaceLighting />}
       {environmentType === "FIDGETSPINNER" && <FidgetSpinnerLighting />}
+      {environmentType === "GRANDGALLERIA" && <GrandGalleriaLighting />}
+      {environmentType === "NEXTRON" && <NextronLighting />}
     </>
   );
 };

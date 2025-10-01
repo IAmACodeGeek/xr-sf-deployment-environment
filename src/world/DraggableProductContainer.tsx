@@ -1,7 +1,7 @@
 import { useComponentStore, EnvProduct, useEnvironmentStore } from "@/stores/ZustandStores";
 import { useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import type Product from '../Types/Product';
 import { BackSide, Box3, Euler, Mesh, Object3D, Quaternion, TextureLoader, Vector3 } from 'three';
 import { useLoader, useThree } from "@react-three/fiber";
@@ -359,7 +359,7 @@ const DraggableProductContainer = ({
   };
 
   return (
-    <>
+    <Suspense fallback={null}>
       {envProduct.type === "MODEL_3D" && memoizedModelScene && 
         <RigidBody ref={rigidBodyRef} type="fixed" colliders="hull">
           <group
@@ -411,7 +411,7 @@ const DraggableProductContainer = ({
           </group>
         </RigidBody>
       }
-    </>
+    </Suspense>
   );
 };
 

@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
 import { Helmet } from "react-helmet-async";
 import { Canvas } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, useProgress } from "@react-three/drei";
 import App from "./world/App.jsx";
 import "@/index.scss";
 import UI from "@/UI/UI.tsx";
@@ -21,15 +21,29 @@ function CanvasWrapper() {
   const { brandData, setBrandData } = useBrandStore();
   const [brandStatus, setBrandStatus] = useState<'LOADING' | 'VALID' | 'INVALID' | null>(null);
   const { environmentType } = useEnvironmentStore();
+  const { loaded, total } = useProgress();
   
   // Environments that should use LinearToneMapping
-  const linearToneMappingEnvironments = ["GLOWBAR", "LUXECRADLE","GARDENATELIER","INDIGOCHAMBER", "CRYSTALPALACE", "FIDGETSPINNER"];
+  const linearToneMappingEnvironments = [
+    "GLOWBAR",
+    "LUXECRADLE",
+    "GARDENATELIER",
+    "INDIGOCHAMBER",
+    "CRYSTALPALACE",
+    "FIDGETSPINNER",
+    "NEXTRON",
+  ];
 
   const toneMappingExposures: { [key: string]: number } = {
     SILKENHALL: 1.4,
-    SOVEREIGNATRIUM : 1.24,
-    CRYSTALPALACE : 1.4,
-    FIDGETSPINNER : 1.2,
+    SOVEREIGNATRIUM: 1.24,
+    CRYSTALPALACE: 1.4,
+    FIDGETSPINNER: 1.2,
+    NEXTRON: 1.2,
+  };
+
+  const environmentFOV: { [key: string]: number } = {
+    GRANDGALLERIA: 55,
   };
 
   useEffect(() => {
@@ -398,21 +412,23 @@ function CanvasWrapper() {
             </div>
           </div>
         ) : (
-          <Load progress={myProgress} />
+          // Loading component not needed since Canvas is wrapped in Suspense which handles loading states
+          // <Load progress={myProgress} />
+          <></>
         )}
-        {myProgress >= 100 && brandData?.account_status === 'active' &&
+        { brandData?.account_status === 'active' &&
+        <Suspense fallback={<Load progress={(loaded/total) * 100} />}>
           <ThreeJSErrorBoundary>
-            <Canvas camera={{ fov: 45 }} 
+            <Canvas camera={{ fov: environmentType && environmentFOV[environmentType] || 45 }} 
              gl={{
                toneMapping: environmentType && linearToneMappingEnvironments.includes(environmentType) ? LinearToneMapping : ACESFilmicToneMapping,
                toneMappingExposure: (environmentType && toneMappingExposures[environmentType]) || 1,
              }}
             shadows>
-              <React.Suspense fallback={null}>
                 <App />
-              </React.Suspense>
             </Canvas>
           </ThreeJSErrorBoundary>
+        </Suspense>
         }
       </div>
     </>
