@@ -10,6 +10,7 @@ export const CLOUD_RUN_ENDPOINTS = {
   // Product Fetch API
   PRODUCT_FETCH: {
     SHOPIFY_PRODUCTS: fn('function-14'),
+    SHOPIFY_PRODUCTS_FALLBACK: fn('app-fetch-shopify-products-bulk'),
   },
 
   // Own Store API
@@ -20,11 +21,13 @@ export const CLOUD_RUN_ENDPOINTS = {
   // Environment Store API
   ENV_STORE: {
     GET_ENV_DATA: fn('get-env-data'),
+    GET_ENV_DATA_FALLBACK: fn('app-get-env-data'),
   },
 
   // Brand Form API
   BRAND_FORM: {
     GET_BRAND_DETAILS: fn('get-brand-details-via-customurl'),
+    GET_BRAND_DETAILS_FALLBACK: fn('app-get-brand-details-via-customurl'),
   },
 };
 

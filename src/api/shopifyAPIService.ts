@@ -2,7 +2,8 @@ import Variant from '@/Types/Variant';
 import Product from '../Types/Product';
 import { CLOUD_RUN_ENDPOINTS } from './cloudUtil';
 
-const BASE_URL = CLOUD_RUN_ENDPOINTS.PRODUCT_FETCH.SHOPIFY_PRODUCTS + '?brandname=';
+const PRIMARY_URL = CLOUD_RUN_ENDPOINTS.PRODUCT_FETCH.SHOPIFY_PRODUCTS;
+const FALLBACK_URL = CLOUD_RUN_ENDPOINTS.PRODUCT_FETCH.SHOPIFY_PRODUCTS_FALLBACK;
 const OWN_STORE_PRODUCT_URL = CLOUD_RUN_ENDPOINTS.OWN_STORE.FETCH_PRODUCTS + '?vendor=';
 
 interface ProductResponse {
@@ -127,16 +128,51 @@ export const ProductService = {
       }
     }
 
-    // Build URL with query parameters
-    const url = new URL(BASE_URL + brandName);
-    url.searchParams.set('region', region);
+    // Try primary endpoint first
+    const primaryUrl = new URL(PRIMARY_URL + '?brandname=' + brandName);
+    primaryUrl.searchParams.set('region', region);
     if (country) {
-      url.searchParams.set('country', country);
+      primaryUrl.searchParams.set('country', country);
     }
 
-    const response = await fetch(url.toString());
-    const resultJSON: ProductResponse = await response.json();
+    const primaryResponse = await fetch(primaryUrl.toString());
+    
+    // Check if primary endpoint failed with 404 "Brand not found"
+    if (primaryResponse.status === 404) {
+      try {
+        const errorData = await primaryResponse.json();
+        if (errorData.error === "Brand not found") {
+          console.log('Primary endpoint returned "Brand not found", trying fallback endpoint...');
+          
+          // Try fallback endpoint
+          const fallbackUrl = new URL(FALLBACK_URL + '?brandname=' + brandName);
+          fallbackUrl.searchParams.set('region', region);
+          if (country) {
+            fallbackUrl.searchParams.set('country', country);
+          }
+          
+          const fallbackResponse = await fetch(fallbackUrl.toString());
+          
+          if (fallbackResponse.ok) {
+            console.log('Fallback endpoint succeeded');
+            const resultJSON: ProductResponse = await fallbackResponse.json();
+            return this.processProducts(resultJSON, brandData);
+          } else {
+            console.log('Fallback endpoint also failed');
+            throw new Error('Both primary and fallback endpoints failed');
+          }
+        }
+      } catch (jsonError) {
+        console.error('Error parsing primary response JSON:', jsonError);
+      }
+    }
 
+    // Use primary response (either success or non-404 error)
+    const resultJSON: ProductResponse = await primaryResponse.json();
+    return this.processProducts(resultJSON, brandData);
+  },
+
+  processProducts(resultJSON: ProductResponse, brandData?: any): Product[] {
     const products: Product[] = resultJSON.data.products.edges
       .filter((product) => product.node.status === "ACTIVE") // Only include ACTIVE products
       .map((product) => {
