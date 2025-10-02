@@ -299,23 +299,35 @@ const Cart = () => {
                       {line?.merchandise?.price?.currencyCode} {line?.merchandise?.price?.amount}
                     </Typography>
                   </Box>
-                  {/* <Typography
-                    sx={{
-                      width: { xs: "20%", md: "10%" }, height: "30px",
-                      fontSize: { xs: "14px", sm: "14px", md: "16px" }, fontFamily: "'Poppins', sans-serif", fontWeight: "bold",
-                      color: "rgba(255, 255, 255, 0.83)",
-                      backgroundColor: { xs: "rgba(0, 0, 0, 0)", md: "rgba(0, 0, 0, 0.9)" },
-                      display: "flex", alignItems: "center", justifyContent: { xs: "left", sm: "left", md: "center" },
-                      overflow: "hidden",
-                    }}
-                    className="CartItemVariant"
-                  >
-                    {
-                      (line?.merchandise?.selectedOptions as { name: string, value: string }[]).find((option) => {
-                        return option.name.toLowerCase() === "size";
-                      })?.value.toUpperCase()
-                    }
-                  </Typography> */}
+                     <Typography
+                     sx={{
+                       width: { xs: "20%", md: "10%" }, height: "30px",
+                       fontSize: { xs: "14px", sm: "14px", md: "16px" }, fontFamily: "'Poppins', sans-serif", fontWeight: "bold",
+                       color: "rgba(255, 255, 255, 0.83)",
+                       backgroundColor: (() => {
+                         const option = (line?.merchandise?.selectedOptions as { name: string, value: string }[])
+                           .find((opt) => {
+                             const lowerValue = opt.value.toLowerCase();
+                             return lowerValue !== "default title" && lowerValue !== "default";
+                           });
+                         return option?.value ? { xs: "rgba(0, 0, 0, 0)", md: "rgba(0, 0, 0, 0.7)" } : "transparent";
+                       })(),
+                       display: "flex", alignItems: "center", justifyContent: { xs: "left", sm: "left", md: "center" },
+                       overflow: "hidden",
+                       textOverflow: "ellipsis",
+                       whiteSpace: "nowrap"
+                     }}
+                     className="CartItemVariant"
+                     >
+                         {
+                           (line?.merchandise?.selectedOptions as { name: string, value: string }[])
+                             .find((option) => {
+                               const lowerValue = option.value.toLowerCase();
+                               return lowerValue !== "default title" && lowerValue !== "default";
+                             })
+                             ?.value?.toUpperCase()
+                         }
+                     </Typography>
                   <Box
                     sx={{
                       minWidth: "70px", width: { xs: "90%", sm: "40%", md: "35%", lg: "30%" }, height: "24px",
