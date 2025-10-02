@@ -196,11 +196,9 @@ const Wishlist = () => {
                           fontSize: { xs: "16px", sm: "20px" },
                           fontFamily: "'Poppins', sans-serif", fontWeight: "normal",
                           color: "rgba(255, 255, 255, 0.83)",
-                          overflowY: { xs: "hidden", sm: "hidden", md: "scroll" },
-                          scrollbarWidth: 0,
-                          "&::-webkit-scrollbar": {
-                            display: "none"
-                          },
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
                           textAlign: "left",
                           "&:hover": {
                             cursor: "pointer",
