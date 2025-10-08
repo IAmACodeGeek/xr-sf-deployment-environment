@@ -44,6 +44,7 @@ function CanvasWrapper() {
 
   const environmentFOV: { [key: string]: number } = {
     GRANDGALLERIA: 55,
+    SPACEPARK: 55,
   };
 
   useEffect(() => {

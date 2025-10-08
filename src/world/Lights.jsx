@@ -25,6 +25,7 @@ import CrystalPalaceLighting from '@/data/environment/environmentLighting/Crysta
 import FidgetSpinnerLighting from '@/data/environment/environmentLighting/FidgetSpinner';
 import GrandGalleriaLighting from '@/data/environment/environmentLighting/GrandGalleria';
 import NextronLighting from '@/data/environment/environmentLighting/Nextron';
+import SpaceParkLighting from '@/data/environment/environmentLighting/SpacePark';
 
 const Lights = () => {
   const {environmentType} = useEnvironmentStore();
@@ -57,6 +58,7 @@ const Lights = () => {
       {environmentType === "FIDGETSPINNER" && <FidgetSpinnerLighting />}
       {environmentType === "GRANDGALLERIA" && <GrandGalleriaLighting />}
       {environmentType === "NEXTRON" && <NextronLighting />}
+      {environmentType === "SPACEPARK" && <SpaceParkLighting />}
     </>
   );
 };

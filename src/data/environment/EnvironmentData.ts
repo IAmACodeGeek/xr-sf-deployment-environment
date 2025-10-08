@@ -26,6 +26,7 @@ import CrystalPalacePlaceHolderData from "./placeHolderData/CrystalPalace";
 import FidgetSpinnerPlaceHolderData from "./placeHolderData/FidgetSpinner";
 import GrandGalleriaPlaceHolderData from "./placeHolderData/GrandGalleria";
 import NextronPlaceHolderData from "./placeHolderData/Nextron";
+import SpaceParkPlaceHolderData from "./placeHolderData/SpacePark";
 
 interface EnvironmentData {
   [environment_name: string]: {
@@ -983,6 +984,39 @@ const environmentData: EnvironmentData = {
         scale: 4,
       },
     ],
+  },
+  SPACEPARK: {
+    playerSpeed: 5,
+    playerHeight: 1,
+    placeHolderData: SpaceParkPlaceHolderData,  
+    initialGSAP: {
+      start: {
+        position: [20, 4, 0],
+        rotation: [5, 0, 0],
+        duration: 0,
+      },
+      update: [
+        {
+          position: [20, 4, 0],
+          rotation: [0, 180, 0],
+          duration: 4,
+        },
+      ],
+    },
+    televisions: [
+      {
+        position: [0.3, 3, 27.5],
+        rotation: [0, 90, 0],
+        scale: 0.35,
+      },
+    ],
+    brandPosters: [
+      {
+        position: [-0.3, 3, -27.7],
+        rotation: [0, 0, 0],
+        scale: 3,
+      },
+    ]
   },
 };
 
