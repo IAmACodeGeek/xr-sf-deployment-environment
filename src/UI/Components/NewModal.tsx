@@ -9,7 +9,16 @@ import Swal from "sweetalert2";
 import styles from "@/UI/UI.module.scss";
 import { showPremiumPopup } from "./PremiumRequired";
 
-const Modal = () => {
+interface ModalProps {
+  noCart?: boolean;
+}
+
+const CartEnabledModal = () => {
+  const { lines, checkoutUrl, linesAdd } = useCart();
+  return <ModalContent noCart={false} cartFunctions={{ lines, checkoutUrl, linesAdd }} />;
+};
+
+const ModalContent = ({ noCart = false, cartFunctions }: ModalProps & { cartFunctions?: { lines: any, checkoutUrl: any, linesAdd: any } }) => {
   const {brandData} = useBrandStore();
 
   const client = useMemo(() => {
@@ -54,7 +63,7 @@ const Modal = () => {
   }, []);
 
   
-  const { lines, checkoutUrl, linesAdd } = useCart();
+  const { lines, checkoutUrl, linesAdd } = cartFunctions || {};
   const { closeModal, selectedProduct } = useComponentStore();
 
 
@@ -384,6 +393,7 @@ const Modal = () => {
   };
 
   const handleAddToCart = async () => {
+    if (noCart) return;
     if (!selectedVariant) {
       Swal.fire({
         title: "Variant Not Found",
@@ -1155,52 +1165,97 @@ const Modal = () => {
         }}
         className="ShopifyButtonsContainer"
       >
-        <Button
-          sx={{
-            minWidth: { xs: "40%", md: "30%" },
-            backgroundColor: "#424147",
-            borderRadius: "100px",
-            color: "white",
-            fontWeight: "normal",
-            fontSize: { xs: "12px", md: "16px" },
-            fontFamily: "'Poppins', sans-serif",
-            textTransform: "none",
-            "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 0.3)",
-            },
-            padding: { md: "auto 35px auto 35px" },
-            boxSizing: "border-box",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-          }}
-          className="AddToCartButton"
-          onClick={handleAddToCart}
-        >
-          Add to Cart
-        </Button>
-        <Button
-          sx={{
-            minWidth: { xs: "40%", md: "30%" },
-            backgroundColor: "#424147",
-            borderRadius: "100px",
-            color: "white",
-            fontWeight: "normal",
-            fontSize: { xs: "12px", md: "16px" },
-            fontFamily: "'Poppins', sans-serif",
-            textTransform: "none",
-            "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 0.3)",
-            },
-            padding: { md: "auto 35px auto 35px" },
-            boxSizing: "border-box",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-          }}
-          className="BuyNowButton"
-          onClick={handleBuyNow}
-        >
-          Buy Now
-        </Button>
+          {noCart ? (<Button
+            sx={{
+              minWidth: { xs: "40%", md: "40%" },
+              backgroundColor: "#424147",
+              borderRadius: "100px",
+              color: "white",
+              fontWeight: "normal",
+              fontSize: { xs: "12px", md: "16px" },
+              fontFamily: "'Poppins', sans-serif",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.3)",
+              },
+              padding: { md: "auto 35px auto 35px" },
+              boxSizing: "border-box",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+            }}
+            className="ViewProductButton"
+            onClick={() => {
+              if (!selectedProduct || !client) {
+                Swal.fire({
+                  title: "Error",
+                  text: "Unable to open product page. Please try again later.",
+                  icon: "error",
+                  confirmButtonText: "Okay",
+                  customClass: {
+                    title: styles.swalTitle,
+                    popup: styles.swalPopup,
+                  },
+                });
+                return;
+              }
+              const productHandle = selectedProduct.handle || selectedProduct.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+              const productUrl = `https://${client.domain}/products/${productHandle}`;
+              // console.log('productHandle: ', productHandle);
+              // console.log('client.domain: ', client.domain);
+              window.open(productUrl, '_blank');
+            }}
+          >
+            View Product
+          </Button>) : (
+            <Button
+            sx={{
+              minWidth: { xs: "40%", md: "40%" },
+              backgroundColor: "#424147",
+              borderRadius: "100px",
+              color: "white",
+              fontWeight: "normal",
+              fontSize: { xs: "12px", md: "16px" },
+              fontFamily: "'Poppins', sans-serif",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.3)",
+              },
+              padding: { md: "auto 35px auto 35px" },
+              boxSizing: "border-box",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+            }}
+            className="ViewProductButton"
+            onClick={handleAddToCart}
+          >
+            Add To Cart
+          </Button>
+          )}
+          {!noCart && (
+            <Button
+              sx={{
+                minWidth: { xs: "40%", md: "30%" },
+                backgroundColor: "#424147",
+                borderRadius: "100px",
+                color: "white",
+                fontWeight: "normal",
+                fontSize: { xs: "12px", md: "16px" },
+                fontFamily: "'Poppins', sans-serif",
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.3)",
+                },
+                padding: { md: "auto 35px auto 35px" },
+                boxSizing: "border-box",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+              }}
+              className="BuyNowButton"
+              onClick={handleBuyNow}
+            >
+              Buy Now
+            </Button>
+          )}
         <Button
           sx={{
             minWidth: "35px",
@@ -1358,6 +1413,13 @@ const Modal = () => {
       </Card>
     </div>
   );
+};
+
+const Modal = ({ noCart = false }: ModalProps) => {
+  if (!noCart) {
+    return <CartEnabledModal />;
+  }
+  return <ModalContent noCart={true} />;
 };
 
 export default Modal;

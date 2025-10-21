@@ -786,7 +786,7 @@ const UI = () => {
 
   return (
     <>
-      {shopifyConfig && brandData ? (
+      {shopifyConfig?.storefrontToken && shopifyConfig.storefrontToken !== "dummy-storefront-token" && brandData ? (
         <ShopifyProvider
           storeDomain={shopifyConfig.storeDomain}
           storefrontToken={shopifyConfig.storefrontToken}
@@ -879,7 +879,7 @@ const UI = () => {
                 />
               </div>
 
-              {isModalOpen && <Modal />}
+              {isModalOpen && <Modal noCart={false} />}
               {isCartOpen && <Cart></Cart>}
               {isWishlistOpen && <Wishlist></Wishlist>}
               {isInfoModalOpen && <InfoModal></InfoModal>}
@@ -942,18 +942,6 @@ const UI = () => {
                 filter: tourVisible && currentTourStep === 3 ? "invert(1)" : "none"
               }}
             />
-            <div style={{ position: "relative" }}>
-              <img
-                src="/icons/Cart.svg"
-                alt="Cart"
-                className={styles.icon}
-                onClick={openCart}
-                style={{
-                  zIndex: tourVisible && currentTourStep === 4 ? 10000 : 1,
-                  filter: tourVisible && currentTourStep === 4 ? "invert(1) brightness(1.5)" : "none"
-                }}
-              />
-            </div>
             <img
               src="/icons/Wishlist.svg"
               alt="Wishlist"
@@ -1005,6 +993,7 @@ const UI = () => {
             />
           </div>
 
+          {isModalOpen && <Modal noCart={true} />}
           {isWishlistOpen && <Wishlist></Wishlist>}
           {isInfoModalOpen && <InfoModal></InfoModal>}
           {isTermsModalOpen && <TermsConditionsModal />}
