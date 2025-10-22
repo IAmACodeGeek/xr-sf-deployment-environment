@@ -1116,7 +1116,7 @@ const ModalContent = ({ noCart = false, cartFunctions }: ModalProps & { cartFunc
           </Typography>
           <PriceContainer />
           <VariantSelector />
-          <QuantitySelector />
+          {!noCart && <QuantitySelector />}
           <Typography
             sx={{
               fontSize: "24px",
