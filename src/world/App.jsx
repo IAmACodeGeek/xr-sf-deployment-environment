@@ -9,7 +9,6 @@ import BrandPoster from "./BrandPoster.jsx";
 import Products from "./Products.jsx";
 import Lights from "./Lights.jsx";
 import { Suspense, useState, useEffect } from "react";
-import Skybox from "./Skybox.jsx";
 import ThreeJSErrorBoundary from "../UI/Components/ThreeJSErrorBoundary";
 import {
   useComponentStore,
@@ -20,6 +19,16 @@ import {
   useTouchStore
 } from "../stores/ZustandStores.ts";
 import environmentData from "../data/environment/EnvironmentData.ts";
+import VrExit from "@/vr/VrMenu.tsx";
+import VrCard from "@/vr/VrProductCard.tsx";
+import VrSettingsCard from "@/vr/VrSettingsCard.tsx";
+import VrAboutUs from "@/vr/VrAboutUs.tsx";
+import VrTerms from "@/vr/VrTerms.tsx";
+import { RapierVRProxy } from "@/vr/VRControls.jsx";
+
+const UiPercentagereduced = 0.1;
+const distanceFromCamera = -9 * UiPercentagereduced;
+const scale = UiPercentagereduced;
 
 export const App = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -40,6 +49,7 @@ export const App = () => {
   const { driverActive } = useDriverStore();
   const { isTouchEnabled } = useTouchStore();
   const {environmentType} = useEnvironmentStore();
+  const [isXRSupported, setIsXRSupported] = useState(false);
 
   useEffect(() => {
     setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
@@ -48,6 +58,18 @@ export const App = () => {
   useFrame(() => {
     TWEEN.update();
   });
+
+  useEffect(() => {
+    if (navigator.xr) {
+      Promise.all([navigator.xr.isSessionSupported("immersive-vr")]).then(
+        ([vrSupported]) => {
+          if(brandData?.shopify_storefront_access_token && brandData?.shopify_storefront_access_token !== "dummy-storefront-token"){
+            setIsXRSupported(vrSupported);
+          }
+        }
+      );
+    }
+  }, []);
 
   const pointerLockControlsLockHandler = () => {
     if (
@@ -82,7 +104,7 @@ export const App = () => {
   return (
     <ThreeJSErrorBoundary>
       <>
-        {!isMobile && (
+        {!isMobile && !isXRSupported && (
           <PointerLockControls
             onLock={pointerLockControlsLockHandler}
             onUnlock={pointerLockControlsUnlockHandler}
@@ -93,9 +115,17 @@ export const App = () => {
         <Physics gravity={[0, -20, 0]}>
           <Ground />
           <Suspense fallback={null}>
-            <Player />
+          {isXRSupported ? <RapierVRProxy /> : <Player />}
           </Suspense>
           <Products />
+          {isXRSupported && (
+          <>
+          <VrExit scale={[scale,scale,scale]} position={[4 * UiPercentagereduced, 1 * UiPercentagereduced, distanceFromCamera]} />
+          <VrCard scale={[scale,scale,scale]} position={[0, 0, distanceFromCamera]} />
+          <VrSettingsCard music={brandData?.brand_music_url || "/media/Soundtrack.mp3"} scale={[scale,scale,scale]} position={[1.75 * UiPercentagereduced, 0, distanceFromCamera]} />
+          <VrAboutUs scale={[scale,scale,scale]} position={[0.75 * UiPercentagereduced, 0, distanceFromCamera]} />
+          <VrTerms environmentName={brandData?.brand_name} scale={[scale,scale,scale]} position={[0.75 * UiPercentagereduced, 0, distanceFromCamera]} /> 
+          </>)}
           {brandData && (
             <>
               {environmentData[environmentType].televisions && 

@@ -15,6 +15,7 @@ import Load from "./UI/Components/Loader.js";
 import ErrorBoundary from "./UI/Components/ErrorBoundary";
 import ThreeJSErrorBoundary from "./UI/Components/ThreeJSErrorBoundary";
 import { ACESFilmicToneMapping, LinearToneMapping } from "three";
+import { createXRStore, DefaultXRInputSourceRayPointer, PointerEvents, XR, XRControllerModel } from "@react-three/xr";
 
 function CanvasWrapper() {
   // Load brand data
@@ -22,7 +23,24 @@ function CanvasWrapper() {
   const [brandStatus, setBrandStatus] = useState<'LOADING' | 'VALID' | 'INVALID' | null>(null);
   const { environmentType } = useEnvironmentStore();
   const { loaded, total } = useProgress();
-  
+  const [isXRSupported, setIsXRSupported] = useState(false);
+  const [store] = useState(
+    createXRStore({
+      controller: CustomController,
+    })
+  );
+
+  useEffect(() => {
+    if (navigator.xr) {
+      Promise.all([navigator.xr.isSessionSupported("immersive-vr")]).then(
+        ([vrSupported]) => {
+          if(brandData?.shopify_storefront_access_token && brandData?.shopify_storefront_access_token !== "dummy-storefront-token"){
+            setIsXRSupported(vrSupported);
+          }
+        }
+      );
+    }
+  }, []);
   // Environments that should use LinearToneMapping
   const linearToneMappingEnvironments = [
     "GLOWBAR",
@@ -280,6 +298,36 @@ function CanvasWrapper() {
         {myProgress >= 100 && brandData?.account_status === 'active' ? (
           <ErrorBoundary>
             <UI />
+            {isXRSupported && (
+            <button
+              onClick={() => store.enterVR()}
+              style={{
+                position: "fixed",
+                bottom: "20px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                zIndex: 9999,
+                backgroundColor: "#4b4b4b",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                padding: "12px 24px",
+                fontSize: "16px",
+                fontFamily: "Poppins, sans-serif",
+                cursor: "pointer",
+                transition: "background-color 0.2s ease",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = "#3a3a3a";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = "#4b4b4b";
+              }}
+            >
+              Enter VR
+            </button>
+          )}
           </ErrorBoundary>
         ) : myProgress >= 100 && brandData?.account_status === 'inactive' ? (
           <div style={{
@@ -426,7 +474,16 @@ function CanvasWrapper() {
                toneMappingExposure: (environmentType && toneMappingExposures[environmentType]) || 1,
              }}
             shadows>
+              {isXRSupported ? (
+                <>
+                  <PointerEvents />
+                  <XR store={store}>
+                    <App />
+                  </XR>
+                </>
+              ) : (
                 <App />
+              )}
             </Canvas>
           </ThreeJSErrorBoundary>
         </Suspense>
@@ -468,3 +525,17 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </HelmetProvider>
   </React.StrictMode>
 );
+
+export function CustomController() {
+  return (
+    <group dispose={null}>
+      <DefaultXRInputSourceRayPointer
+        rayModel={{ renderOrder: 1001 }}
+        cursorModel={{ size: 0.25, opacity: 1, renderOrder: 1001 }}
+        makeDefault
+        minDistance={0}
+      />
+      <XRControllerModel renderOrder={1001} />
+    </group>
+  );
+}
