@@ -16,7 +16,6 @@ export default function VrAboutUs({scale,position}: {scale: [number, number, num
     (state) => state.closeContactModal
   );
   const { brandData } = useBrandStore();
-  console.log('brandData: ', brandData);
   const openSettingsModal = useComponentStore((state) => state.openSettingsModal);
   useEffect(() => {
     const uiMesh = uiRef.current as unknown as THREE.Group;

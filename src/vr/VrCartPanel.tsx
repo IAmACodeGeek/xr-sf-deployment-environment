@@ -4,10 +4,11 @@ import { useCart } from "@shopify/hydrogen-react";
 import { useXRStore } from "@react-three/xr";
 import { useEffect, useRef, useState } from "react";
 import { DynamicImage } from "./DynamicImage";
+import { useComponentStore } from "@/stores/ZustandStores";
 
 export default function VrCartPanel() {
   const { lines, checkoutUrl, linesRemove, linesUpdate } = useCart();
-
+  const { products } = useComponentStore();
   const store = useXRStore();
 
   const handleCheckout = () => {
@@ -46,7 +47,10 @@ export default function VrCartPanel() {
               }
             };
             const increment = () => {
-              if ((line?.quantity || 0) < 5) {
+              const productVariant = products.find(p => p.variants.some(v => {
+                return v.id === Number(line?.merchandise?.id?.split('/')[4])
+              }))?.variants.find(v => v.id === Number(line?.merchandise?.id?.split('/')[4]));
+              if (line?.quantity as number < (productVariant?.inventoryQuantity || 5)) {
                 linesUpdate([
                   { id: line?.id || "", quantity: (line?.quantity || 0) + 1 },
                 ]);

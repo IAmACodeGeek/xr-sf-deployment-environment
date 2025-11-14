@@ -324,8 +324,8 @@ function VrProductPanel() {
       <Card backgroundOpacity={0} height="90%" maxHeight={"90%"} overflow={"scroll"} scrollbarWidth={10} flexDirection="column" alignItems="flex-start" gap={12}>
         <Text fontSize={20} height={"auto"} color="#fff">{selectedProduct?.title}</Text>
         <Card backgroundOpacity={0} width="100%" height={15} flexDirection="row" alignItems="center" gap={8}>
-          <Text fontSize={18} color="#c2c2c2">{`Rs. ${state.selectedVariant?.price || selectedProduct?.variants[0].price}`}</Text>
-          <Text fontSize={14} color="#ff0000">{`Rs. ${state.selectedVariant?.compareAtPrice || ""}`}</Text>
+          <Text fontSize={18} color="#c2c2c2">{state.selectedVariant?.price ? state.selectedVariant?.currencyCode : ""} {state.selectedVariant?.price}</Text>
+          <Text fontSize={14} color="#ff0000">{state.selectedVariant?.compareAtPrice ? state.selectedVariant?.currencyCode : ""} {state.selectedVariant?.compareAtPrice}</Text>
         </Card>
           
           
@@ -394,10 +394,10 @@ function VrProductPanel() {
               borderRadius={16} 
               alignItems="center" 
               justifyContent="center" 
-              backgroundColor={state.quantity < 5 ? "#3A3A3A" : "#2A2A2A"}
-              onClick={() => updateQuantity(Math.min(10, state.quantity + 1))}
+              backgroundColor={state.quantity < (stateRef.current?.selectedVariant?.inventoryQuantity || 10) ? "#3A3A3A" : "#2A2A2A"}
+              onClick={() => updateQuantity(Math.min(stateRef.current?.selectedVariant?.inventoryQuantity || 10, state.quantity + 1))}
             >
-              <Text fontSize={16} color={state.quantity < 10 ? "#fff" : "#666666"}>+</Text>
+              <Text fontSize={16} color={state.quantity < (stateRef.current?.selectedVariant?.inventoryQuantity || 10) ? "#fff" : "#666666"}>+</Text>
             </Card>
           </Container>
         </Card>

@@ -249,7 +249,7 @@ const DraggableProductContainer = ({
     return {
       computedPositionForModel: [newPosition.x, newPosition.y, newPosition.z],
     }
-  }, [scene, computedScaleForModel, position, camera]);
+  }, [scene, computedScaleForModel, position]);
 
   // Set position and rotation
   const rigidBodyRef = useRef<any>(null);
@@ -291,7 +291,7 @@ const DraggableProductContainer = ({
     nullQuaternion.setFromEuler(new Euler(0, 0, 0));
     modelRef.current.setRotationFromQuaternion(nullQuaternion);
 
-  }, [position, computedPositionForModel, envProduct.type, computedRotation, camera, modelRef]);
+  }, [position, computedPositionForModel, envProduct.type, computedRotation, modelRef]);
 
   useEffect(() => {
     if (!meshRef.current || !backMeshRef.current || envProduct.type !== "PHOTO") return;
@@ -331,7 +331,7 @@ const DraggableProductContainer = ({
     meshRef.current.setRotationFromQuaternion(quaternion);
     backMeshRef.current.setRotationFromQuaternion(quaternion);
 
-  }, [position, computedPositionForModel, envProduct.type, computedRotation, camera, meshRef, backMeshRef]);
+  }, [position, computedPositionForModel, envProduct.type, computedRotation, meshRef, backMeshRef]);
 
   // Load Image texture
   const imageUrl = useMemo(() => {
