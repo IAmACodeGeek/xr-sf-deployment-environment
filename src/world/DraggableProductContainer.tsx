@@ -1,4 +1,4 @@
-import { useComponentStore, EnvProduct, useEnvironmentStore } from "@/stores/ZustandStores";
+import { useComponentStore, EnvProduct, useEnvironmentStore, useBrandStore } from "@/stores/ZustandStores";
 import { useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
@@ -26,12 +26,27 @@ const DraggableProductContainer = ({
   envScale = 1,
   envProduct
 }: DraggableProductContainerProps) => {
-  const { products, setSelectedProduct, openModal } = useComponentStore();
+  const { products, setSelectedProduct, openModal, isSettingsModalOpen, isTermsModalOpen, isContactModalOpen } = useComponentStore();
   const { camera } = useThree();
+  const [isXRSupported, setIsXRSupported] = useState(false);
+  const { brandData } = useBrandStore();
 
   // Get the placeholder
   const { environmentType } = useEnvironmentStore();
   const placeHolderData = environmentData[environmentType || ''].placeHolderData;
+
+  // Check if XR is supported
+  useEffect(() => {
+    if (navigator.xr) {
+      Promise.all([navigator.xr.isSessionSupported("immersive-vr")]).then(
+        ([vrSupported]) => {
+          if(brandData?.shopify_storefront_access_token && brandData?.shopify_storefront_access_token !== "dummy-storefront-token"){
+            setIsXRSupported(vrSupported);
+          }
+        }
+      );
+    }
+  }, []);
 
   // Find the corresponding product for the envProduct
   const product = useMemo(() => {
@@ -133,6 +148,24 @@ const DraggableProductContainer = ({
     return clonedScene;
   }, [scene]);
 
+  // Apply XR specific material properties
+  useEffect(() => {
+    if(memoizedModelScene && isXRSupported){
+      memoizedModelScene.traverse((obj: any) => {
+        if (obj.material && obj.material.isMeshPhysicalMaterial) {
+          // obj.material = new MeshStandardMaterial().copy(obj.material)
+          obj.material.transmission = 0
+          obj.material.ior = 1.0
+          obj.material.transparent = false
+          obj.material.opacity = 1
+          obj.material.depthWrite = true
+          obj.material.depthTest = true
+          obj.material.needsUpdate = true
+        }
+      })
+    }
+  },[memoizedModelScene, isXRSupported])
+
   // Fetch position, rotation & scale from placeholder
   const position = useMemo(() => {
     if (placeHolderId !== undefined) {
@@ -216,7 +249,7 @@ const DraggableProductContainer = ({
     return {
       computedPositionForModel: [newPosition.x, newPosition.y, newPosition.z],
     }
-  }, [scene, computedScaleForModel, position, camera]);
+  }, [scene, computedScaleForModel, position]);
 
   // Set position and rotation
   const rigidBodyRef = useRef<any>(null);
@@ -258,7 +291,7 @@ const DraggableProductContainer = ({
     nullQuaternion.setFromEuler(new Euler(0, 0, 0));
     modelRef.current.setRotationFromQuaternion(nullQuaternion);
 
-  }, [position, computedPositionForModel, envProduct.type, computedRotation, camera, modelRef]);
+  }, [position, computedPositionForModel, envProduct.type, computedRotation, modelRef]);
 
   useEffect(() => {
     if (!meshRef.current || !backMeshRef.current || envProduct.type !== "PHOTO") return;
@@ -298,7 +331,7 @@ const DraggableProductContainer = ({
     meshRef.current.setRotationFromQuaternion(quaternion);
     backMeshRef.current.setRotationFromQuaternion(quaternion);
 
-  }, [position, computedPositionForModel, envProduct.type, computedRotation, camera, meshRef, backMeshRef]);
+  }, [position, computedPositionForModel, envProduct.type, computedRotation, meshRef, backMeshRef]);
 
   // Load Image texture
   const imageUrl = useMemo(() => {
@@ -340,6 +373,7 @@ const DraggableProductContainer = ({
 
   const handleEvent = (event) => {
     event.stopPropagation();
+    if(isSettingsModalOpen || isTermsModalOpen || isContactModalOpen) return;
 
     if (product) {
       setSelectedProduct(product.id);

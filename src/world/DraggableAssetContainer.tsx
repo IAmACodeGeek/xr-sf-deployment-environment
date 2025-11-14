@@ -21,7 +21,8 @@ const DraggableAssetContainer = ({
   envAsset
 }: DraggableAssetContainerProps) => {
   const {camera} = useThree();
-
+  const [isXRSupported, setIsXRSupported] = useState(false);
+  const { brandData } = useBrandStore();
   // Get the model URL
   const modelUrl = useMemo(() => {
     if (envAsset.type !== "MODEL_3D" || !envAsset.src) {
@@ -30,6 +31,19 @@ const DraggableAssetContainer = ({
     
     return envAsset.src;
   }, [envAsset.type, envAsset.src]);
+
+    // Check if XR is supported
+    useEffect(() => {
+      if (navigator.xr) {
+        Promise.all([navigator.xr.isSessionSupported("immersive-vr")]).then(
+          ([vrSupported]) => {
+            if(brandData?.shopify_storefront_access_token && brandData?.shopify_storefront_access_token !== "dummy-storefront-token"){
+              setIsXRSupported(vrSupported);
+            }
+          }
+        );
+      }
+    }, []);
 
   // Load the GLTF model
   const [model, setModel] = useState<GLTF | null>(null);
@@ -111,6 +125,24 @@ const DraggableAssetContainer = ({
     const clonedScene = scene.clone();
     return clonedScene;
   }, [scene]);
+
+  // Apply XR specific material properties
+  useEffect(() => {
+    if(memoizedModelScene && isXRSupported){
+      memoizedModelScene.traverse((obj: any) => {
+        if (obj.material && obj.material.isMeshPhysicalMaterial) {
+          // obj.material = new MeshStandardMaterial().copy(obj.material)
+          obj.material.transmission = 0
+          obj.material.ior = 1.0
+          obj.material.transparent = false
+          obj.material.opacity = 1
+          obj.material.depthWrite = true
+          obj.material.depthTest = true
+          obj.material.needsUpdate = true
+        }
+      })
+    }
+  },[memoizedModelScene, isXRSupported])
 
   // Fetch position, rotation & scale from placeholder
   const position = useMemo(() => {
