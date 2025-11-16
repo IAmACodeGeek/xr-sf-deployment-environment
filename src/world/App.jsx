@@ -9,7 +9,6 @@ import BrandPoster from "./BrandPoster.jsx";
 import Products from "./Products.jsx";
 import Lights from "./Lights.jsx";
 import { Suspense, useState, useEffect } from "react";
-import ThreeJSErrorBoundary from "../UI/Components/ThreeJSErrorBoundary";
 import {
   useComponentStore,
   usePointerLockStore,
@@ -102,7 +101,6 @@ export const App = () => {
   }
 
   return (
-    <ThreeJSErrorBoundary>
       <>
         {!isMobile && !isXRSupported && (
           <PointerLockControls
@@ -159,7 +157,6 @@ export const App = () => {
           )}
         </Physics>
       </>
-    </ThreeJSErrorBoundary>
   );
 };
 
