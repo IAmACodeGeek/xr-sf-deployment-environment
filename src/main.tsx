@@ -34,9 +34,7 @@ function CanvasWrapper() {
     if (navigator.xr) {
       Promise.all([navigator.xr.isSessionSupported("immersive-vr")]).then(
         ([vrSupported]) => {
-          if(brandData?.shopify_storefront_access_token && brandData?.shopify_storefront_access_token !== "dummy-storefront-token"){
-            setIsXRSupported(vrSupported);
-          }
+          setIsXRSupported(vrSupported);
         }
       );
     }
