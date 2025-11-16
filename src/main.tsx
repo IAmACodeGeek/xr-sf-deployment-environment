@@ -474,16 +474,10 @@ function CanvasWrapper() {
                toneMappingExposure: (environmentType && toneMappingExposures[environmentType]) || 1,
              }}
             shadows>
-              {isXRSupported ? (
-                <>
                   <PointerEvents />
                   <XR store={store}>
                     <App />
                   </XR>
-                </>
-              ) : (
-                <App />
-              )}
             </Canvas>
           </ThreeJSErrorBoundary>
         </Suspense>
