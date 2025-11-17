@@ -1,4 +1,4 @@
-import { EnvAsset } from "@/stores/ZustandStores";
+import { EnvAsset, useBrandStore } from "@/stores/ZustandStores";
 import { PivotControls, useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
