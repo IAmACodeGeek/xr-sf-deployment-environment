@@ -26,7 +26,7 @@ const DraggableProductContainer = ({
   envScale = 1,
   envProduct
 }: DraggableProductContainerProps) => {
-  const { products, setSelectedProduct, openModal, isSettingsModalOpen, isTermsModalOpen, isContactModalOpen } = useComponentStore();
+  const { products, setSelectedProduct, openModal, isSettingsModalOpen, isTermsModalOpen, isContactModalOpen, closeCart, closeWishlist, isCartOpen, isWishlistOpen, closeSettingsModal, closeTermsModal, closeContactModal } = useComponentStore();
   const { camera } = useThree();
   const [isXRSupported, setIsXRSupported] = useState(false);
   const { brandData } = useBrandStore();
@@ -373,7 +373,13 @@ const DraggableProductContainer = ({
 
   const handleEvent = (event) => {
     event.stopPropagation();
-    if(isSettingsModalOpen || isTermsModalOpen || isContactModalOpen) return;
+    if(isCartOpen || isWishlistOpen || isSettingsModalOpen || isTermsModalOpen || isContactModalOpen) {
+      closeCart();
+      closeWishlist();
+      closeSettingsModal();
+      closeTermsModal();
+      closeContactModal();
+    }
 
     if (product) {
       setSelectedProduct(product.id);
