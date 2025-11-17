@@ -24,6 +24,8 @@ export default function VrCard({scale,position}: {scale: [number, number, number
   const openCart = useComponentStore((state) => state.openCart);
   const openWishlist = useComponentStore((state) => state.openWishlist);
   const {brandData} = useBrandStore();
+  const isCartOpen = useComponentStore((state) => state.isCartOpen);
+  const isWishlistOpen = useComponentStore((state) => state.isWishlistOpen);
   // Use useRef to store active tab
   const activeRef = useRef<Tab>("product");
   
@@ -40,6 +42,9 @@ export default function VrCard({scale,position}: {scale: [number, number, number
 
   // Helper to update active tab and trigger re-render
   const setActive = (tab: Tab) => {
+    if (tab === activeRef.current) {
+      return;
+    }
     activeRef.current = tab;
     if (tab === "cart") {
       openCart();
@@ -165,7 +170,7 @@ export default function VrCard({scale,position}: {scale: [number, number, number
       <Defaults  renderOrder={1}>
         <Root>
           {shopifyConfig?.storefrontToken && shopifyConfig.storefrontToken !== "dummy-storefront-token" && brandData ? (<Container
-            display={isModalOpen ? "flex" : "none"}
+            display={(isModalOpen || isCartOpen || isWishlistOpen) ? "flex" : "none"}
             flexDirection="column"
             alignItems="flex-start"
             gap={20}
@@ -176,9 +181,9 @@ export default function VrCard({scale,position}: {scale: [number, number, number
               width={"100%"}
               gap={12}
             >
-              <TabButton tab="product" label="product" />
-              <TabButton tab="cart" label="cart" />
-              <TabButton tab="wishlist" label="wishlist" />
+              {isModalOpen && <TabButton tab="product" label="product" />}
+              {isCartOpen && <TabButton tab="cart" label="cart" />}
+              {isWishlistOpen && <TabButton tab="wishlist" label="wishlist" />}
               <Card
                 width={56}
                 height={56}
@@ -217,9 +222,9 @@ export default function VrCard({scale,position}: {scale: [number, number, number
                   languageIsoCode={shopifyConfig.languageIsoCode}
                 >
                   <CartProvider>
-                    {activeRef.current === "product" && <VrProductPanel />}
-                    {activeRef.current === "cart" && <VrCartPanel />}
-                    {activeRef.current === "wishlist" && <VrWishlistPanel />}
+                    { isModalOpen && <VrProductPanel />}
+                    {isCartOpen && <VrCartPanel />}
+                    {isWishlistOpen && <VrWishlistPanel />}
                   </CartProvider>
                 </ShopifyProvider>
               </Card>
