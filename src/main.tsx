@@ -296,7 +296,7 @@ function CanvasWrapper() {
         {myProgress >= 100 && brandData?.account_status === 'active' ? (
           <ErrorBoundary>
             <UI />
-            {isXRSupported && (
+            {isXRSupported && brandData?.shopify_storefront_access_token !== "dummy-storefront-token" &&(
             <button
               onClick={() => store.enterVR()}
               style={{
