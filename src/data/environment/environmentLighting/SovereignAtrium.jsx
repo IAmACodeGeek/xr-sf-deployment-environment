@@ -3,6 +3,7 @@ import { Environment } from "@react-three/drei";
 const SovereignAtriumLighting = () => {
   return (
     <>
+      <ambientLight intensity={1} color={"#ffffff"} />
       <Environment
         background
         files={["/hdr/night.hdr"]}

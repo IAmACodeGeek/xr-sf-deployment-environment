@@ -2,6 +2,8 @@ import { Environment } from "@react-three/drei";
 
 const AutoHavenLighting = () => {
   return (
+    <>
+    <ambientLight intensity={1} color={"#ffffff"} />
     <Environment
       background
       preset={"city"}
@@ -12,6 +14,7 @@ const AutoHavenLighting = () => {
         scale: 500
       }}
     />
+    </>
   );
 };
 

@@ -417,9 +417,30 @@ export const RapierVRProxy = () => {
     >
       <ProductGSAPUtil setAnimating={setAnimating} playerRef={playerRef} />
       <CameraController setAnimating={setAnimating} playerRef={playerRef} />
-      <XROrigin ref={originRef} />
+      <XROrigin
+        ref={originRef}
+        rotation={[
+          (environmentData[environmentType].initialGSAP.update[
+            environmentData[environmentType].initialGSAP.update.length - 1
+          ].rotation[0] *
+            Math.PI) /
+            180,
+          (environmentData[environmentType].initialGSAP.update[
+            environmentData[environmentType].initialGSAP.update.length - 1
+          ].rotation[1] *
+            Math.PI) /
+            180,
+          (environmentData[environmentType].initialGSAP.update[
+            environmentData[environmentType].initialGSAP.update.length - 1
+          ].rotation[2] *
+            Math.PI) /
+            180,
+        ]}
+      />
       <mesh castShadow>
-        <CapsuleCollider args={[environmentData[environmentType].playerHeight, 1]} />
+        <CapsuleCollider
+          args={[environmentData[environmentType].playerHeight, 1]}
+        />
       </mesh>
     </RigidBody>
   );

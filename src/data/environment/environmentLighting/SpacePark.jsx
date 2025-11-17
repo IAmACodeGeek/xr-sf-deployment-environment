@@ -8,6 +8,7 @@ const SpaceParkLighting = () => {
     hdr.mapping = EquirectangularReflectionMapping
   return (
         <>
+      <ambientLight intensity={1} color={"#ffffff"} />
       <mesh scale={[500, 500, 500]}>
       <sphereGeometry args={[1, 64, 64]} />
       <meshBasicMaterial

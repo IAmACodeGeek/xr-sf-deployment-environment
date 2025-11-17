@@ -3,6 +3,7 @@ import { Environment } from "@react-three/drei";
 const GrandGalleriaLighting = () => {
     return (
       <>
+      <ambientLight intensity={1} color={"#ffffff"} />
       <Environment files={['/hdr/golden_bay_2k.hdr']} background environmentIntensity={0} ground={{
         radius : 400,
         scale : 400,
